@@ -1,27 +1,31 @@
 //! Prototype for testing the API.
 
 use std::fs::read;
+use std::path::PathBuf;
 
 use clap::Parser;
 use log::error;
-use mender_free_ext::{ApiVersion, Management, MenderServer, UserAdm};
-use reqwest::Certificate;
-
-const CERT_FILE: &str = "/home/mender/automatization-sources/certificates/DigiCertCA.pem";
+use mender_free_ext::{ApiVersion, Certificate, Management, MenderServer, UserAdm};
 
 #[derive(Debug, Parser)]
 struct Args {
+    #[clap(index = 1, help = "Username for Mender server login")]
     username: String,
+    #[clap(index = 2, help = "Password for Mender server login")]
     password: String,
+    #[clap(long, short, help = "Path to the certificate file (optional)")]
+    certificate: Option<PathBuf>,
 }
 
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-    let cert = read(CERT_FILE)
-        .inspect_err(|error| error!("Failed to read certificate file: {error}"))
-        .ok()
-        .map(|cert| Certificate::from_pem(&cert).expect("Failed to parse certificate: {error}"));
+    let cert = args.certificate.and_then(|certificate| {
+        read(certificate)
+            .inspect_err(|error| error!("Failed to read certificate file: {error}"))
+            .ok()
+            .map(|cert| Certificate::from_pem(&cert).expect("Failed to parse certificate: {error}"))
+    });
 
     let server = MenderServer::new(
         "https://mender-acc.paulmann.com"

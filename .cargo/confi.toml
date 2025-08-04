@@ -1,0 +1,5 @@
+[net]
+git-fetch-with-cli = true
+
+[target.mender-acc]
+rustflags = ["-C", "link-args=--sysroot=/home/neumann/Downloads/libc-ubuntu/lib/x86_64-linux-gnu"]
