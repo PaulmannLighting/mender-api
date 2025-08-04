@@ -1,6 +1,6 @@
 //! Mender API data transfer objects (DTOs).
 
-pub use artifact::{Artifact, File, Info, TypeInfo, Update};
+pub use artifact::{Artifact, Dependency, File, Info, TypeInfo, Update};
 pub use attribute::{Attribute, Scope, Status, Value};
 pub use bootloader_integration::BootloaderIntegration;
 pub use country::Country;

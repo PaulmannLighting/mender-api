@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, FixedOffset};
+pub use dependency::Dependency;
 pub use file::File;
 pub use info::Info;
 use serde::{Deserialize, Serialize};
@@ -10,6 +11,7 @@ use uuid::Uuid;
 
 use crate::api::dto::DeviceType;
 
+mod dependency;
 mod file;
 mod info;
 mod type_info;
@@ -19,7 +21,7 @@ mod update;
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Artifact {
     id: Uuid,
-    description: String,
+    description: Option<String>,
     name: String,
     #[serde(rename = "device_types_compatible")]
     compatible_device_types: Vec<DeviceType>,
@@ -33,31 +35,32 @@ pub struct Artifact {
     )]
     provides: BTreeMap<String, String>,
     #[serde(rename = "artifact_depends")]
-    depends: BTreeMap<String, String>,
+    depends: Dependency,
     #[serde(
         rename = "clears_artifact_provides",
         default,
-        skip_serializing_if = "BTreeMap::is_empty"
+        skip_serializing_if = "Vec::is_empty"
     )]
-    clears_provides: BTreeMap<String, String>,
+    clears_provides: Vec<String>,
     size: usize,
     modified: DateTime<FixedOffset>,
 }
 
 impl Artifact {
     /// Creates a new `Artifact` instance.
+    #[allow(clippy::too_many_arguments)]
     #[must_use]
     pub const fn new(
         id: Uuid,
-        description: String,
+        description: Option<String>,
         name: String,
         compatible_device_types: Vec<DeviceType>,
         info: Info,
         signed: bool,
         updates: Vec<Update>,
         provides: BTreeMap<String, String>,
-        depends: BTreeMap<String, String>,
-        clears_provides: BTreeMap<String, String>,
+        depends: Dependency,
+        clears_provides: Vec<String>,
         size: usize,
         modified: DateTime<FixedOffset>,
     ) -> Self {
@@ -85,8 +88,8 @@ impl Artifact {
 
     /// Returns the description of the artifact.
     #[must_use]
-    pub fn description(&self) -> &str {
-        &self.description
+    pub fn description(&self) -> Option<&str> {
+        self.description.as_deref()
     }
 
     /// Returns the name of the artifact.
@@ -125,15 +128,15 @@ impl Artifact {
         &self.provides
     }
 
-    /// Returns the depends map of the artifact.
+    /// Returns the dependencies of the artifact.
     #[must_use]
-    pub fn depends(&self) -> &BTreeMap<String, String> {
+    pub fn depends(&self) -> &Dependency {
         &self.depends
     }
 
-    /// Returns the clears provides map of the artifact.
+    /// Returns the clears provides list of the artifact.
     #[must_use]
-    pub fn clears_provides(&self) -> &BTreeMap<String, String> {
+    pub fn clears_provides(&self) -> &[String] {
         &self.clears_provides
     }
 
