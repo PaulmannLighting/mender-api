@@ -2,10 +2,6 @@
 
 use reqwest::{Certificate, Client, Url};
 
-use crate::api::api_version::ApiVersion;
-use crate::api::endpoint::Endpoint;
-use crate::api::management::Management;
-
 /// Mender server API client.
 #[derive(Clone, Debug)]
 pub struct MenderServer {
@@ -23,11 +19,5 @@ impl MenderServer {
         }
 
         builder.build().map(|client| Self { base_url, client })
-    }
-
-    /// Return the mender management API.
-    #[must_use]
-    pub fn management(&self, version: ApiVersion) -> impl Management {
-        Endpoint::new(self, format!("/api/management/{version}").into())
     }
 }

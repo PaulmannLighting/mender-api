@@ -1,4 +1,4 @@
-use crate::api::endpoint::Endpoint;
+use crate::api::session::Session;
 
 /// Device authentication API interface for Mender server.
 pub trait Devauth {
@@ -6,7 +6,7 @@ pub trait Devauth {
     fn devices(&self);
 }
 
-impl Devauth for Endpoint<'_> {
+impl Devauth for Session {
     fn devices(&self) {
         todo!()
     }

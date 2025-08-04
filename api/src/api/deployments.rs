@@ -1,11 +1,11 @@
-use crate::api::endpoint::Endpoint;
+use crate::api::session::Session;
 
 /// Deployments API.
 pub trait Deployments {
     fn deployments(&self);
 }
 
-impl Deployments for Endpoint<'_> {
+impl Deployments for Session {
     fn deployments(&self) {
         todo!()
     }

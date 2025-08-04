@@ -1,11 +1,12 @@
 //! Prototype for testing the API.
 
 use std::fs::read;
+use std::io::read_to_string;
 use std::path::PathBuf;
 
 use clap::Parser;
-use log::error;
-use mender_free_ext::{ApiVersion, Certificate, Management, MenderServer, UserAdm};
+use log::{debug, error};
+use mender_free_ext::{Certificate, DeviceList, Devices, Login, MenderServer};
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -35,11 +36,17 @@ async fn main() {
     )
     .expect("Failed to create MenderServer");
 
-    let response = server
-        .management(ApiVersion::V1)
-        .useradm()
+    let json = read("./devices.pretty.json").unwrap();
+    let devices: DeviceList = serde_json::from_slice(&json).expect("Failed to parse devices JSON");
+    dbg!(devices);
+
+    let session = server
         .login(args.username, args.password)
         .await
         .expect("Failed to login MenderServer");
-    println!("Raw response: {response:?}");
+    let deployments = session
+        .page(500, 1)
+        .await
+        .expect("Failed to get Mender deployments");
+    println!("{deployments:?}");
 }
