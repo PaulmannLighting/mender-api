@@ -16,7 +16,7 @@ pub struct MenderServer {
 impl MenderServer {
     /// Crate a new `MenderServer` with the specified base URL.
     pub fn new(base_url: Url, certificate: Option<Certificate>) -> reqwest::Result<Self> {
-        let mut builder = Client::builder();
+        let mut builder = Client::builder().use_rustls_tls();
 
         if let Some(certificate) = certificate {
             builder = builder.add_root_certificate(certificate);
