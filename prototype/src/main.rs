@@ -39,9 +39,12 @@ async fn main() {
         .login(args.username, args.password)
         .await
         .expect("Failed to login MenderServer");
-    let deployments = session
-        .page(500, 1)
+
+    for device in session
+        .iter()
         .await
-        .expect("Failed to get Mender deployments");
-    println!("{deployments:?}");
+        .expect("Failed to get Mender deployments")
+    {
+        println!("{device:?}");
+    }
 }

@@ -12,3 +12,4 @@ uuid = { version = "1.17.0", features = ["serde"] }
 serde = { version = "1.0.219", features = ["derive"] }
 semver = { version = "1.0.26", features = ["serde"] }
 ipnet = { version = "2.11.0", features = ["serde"] }
+log = "0.4.27"

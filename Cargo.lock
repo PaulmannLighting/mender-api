@@ -641,6 +641,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "ipnet",
+ "log",
  "macaddr",
  "reqwest",
  "semver",
