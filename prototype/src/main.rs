@@ -36,10 +36,6 @@ async fn main() {
     )
     .expect("Failed to create MenderServer");
 
-    let json = read("./devices.pretty.json").unwrap();
-    let devices: DeviceList = serde_json::from_slice(&json).expect("Failed to parse devices JSON");
-    dbg!(devices);
-
     let session = server
         .login(args.username, args.password)
         .await
