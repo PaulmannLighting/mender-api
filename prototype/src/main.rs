@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use log::error;
-use mender_free_ext::{Certificate, Devices, Login, MenderServer};
+use mender_free_ext::{Api, Certificate, Devices, Login, Releases};
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -15,6 +15,10 @@ struct Args {
     password: String,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
     certificate: Option<PathBuf>,
+    #[clap(long, short, help = "List devices in the Mender server")]
+    list_devices: bool,
+    #[clap(long, short, help = "List releases in the Mender server")]
+    list_releases: bool,
 }
 
 #[tokio::main]
@@ -27,7 +31,7 @@ async fn main() {
             .map(|cert| Certificate::from_pem(&cert).expect("Failed to parse certificate: {error}"))
     });
 
-    let server = MenderServer::new(
+    let server = Api::new(
         "https://mender-acc.paulmann.com"
             .parse()
             .expect("Failed to parse base URL"),
@@ -40,11 +44,19 @@ async fn main() {
         .await
         .expect("Failed to login MenderServer");
 
-    for device in session
-        .iter()
-        .await
-        .expect("Failed to get Mender deployments")
-    {
-        println!("{device:?}");
+    if args.list_devices {
+        for device in session
+            .iter()
+            .await
+            .expect("Failed to get Mender deployments")
+        {
+            println!("{device:?}");
+        }
+    }
+
+    if args.list_releases {
+        for release in session.list().await.expect("Failed to get releases.") {
+            println!("{release:?}");
+        }
     }
 }
