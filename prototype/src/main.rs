@@ -30,7 +30,7 @@ async fn main() {
     let server = MenderServer::new(
         "https://mender-acc.paulmann.com"
             .parse()
-            .expect("Invalid URL"),
+            .expect("Failed to parse base URL"),
         cert,
     )
     .expect("Failed to create MenderServer");
@@ -42,6 +42,4 @@ async fn main() {
         .await
         .expect("Failed to login MenderServer");
     println!("Raw response: {response:?}");
-    let response_str = String::from_utf8(response).expect("Failed to convert response to string");
-    println!("Response string: {response_str}");
 }
