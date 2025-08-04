@@ -8,7 +8,7 @@ pub use mender_server::MenderServer;
 
 mod deployments;
 mod devauth;
-mod devices;
+pub mod devices;
 mod login;
 mod mender_server;
 mod session;

@@ -1,8 +1,10 @@
+//! Devices management API.
+
 mod list;
 
+pub use list::{AsStr, Attribute, Device, DeviceList, MacAddress, OneOrMany, Scope, Value};
 use serde_json::json;
 
-pub use crate::api::devices::list::DeviceList;
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
