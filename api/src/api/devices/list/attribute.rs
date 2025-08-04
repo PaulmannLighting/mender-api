@@ -18,6 +18,8 @@ use super::value::Value;
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "name")]
 pub enum Attribute {
+    #[serde(rename = "name")]
+    Name(Value<String>),
     #[serde(rename = "mac")]
     Mac(Value<MacAddress>),
     #[serde(rename = "created_ts")]

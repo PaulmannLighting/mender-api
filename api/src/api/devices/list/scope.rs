@@ -10,4 +10,6 @@ pub enum Scope {
     System,
     /// The attribute is specific to an inventory.
     Inventory,
+    /// The attribute is specific to tags.
+    Tags,
 }

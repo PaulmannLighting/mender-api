@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Status {
+    /// Device is pending.
+    Pending,
     /// Request has been accepted.
     Accepted,
     /// Missing authentication.
