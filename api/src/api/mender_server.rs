@@ -1,6 +1,5 @@
 //! Extension traits to handle Mender URLs.
 
-use reqwest::header::HeaderMap;
 use reqwest::{Certificate, Client, Url};
 
 use crate::api::api_version::ApiVersion;
