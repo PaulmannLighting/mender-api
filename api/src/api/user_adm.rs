@@ -1,7 +1,6 @@
-mod authentication;
+use serde_json::json;
 
 use crate::api::endpoint::Endpoint;
-use crate::api::user_adm::authentication::Request;
 use crate::util::JoinPath;
 
 const LOGIN_ENDPOINT: &str = "auth/login";
@@ -12,7 +11,7 @@ pub trait UserAdm {
         &self,
         user_name: impl AsRef<str>,
         password: impl AsRef<str>,
-    ) -> Result<Vec<u8>, reqwest::Error>;
+    ) -> Result<String, reqwest::Error>;
 }
 
 impl UserAdm for Endpoint<'_> {
@@ -20,18 +19,17 @@ impl UserAdm for Endpoint<'_> {
         &self,
         user_name: impl AsRef<str>,
         password: impl AsRef<str>,
-    ) -> Result<Vec<u8>, reqwest::Error> {
-        let authentication = Request::new(user_name.as_ref(), password.as_ref());
+    ) -> Result<String, reqwest::Error> {
         let url = self.url().with_joined_path(LOGIN_ENDPOINT);
         let response = self
             .server
             .client
             .post(url)
-            .json(&authentication)
+            .basic_auth(user_name.as_ref(), Some(password.as_ref()))
+            .json(&json!({}))
             .send()
             .await?
             .error_for_status()?;
-
-        response.bytes().await.map(|bytes| bytes.to_vec())
+        response.text().await
     }
 }
