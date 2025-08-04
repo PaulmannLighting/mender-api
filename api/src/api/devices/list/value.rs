@@ -7,4 +7,5 @@ use super::scope::Scope;
 pub struct Value<T> {
     value: T,
     scope: Scope,
+    description: Option<String>,
 }
