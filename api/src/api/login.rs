@@ -1,6 +1,6 @@
 use serde_json::json;
 
-use crate::MenderServer;
+use crate::Api;
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/useradm/auth/login";
@@ -26,7 +26,7 @@ pub trait Login {
         P: AsRef<str> + Send;
 }
 
-impl Login for MenderServer {
+impl Login for Api {
     async fn login<U, P>(self, user_name: U, password: P) -> reqwest::Result<Session>
     where
         U: AsRef<str> + Send,
