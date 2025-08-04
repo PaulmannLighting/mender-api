@@ -1,12 +1,11 @@
 //! Prototype for testing the API.
 
 use std::fs::read;
-use std::io::read_to_string;
 use std::path::PathBuf;
 
 use clap::Parser;
-use log::{debug, error};
-use mender_free_ext::{Certificate, DeviceList, Devices, Login, MenderServer};
+use log::error;
+use mender_free_ext::{Certificate, Devices, Login, MenderServer};
 
 #[derive(Debug, Parser)]
 struct Args {
