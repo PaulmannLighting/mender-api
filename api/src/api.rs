@@ -6,7 +6,6 @@ pub use devauth::Devauth;
 pub use inventory::Inventory;
 pub use management::Management;
 pub use mender_server::MenderServer;
-pub use reqwest::Certificate;
 pub use user_adm::UserAdm;
 
 mod api_version;
