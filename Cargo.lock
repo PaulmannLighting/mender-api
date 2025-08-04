@@ -751,7 +751,6 @@ dependencies = [
  "clap",
  "log",
  "mender-free-ext",
- "serde_json",
  "tokio",
 ]
 
