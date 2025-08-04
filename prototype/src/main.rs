@@ -15,9 +15,9 @@ struct Args {
     password: String,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
     certificate: Option<PathBuf>,
-    #[clap(long, short, help = "List devices in the Mender server")]
+    #[clap(long, short = 'D', help = "List devices in the Mender server")]
     list_devices: bool,
-    #[clap(long, short, help = "List releases in the Mender server")]
+    #[clap(long, short = 'R', help = "List releases in the Mender server")]
     list_releases: bool,
 }
 
