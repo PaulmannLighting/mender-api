@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::scope::Scope;
+use crate::api::dto::Scope;
 
 /// Attribute values.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]

@@ -1,16 +1,11 @@
 //! Devices management API.
 
-mod list;
-
 use std::num::NonZero;
 
-pub use list::{
-    AsStr, Attribute, BootloaderIntegration, Country, Device, DeviceList, DeviceType, MacAddress,
-    OneOrMany, RootfsType, Scope, Status, Value,
-};
 use log::debug;
 use serde_json::json;
 
+use crate::api::dto::DeviceList;
 use crate::api::session::Session;
 
 const DEFAULT_PAGE_SIZE: NonZero<usize> =

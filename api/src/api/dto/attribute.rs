@@ -2,18 +2,18 @@ use std::net::IpAddr;
 
 use chrono::{DateTime, FixedOffset};
 use ipnet::{Ipv4Net, Ipv6Net};
+pub use scope::Scope;
 use semver::Version;
 use serde::{Deserialize, Serialize};
+pub use status::Status;
+pub use value::Value;
 
-use super::as_str::AsStr;
-use super::bootloader_integration::BootloaderIntegration;
-use super::country::Country;
-use super::device_type::DeviceType;
-use super::mac_address::MacAddress;
-use super::one_or_many::OneOrMany;
-use super::rootfs_type::RootfsType;
-use super::status::Status;
-use super::value::Value;
+use crate::api::dto::types::{AsStr, MacAddress, OneOrMany};
+use crate::api::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
+
+mod scope;
+mod status;
+mod value;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "name")]
