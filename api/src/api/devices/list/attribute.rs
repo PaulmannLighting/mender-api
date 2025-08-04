@@ -37,7 +37,7 @@ pub enum Attribute {
     #[serde(rename = "hostname")]
     Hostname(Value<String>),
     #[serde(rename = "ipv4_eth0")]
-    Ipv4Eth0(Value<Ipv4Net>),
+    Ipv4Eth0(Value<OneOrMany<Ipv4Net>>),
     #[serde(rename = "ipv6_eth0")]
     Ipv6Eth0(Value<OneOrMany<Ipv6Net>>),
     #[serde(rename = "kernel")]
