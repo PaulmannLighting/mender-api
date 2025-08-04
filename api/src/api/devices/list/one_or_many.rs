@@ -1,3 +1,5 @@
+use std::vec::IntoIter;
+
 use serde::{Deserialize, Serialize};
 
 /// A wrapper type to represent either a single item or a list of items.
@@ -35,5 +37,14 @@ impl<T> From<Vec<T>> for OneOrMany<T> {
 impl<T> From<OneOrMany<T>> for Vec<T> {
     fn from(one_or_many: OneOrMany<T>) -> Self {
         one_or_many.into_vec()
+    }
+}
+
+impl<T> IntoIterator for OneOrMany<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.into_vec().into_iter()
     }
 }
