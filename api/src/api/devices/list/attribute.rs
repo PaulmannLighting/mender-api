@@ -5,10 +5,15 @@ use ipnet::{Ipv4Net, Ipv6Net};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 
+use super::as_str::AsStr;
+use super::bootloader_integration::BootloaderIntegration;
+use super::country::Country;
+use super::device_type::DeviceType;
 use super::mac_address::MacAddress;
+use super::one_or_many::OneOrMany;
+use super::rootfs_type::RootfsType;
+use super::status::Status;
 use super::value::Value;
-use crate::api::devices::list::as_str::AsStr;
-use crate::api::devices::list::one_or_many::OneOrMany;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "name")]
@@ -20,7 +25,7 @@ pub enum Attribute {
     #[serde(rename = "updated_ts")]
     Updated(Value<DateTime<FixedOffset>>),
     #[serde(rename = "status")]
-    Status(Value<String>), // TODO: use enum for status
+    Status(Value<Status>), // TODO: use enum for status
     #[serde(rename = "group")]
     Group(Value<String>),
     #[serde(rename = "artifact_name")]
@@ -28,7 +33,7 @@ pub enum Attribute {
     #[serde(rename = "cpu_model")]
     CpuModel(Value<String>),
     #[serde(rename = "device_type")]
-    DeviceType(Value<String>),
+    DeviceType(Value<DeviceType>),
     #[serde(rename = "hostname")]
     Hostname(Value<String>),
     #[serde(rename = "ipv4_eth0")]
@@ -42,7 +47,7 @@ pub enum Attribute {
     #[serde(rename = "mem_total_kB")]
     MemTotalKB(Value<AsStr<u32>>),
     #[serde(rename = "mender_bootloader_integration")]
-    MenderBootloaderIntegration(Value<String>), // TODO: use enum for bootloader integration
+    MenderBootloaderIntegration(Value<BootloaderIntegration>),
     #[serde(rename = "mender_client_version")]
     MenderClientVersion(Value<Version>),
     #[serde(rename = "network_interfaces")]
@@ -50,11 +55,11 @@ pub enum Attribute {
     #[serde(rename = "os")]
     Os(Value<String>),
     #[serde(rename = "rootfs_type")]
-    RootfsType(Value<String>), // TODO: use enum for rootfs type
+    RootfsType(Value<RootfsType>),
     #[serde(rename = "geo-city")]
     GeoCity(Value<String>),
     #[serde(rename = "geo-country")]
-    GeoCountry(Value<String>),
+    GeoCountry(Value<Country>),
     #[serde(rename = "geo-ip")]
     GeoIp(Value<IpAddr>),
     #[serde(rename = "geo-timezone")]

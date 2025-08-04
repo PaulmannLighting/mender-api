@@ -2,7 +2,10 @@
 
 mod list;
 
-pub use list::{AsStr, Attribute, Device, DeviceList, MacAddress, OneOrMany, Scope, Value};
+pub use list::{
+    AsStr, Attribute, BootloaderIntegration, Country, Device, DeviceList, DeviceType, MacAddress,
+    OneOrMany, RootfsType, Scope, Status, Value,
+};
 use serde_json::json;
 
 use crate::api::session::Session;

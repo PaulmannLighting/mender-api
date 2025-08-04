@@ -2,19 +2,29 @@
 
 pub use as_str::AsStr;
 pub use attribute::Attribute;
+pub use bootloader_integration::BootloaderIntegration;
 use chrono::{DateTime, FixedOffset};
+pub use country::Country;
+pub use device_type::DeviceType;
 pub use mac_address::MacAddress;
 pub use one_or_many::OneOrMany;
+pub use rootfs_type::RootfsType;
 pub use scope::Scope;
 use serde::{Deserialize, Serialize};
+pub use status::Status;
 use uuid::Uuid;
 pub use value::Value;
 
 mod as_str;
 mod attribute;
+mod bootloader_integration;
+mod country;
+mod device_type;
 mod mac_address;
 mod one_or_many;
+mod rootfs_type;
 mod scope;
+mod status;
 mod value;
 
 /// A list of devices in the Mender server.
