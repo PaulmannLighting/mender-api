@@ -27,6 +27,10 @@ pub enum Endpoint {
         #[clap(subcommand)]
         action: Device,
     },
+    Group {
+        #[clap(subcommand)]
+        action: Group,
+    },
     Release {
         #[clap(subcommand)]
         action: Release,
@@ -58,6 +62,17 @@ pub enum Device {
     ByMac {
         #[clap(index = 1, help = "Find a device by its MAC address")]
         mac_address: MacAddr6,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum Group {
+    #[clap(name = "list")]
+    List,
+    #[clap(name = "devices")]
+    Devices {
+        #[clap(index = 1, help = "List the devices in a group")]
+        name: String,
     },
 }
 

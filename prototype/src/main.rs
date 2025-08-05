@@ -6,9 +6,9 @@ use args::Args;
 use clap::Parser;
 use log::error;
 use mender_free_ext::api::dto::NewDeployment;
-use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
+use mender_free_ext::{Api, Certificate, Deployments, Devices, Groups, Login, Releases};
 
-use crate::args::{Deployment, Device, Endpoint, Release};
+use crate::args::{Deployment, Device, Endpoint, Group, Release};
 
 mod args;
 
@@ -40,7 +40,7 @@ async fn main() {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                let mut deployments = Deployments::list(&session);
+                let mut deployments = Deployments::iter(&session);
 
                 while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
@@ -62,7 +62,7 @@ async fn main() {
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                let mut devices = Devices::list(&session);
+                let mut devices = Devices::iter(&session);
 
                 while let Some(device) = devices.next().await {
                     println!("{device:?}");
@@ -77,6 +77,25 @@ async fn main() {
                     .for_each(|device| {
                         println!("Device: {device:?}");
                     });
+            }
+        },
+        Endpoint::Group { action } => match action {
+            Group::List => {
+                for group in Groups::list(&session)
+                    .await
+                    .expect("Failed to list groups.")
+                {
+                    println!("{group}");
+                }
+            }
+            Group::Devices { name } => {
+                for device_id in session
+                    .devices_of(&name)
+                    .await
+                    .expect("Failed to get devices.")
+                {
+                    println!("{device_id}");
+                }
             }
         },
         Endpoint::Release { action } => match action {
