@@ -21,6 +21,7 @@ impl Session {
     }
 }
 
+/// Crate internals.
 impl Session {
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
@@ -41,7 +42,10 @@ impl Session {
     pub(crate) fn bearer_token(&self) -> &str {
         &self.bearer_token
     }
+}
 
+/// External API.
+impl Session {
     /// Return an opaque type to proxy deployment-related operations.
     #[must_use]
     pub fn deployments(&self) -> impl Deployments {
