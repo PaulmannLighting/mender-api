@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use log::error;
-use mender_free_ext::{Api, Certificate, Devices, Login, Releases};
+use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -19,6 +19,8 @@ struct Args {
     list_devices: bool,
     #[clap(long, short = 'R', help = "List releases in the Mender server")]
     list_releases: bool,
+    #[clap(long, short = 'P', help = "List deployments in the Mender server")]
+    list_deployments: bool,
 }
 
 #[tokio::main]
@@ -45,8 +47,7 @@ async fn main() {
         .expect("Failed to login MenderServer");
 
     if args.list_devices {
-        for device in session
-            .iter()
+        for device in Devices::iter(&session)
             .await
             .expect("Failed to get Mender deployments")
         {
@@ -58,5 +59,13 @@ async fn main() {
         for release in session.list().await.expect("Failed to get releases.") {
             println!("{release:?}");
         }
+    }
+
+    if args.list_deployments {
+        let deployments =
+            Deployments::page(&session, 500.try_into().unwrap(), 1.try_into().unwrap())
+                .await
+                .expect("Failed to get releases.");
+        println!("{deployments}");
     }
 }

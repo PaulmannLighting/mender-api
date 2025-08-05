@@ -13,6 +13,7 @@ mod artifact;
 mod attribute;
 mod bootloader_integration;
 mod country;
+mod deployments;
 mod device_type;
 mod devices;
 mod releases;

@@ -1,15 +1,22 @@
 //!  Implementation of the Mender server API.
 
+use std::num::NonZero;
+
+pub use deployments::Deployments;
 pub use devices::Devices;
 pub use login::Login;
 pub use releases::Releases;
 use reqwest::{Certificate, Client, Url};
 
+mod deployments;
 pub mod devices;
 pub mod dto;
 mod login;
 mod releases;
 mod session;
+
+const DEFAULT_PAGE_SIZE: NonZero<usize> =
+    NonZero::new(500).expect("Default page should be be non-zero.");
 
 /// Mender server API client.
 #[derive(Clone, Debug)]
