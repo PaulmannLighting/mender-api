@@ -1,4 +1,5 @@
 use crate::api::dto::ReleaseList;
+use crate::api::pager::Pager;
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
@@ -11,13 +12,6 @@ pub trait Releases {
 
 impl Releases for Session {
     async fn list(&self) -> reqwest::Result<ReleaseList> {
-        self.client()
-            .get(self.url(PATH))
-            .bearer_auth(self.bearer_token())
-            .send()
-            .await?
-            .error_for_status()?
-            .json()
-            .await
+        Pager::new(self, PATH).iter().await
     }
 }
