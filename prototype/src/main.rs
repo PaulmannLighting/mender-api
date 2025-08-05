@@ -6,7 +6,7 @@ use args::Args;
 use clap::Parser;
 use log::error;
 use mender_free_ext::api::dto::NewDeployment;
-use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
+use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases, async_iter};
 
 use crate::args::{Deployment, Device, Endpoint, Release};
 
@@ -14,6 +14,8 @@ mod args;
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     let args = Args::parse();
     let cert = args.certificate.and_then(|certificate| {
         read(certificate)
@@ -38,12 +40,9 @@ async fn main() {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                for deployment in Deployments::list(&session)
-                    .await
-                    .expect("Failed to get deploxments.")
-                {
+                async_iter!(deployment in Deployments::list(&session) => {
                     println!("{deployment:?}");
-                }
+                });
             }
             Deployment::Add {
                 name,
@@ -61,54 +60,34 @@ async fn main() {
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                for device in Devices::list(&session)
-                    .await
-                    .expect("Failed to get devices")
-                {
+                async_iter!( device in Devices::list(&session) => {
                     println!("{device:?}");
-                }
+                });
             }
             Device::ByMac { mac_address } => {
-                if let Some(device) = Devices::list(&session)
-                    .await
-                    .expect("Failed to get devices")
-                    .into_iter()
-                    .find_map(|device| {
-                        device.mac_address().and_then(|addr| {
-                            if addr == mac_address {
-                                Some(device)
-                            } else {
-                                None
-                            }
-                        })
-                    })
-                {
-                    println!("Device: {device:?}");
-                } else {
-                    eprintln!("Error: Device not found");
-                }
+                async_iter!(device in Devices::list(&session) => {
+                    if device.mac_address().is_some_and(|addr| addr == mac_address) {
+                        println!("Device: {device:?}");
+                    } else {
+                        eprintln!("Error: Device not found");
+                    }
+                });
             }
         },
         Endpoint::Release { action } => match action {
             Release::List => {
-                for release in Releases::list(&session)
-                    .await
-                    .expect("Failed to get releases.")
-                {
+                async_iter!(release in  Releases::list(&session) => {
                     println!("{release:?}");
-                }
+                });
             }
             Release::ByName { name } => {
-                if let Some(release) = Releases::list(&session)
-                    .await
-                    .expect("Failed to get releases.")
-                    .into_iter()
-                    .find(|release| release.name() == name)
-                {
-                    println!("Release: {release:?}");
-                } else {
-                    eprintln!("Error: Release not found");
-                }
+                async_iter!(release in Releases::list(&session) => {
+                    if release.name() == name {
+                        println!("Release: {release:?}");
+                    } else {
+                        eprintln!("Error: Release not found");
+                    }
+                });
             }
         },
     }
