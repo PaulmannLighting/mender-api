@@ -47,7 +47,7 @@ async fn main() {
         .expect("Failed to login MenderServer");
 
     if args.list_devices {
-        for device in Devices::iter(&session)
+        for device in Devices::list(&session)
             .await
             .expect("Failed to get Mender deployments")
         {
@@ -56,16 +56,20 @@ async fn main() {
     }
 
     if args.list_releases {
-        for release in session.list().await.expect("Failed to get releases.") {
+        for release in Releases::list(&session)
+            .await
+            .expect("Failed to get releases.")
+        {
             println!("{release:?}");
         }
     }
 
     if args.list_deployments {
-        let deployments =
-            Deployments::page(&session, 500.try_into().unwrap(), 1.try_into().unwrap())
-                .await
-                .expect("Failed to get releases.");
-        println!("{deployments}");
+        for deployment in Deployments::list(&session)
+            .await
+            .expect("Failed to get releases.")
+        {
+            println!("{deployment:?}");
+        }
     }
 }

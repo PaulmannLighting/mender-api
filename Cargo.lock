@@ -643,6 +643,8 @@ dependencies = [
  "ipnet",
  "log",
  "macaddr",
+ "num-derive",
+ "num-traits",
  "reqwest",
  "semver",
  "serde",
@@ -668,6 +670,17 @@ dependencies = [
  "libc",
  "wasi 0.11.1+wasi-snapshot-preview1",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "num-derive"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed3955f1a9c7c0c15e092f9c887db08b1fc683305fdf6eb6684f22555355e202"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
