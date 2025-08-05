@@ -24,8 +24,8 @@ impl Deployments for Session {
     async fn create(&self, deployment: &NewDeployment) -> reqwest::Result<String> {
         self.client()
             .post(self.url(PATH))
-            .json(deployment)
             .bearer_auth(self.bearer_token())
+            .json(deployment)
             .send()
             .await?
             .error_for_status()?
