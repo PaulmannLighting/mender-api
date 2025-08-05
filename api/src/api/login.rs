@@ -5,7 +5,7 @@ use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/useradm/auth/login";
 
-/// User administration API.
+/// User login API.
 pub trait Login {
     /// Log in to the Mender server with the given username and password.
     ///

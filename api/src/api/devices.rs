@@ -6,7 +6,7 @@ use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
 
-/// Inventory API.
+/// Devices management API.
 pub trait Devices {
     /// List devices.
     fn list(&self) -> impl Future<Output = reqwest::Result<DeviceList>> + Send;

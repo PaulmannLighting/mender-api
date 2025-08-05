@@ -4,6 +4,7 @@ use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
+/// Deployments management API.
 pub trait Deployments {
     /// List deployments.
     fn list(&self) -> impl Future<Output = reqwest::Result<DeploymentList>> + Send;

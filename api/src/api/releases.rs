@@ -3,7 +3,7 @@ use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 
-/// Trait to manage releases in the mender server API.
+/// Releases management API.
 pub trait Releases {
     /// List all releases available in the Mender server.
     fn list(&self) -> impl Future<Output = reqwest::Result<ReleaseList>>;
