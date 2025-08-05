@@ -22,7 +22,7 @@ pub enum Endpoint {
         #[clap(subcommand)]
         action: Deployment,
     },
-    Devices {
+    Device {
         #[clap(subcommand)]
         action: Device,
     },

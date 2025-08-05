@@ -46,7 +46,7 @@ async fn main() {
             }
             Deployment::Add { .. } => todo!(),
         },
-        Endpoint::Devices { action } => match action {
+        Endpoint::Device { action } => match action {
             Device::List => {
                 for device in Devices::list(&session)
                     .await
