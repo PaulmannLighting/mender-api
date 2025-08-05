@@ -21,9 +21,7 @@ async fn main() -> ExitCode {
 
 async fn run(args: Args) -> Result<(), ExitCode> {
     let cert = args.certificate()?;
-
     let server = Api::new("https://mender-acc.paulmann.com".parse().or_bail()?, cert).or_bail()?;
-
     let session = server.login(args.username, args.password).await.or_bail()?;
 
     match args.endpoint {
