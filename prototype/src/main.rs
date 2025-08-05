@@ -98,6 +98,18 @@ async fn main() {
                     println!("{release:?}");
                 }
             }
+            Release::ByName { name } => {
+                if let Some(release) = Releases::list(&session)
+                    .await
+                    .expect("Failed to get releases.")
+                    .into_iter()
+                    .find(|release| release.name() == name)
+                {
+                    println!("Release: {release:?}");
+                } else {
+                    eprintln!("Error: Release not found");
+                }
+            }
         },
     }
 }

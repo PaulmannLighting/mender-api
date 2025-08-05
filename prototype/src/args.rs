@@ -65,4 +65,9 @@ pub enum Device {
 pub enum Release {
     #[clap(name = "list")]
     List,
+    #[clap(name = "by-name")]
+    ByName {
+        #[clap(index = 1, help = "Find a release by its name")]
+        name: String,
+    },
 }
