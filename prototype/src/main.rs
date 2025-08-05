@@ -6,7 +6,7 @@ use args::Args;
 use clap::Parser;
 use log::error;
 use mender_free_ext::api::dto::NewDeployment;
-use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases, async_iter};
+use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Release};
 
@@ -40,9 +40,11 @@ async fn main() {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                async_iter!(deployment in Deployments::list(&session) => {
+                let mut deployments = Deployments::list(&session);
+
+                while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
-                });
+                }
             }
             Deployment::Add {
                 name,
@@ -60,34 +62,40 @@ async fn main() {
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                async_iter!( device in Devices::list(&session) => {
+                let mut devices = Devices::list(&session);
+
+                while let Some(device) = devices.next().await {
                     println!("{device:?}");
-                });
+                }
             }
             Device::ByMac { mac_address } => {
-                async_iter!(device in Devices::list(&session) => {
-                    if device.mac_address().is_some_and(|addr| addr == mac_address) {
+                Devices::collect(&session)
+                    .await
+                    .expect("Failed to collect devices.")
+                    .into_iter()
+                    .filter(|device| device.mac_address().is_some_and(|addr| addr == mac_address))
+                    .for_each(|device| {
                         println!("Device: {device:?}");
-                    } else {
-                        eprintln!("Error: Device not found");
-                    }
-                });
+                    });
             }
         },
         Endpoint::Release { action } => match action {
             Release::List => {
-                async_iter!(release in  Releases::list(&session) => {
+                let mut releases = Releases::list(&session);
+
+                while let Some(release) = releases.next().await {
                     println!("{release:?}");
-                });
+                }
             }
             Release::ByName { name } => {
-                async_iter!(release in Releases::list(&session) => {
-                    if release.name() == name {
+                Releases::collect(&session)
+                    .await
+                    .expect("Failed to collect releases")
+                    .into_iter()
+                    .filter(|release| release.name() == name)
+                    .for_each(|release| {
                         println!("Release: {release:?}");
-                    } else {
-                        eprintln!("Error: Release not found");
-                    }
-                });
+                    });
             }
         },
     }
