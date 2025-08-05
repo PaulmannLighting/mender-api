@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 use std::num::NonZero;
 use std::vec::IntoIter;
 
-use log::{debug, error};
+use log::error;
 use serde::Deserialize;
 
 use crate::api::DEFAULT_PAGE_SIZE;
@@ -105,14 +105,10 @@ where
 {
     /// Return the next item in the iterator, fetching a new page if necessary.
     pub async fn next(&mut self) -> Option<T> {
-        debug!("Next item in iterator.");
-
         if let Some(item) = self.current_page.as_mut().and_then(Iterator::next) {
-            debug!("Next page item from current page.");
             return Some(item);
         }
 
-        debug!("Fetching next page: {}", self.page_no);
         let mut next_page = self
             .pager
             .page(self.page_no)
@@ -121,11 +117,9 @@ where
             .ok()?
             .into_iter();
 
-        debug!("Fetching next item from page.");
         let item = next_page.next()?;
         self.current_page.replace(next_page);
         self.page_no = self.page_no.saturating_add(1);
-        debug!("Next page item from fetched page.");
         Some(item)
     }
 }
