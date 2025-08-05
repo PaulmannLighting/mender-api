@@ -31,6 +31,7 @@ pub struct Deployment {
 
 impl Deployment {
     /// Creates a new `Deployment` instance.
+    #[allow(clippy::too_many_arguments)]
     #[must_use]
     pub const fn new(
         name: String,

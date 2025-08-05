@@ -12,6 +12,7 @@ mod deployments;
 pub mod devices;
 pub mod dto;
 mod login;
+mod pager;
 mod releases;
 mod session;
 

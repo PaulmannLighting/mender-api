@@ -1,66 +1,19 @@
 //! Devices management API.
 
-use std::num::NonZero;
-
-use log::debug;
-
-use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::dto::DeviceList;
+use crate::api::pager::Pager;
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Inventory API.
 pub trait Devices {
-    /// Return the devices API interface.
-    fn page(
-        &self,
-        page_size: NonZero<usize>,
-        page_no: NonZero<usize>,
-    ) -> impl Future<Output = reqwest::Result<DeviceList>> + Send;
-
-    /// Iterate over all pages with the specified page size,
-    #[allow(async_fn_in_trait)]
-    async fn iter_sized(&self, page_size: NonZero<usize>) -> reqwest::Result<DeviceList> {
-        let mut devices = DeviceList::new();
-
-        for page_no in (1..).filter_map(NonZero::new) {
-            debug!("Fetching devices page #{page_no} with size {page_size}");
-            let page = self.page(page_size, page_no).await?;
-
-            if page.len() < page_size.get() {
-                devices.extend(page);
-                break;
-            } else {
-                devices.extend(page);
-            }
-        }
-
-        Ok(devices)
-    }
-
-    /// Iterate over all pages with the default page size of 100.
-    #[allow(async_fn_in_trait)]
-    async fn iter(&self) -> reqwest::Result<DeviceList> {
-        self.iter_sized(DEFAULT_PAGE_SIZE).await
-    }
+    /// List devices.
+    fn list(&self) -> impl Future<Output = reqwest::Result<DeviceList>> + Send;
 }
 
 impl Devices for Session {
-    async fn page(
-        &self,
-        page_size: NonZero<usize>,
-        page_no: NonZero<usize>,
-    ) -> reqwest::Result<DeviceList> {
-        let mut url = self.url(PATH);
-        url.set_query(Some(&format!("per_page={page_size}&page={page_no}")));
-        self.client()
-            .get(url)
-            .bearer_auth(self.bearer_token())
-            .send()
-            .await?
-            .error_for_status()?
-            .json()
-            .await
+    async fn list(&self) -> reqwest::Result<DeviceList> {
+        Pager::new(self, PATH).iter().await
     }
 }
