@@ -5,9 +5,6 @@ use uuid::Uuid;
 use crate::api::dto::Kind;
 use crate::api::dto::deployments::Status;
 
-/// List of deployments.
-pub type DeploymentList = Vec<Deployment>;
-
 /// Represents a deployment in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize)]
 pub struct Deployment {

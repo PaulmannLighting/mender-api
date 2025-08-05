@@ -8,10 +8,17 @@ const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 pub trait Releases {
     /// List all releases available in the Mender server.
     fn list(&self) -> PageIterator<Release>;
+
+    /// Collect releases into a `Vec`.
+    fn collect(&self) -> impl Future<Output = reqwest::Result<Vec<Release>>> + Send;
 }
 
 impl Releases for Session {
     fn list(&self) -> PageIterator<Release> {
         Pager::new(self, PATH).into()
+    }
+
+    async fn collect(&self) -> reqwest::Result<Vec<Release>> {
+        Pager::new(self, PATH).collect().await
     }
 }

@@ -4,9 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::api::dto::Artifact;
 
-/// List of releases.
-pub type ReleaseList = Vec<Release>;
-
 /// Represents a release in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Release {

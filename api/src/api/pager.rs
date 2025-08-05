@@ -61,7 +61,7 @@ where
             .await
     }
     /// Iterate over all pages,
-    pub async fn iter(&self) -> reqwest::Result<Vec<T>> {
+    pub async fn collect(&self) -> reqwest::Result<Vec<T>> {
         let mut devices = Vec::new();
 
         for page_no in (1..).filter_map(NonZero::new) {
@@ -127,15 +127,5 @@ where
 impl<'session, 'path, T> From<Pager<'session, 'path, T>> for PageIterator<'session, 'path, T> {
     fn from(pager: Pager<'session, 'path, T>) -> Self {
         Self::new(pager)
-    }
-}
-
-#[macro_export]
-macro_rules! async_iter {
-    ($pattern:pat in $iter:expr => $body:block) => {
-        {
-            let mut __async_iterator = $iter;
-            while let Some($pattern) = __async_iterator.next().await $body
-        }
     }
 }

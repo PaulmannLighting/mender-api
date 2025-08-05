@@ -7,9 +7,6 @@ use uuid::Uuid;
 
 use crate::api::dto::Attribute;
 
-/// A list of devices in the Mender server.
-pub type DeviceList = Vec<Device>;
-
 /// A device in the Mender server.
 #[derive(Clone, Debug, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Device {
