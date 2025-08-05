@@ -1,5 +1,5 @@
-use crate::api::dto::ReleaseList;
-use crate::api::pager::Pager;
+use crate::api::dto::Release;
+use crate::api::pager::{PageIterator, Pager};
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
@@ -7,11 +7,11 @@ const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 /// Releases management API.
 pub trait Releases {
     /// List all releases available in the Mender server.
-    fn list(&self) -> impl Future<Output = reqwest::Result<ReleaseList>>;
+    fn list(&self) -> PageIterator<Release>;
 }
 
 impl Releases for Session {
-    async fn list(&self) -> reqwest::Result<ReleaseList> {
-        Pager::new(self, PATH).iter().await
+    fn list(&self) -> PageIterator<Release> {
+        Pager::new(self, PATH).into()
     }
 }

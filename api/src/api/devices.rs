@@ -1,7 +1,7 @@
 //! Devices management API.
 
-use crate::api::dto::DeviceList;
-use crate::api::pager::Pager;
+use crate::api::dto::Device;
+use crate::api::pager::{PageIterator, Pager};
 use crate::api::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
@@ -9,11 +9,11 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Devices management API.
 pub trait Devices {
     /// List devices.
-    fn list(&self) -> impl Future<Output = reqwest::Result<DeviceList>> + Send;
+    fn list(&self) -> PageIterator<Device>;
 }
 
 impl Devices for Session {
-    async fn list(&self) -> reqwest::Result<DeviceList> {
-        Pager::new(self, PATH).iter().await
+    fn list(&self) -> PageIterator<Device> {
+        Pager::new(self, PATH).into()
     }
 }

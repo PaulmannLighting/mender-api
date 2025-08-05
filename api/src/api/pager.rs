@@ -2,17 +2,20 @@
 
 use std::marker::PhantomData;
 use std::num::NonZero;
+use std::vec::IntoIter;
 
-use log::debug;
+use log::{debug, error};
 use serde::Deserialize;
 
 use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::session::Session;
 
 /// Generic pager.
+#[derive(Debug, Clone)]
 pub struct Pager<'session, 'path, T> {
     session: &'session Session,
     path: &'path str,
+    page_size: NonZero<usize>,
     phantom_data: PhantomData<T>,
 }
 
@@ -20,9 +23,20 @@ impl<'session, 'path, T> Pager<'session, 'path, T> {
     /// Create a new pager.
     #[must_use]
     pub const fn new(session: &'session Session, path: &'path str) -> Self {
+        Self::new_with_page_size(session, path, DEFAULT_PAGE_SIZE)
+    }
+
+    /// Create a new pager.
+    #[must_use]
+    pub const fn new_with_page_size(
+        session: &'session Session,
+        path: &'path str,
+        page_size: NonZero<usize>,
+    ) -> Self {
         Self {
             session,
             path,
+            page_size,
             phantom_data: PhantomData,
         }
     }
@@ -33,13 +47,9 @@ where
     for<'a> T: Deserialize<'a>,
 {
     /// Return the given page.
-    pub async fn page(
-        &self,
-        page_size: NonZero<usize>,
-        page_no: NonZero<usize>,
-    ) -> reqwest::Result<Vec<T>> {
+    pub async fn page(&self, page_no: NonZero<usize>) -> reqwest::Result<Vec<T>> {
         let mut url = self.session.url(self.path);
-        url.set_query(Some(&format!("per_page={page_size}&page={page_no}")));
+        url.set_query(Some(&format!("per_page={}&page={page_no}", self.page_size)));
         self.session
             .client()
             .get(url)
@@ -50,15 +60,14 @@ where
             .json()
             .await
     }
-    /// Iterate over all pages with the specified page size,
-    pub async fn iter_sized(&self, page_size: NonZero<usize>) -> reqwest::Result<Vec<T>> {
+    /// Iterate over all pages,
+    pub async fn iter(&self) -> reqwest::Result<Vec<T>> {
         let mut devices = Vec::new();
 
         for page_no in (1..).filter_map(NonZero::new) {
-            debug!("Fetching devices page #{page_no} with size {page_size}");
-            let page = self.page(page_size, page_no).await?;
+            let page = self.page(page_no).await?;
 
-            if page.len() < page_size.get() {
+            if page.len() < self.page_size.get() {
                 devices.extend(page);
                 break;
             } else {
@@ -68,9 +77,71 @@ where
 
         Ok(devices)
     }
+}
 
-    /// Iterate over all pages with the default page size.
-    pub async fn iter(&self) -> reqwest::Result<Vec<T>> {
-        self.iter_sized(DEFAULT_PAGE_SIZE).await
+/// Iterator for paginated results.
+#[derive(Debug, Clone)]
+pub struct PageIterator<'session, 'path, T> {
+    pager: Pager<'session, 'path, T>,
+    page_no: NonZero<usize>,
+    current_page: Option<IntoIter<T>>,
+}
+
+impl<'session, 'path, T> PageIterator<'session, 'path, T> {
+    /// Create a new page iterator with the given page size.
+    #[must_use]
+    pub(crate) const fn new(pager: Pager<'session, 'path, T>) -> Self {
+        Self {
+            pager,
+            page_no: NonZero::new(1).expect("1 is always non-zero."),
+            current_page: None,
+        }
+    }
+}
+
+impl<T> PageIterator<'_, '_, T>
+where
+    for<'a> T: Deserialize<'a>,
+{
+    /// Return the next item in the iterator, fetching a new page if necessary.
+    pub async fn next(&mut self) -> Option<T> {
+        debug!("Next item in iterator.");
+
+        if let Some(item) = self.current_page.as_mut().and_then(Iterator::next) {
+            debug!("Next page item from current page.");
+            return Some(item);
+        }
+
+        debug!("Fetching next page: {}", self.page_no);
+        let mut next_page = self
+            .pager
+            .page(self.page_no)
+            .await
+            .inspect_err(|error| error!("{error}"))
+            .ok()?
+            .into_iter();
+
+        debug!("Fetching next item from page.");
+        let item = next_page.next()?;
+        self.current_page.replace(next_page);
+        self.page_no = self.page_no.saturating_add(1);
+        debug!("Next page item from fetched page.");
+        Some(item)
+    }
+}
+
+impl<'session, 'path, T> From<Pager<'session, 'path, T>> for PageIterator<'session, 'path, T> {
+    fn from(pager: Pager<'session, 'path, T>) -> Self {
+        Self::new(pager)
+    }
+}
+
+#[macro_export]
+macro_rules! async_iter {
+    ($pattern:pat in $iter:expr => $body:block) => {
+        {
+            let mut __async_iterator = $iter;
+            while let Some($pattern) = __async_iterator.next().await $body
+        }
     }
 }
