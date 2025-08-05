@@ -11,6 +11,7 @@ use reqwest::{Certificate, Client, Url};
 mod deployments;
 pub mod devices;
 pub mod dto;
+mod groups;
 mod login;
 mod pager;
 mod releases;

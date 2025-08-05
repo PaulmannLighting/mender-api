@@ -1,11 +1,14 @@
 //! Data structures for listing devices.
 
 use chrono::{DateTime, FixedOffset};
+pub use group::Group;
 use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::api::dto::Attribute;
+
+mod group;
 
 /// A device in the Mender server.
 #[derive(Clone, Debug, Hash, PartialEq, Deserialize, Serialize)]

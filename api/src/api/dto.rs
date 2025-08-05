@@ -8,7 +8,7 @@ pub use deployments::list::Deployment as ListDeployment;
 pub use deployments::new::Deployment as NewDeployment;
 pub use deployments::{Kind, Status as DeploymentStatus};
 pub use device_type::DeviceType;
-pub use devices::Device;
+pub use devices::{Device, Group as DeviceGroup};
 pub use releases::Release;
 pub use rootfs_type::RootfsType;
 
