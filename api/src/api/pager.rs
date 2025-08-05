@@ -7,7 +7,6 @@ use std::vec::IntoIter;
 use log::error;
 use serde::Deserialize;
 
-use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::session::Session;
 
 /// Generic pager.
