@@ -5,26 +5,26 @@ use crate::api::session::Session;
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
 /// Deployments management API.
-pub trait Deployments {
+pub trait Deployments<'a> {
     /// List deployments.
-    fn iter(&self) -> PageIterator<ListDeployment>;
+    fn iter(self) -> PageIterator<'a, 'static, ListDeployment>;
 
     /// Create a new deployment.
     fn create(
-        &self,
+        self,
         deployment: &NewDeployment,
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
 
     /// Collect deployments into a `Vec`.
-    fn collect(&self) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
+    fn collect(self) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 }
 
-impl Deployments for Session {
-    fn iter(&self) -> PageIterator<ListDeployment> {
+impl<'session> Deployments<'session> for &'session Session {
+    fn iter(self) -> PageIterator<'session, 'static, ListDeployment> {
         Pager::new(self, PATH).into()
     }
 
-    async fn create(&self, deployment: &NewDeployment) -> reqwest::Result<String> {
+    async fn create(self, deployment: &NewDeployment) -> reqwest::Result<String> {
         self.client()
             .post(self.url(PATH))
             .bearer_auth(self.bearer_token())
@@ -36,7 +36,7 @@ impl Deployments for Session {
             .await
     }
 
-    async fn collect(&self) -> reqwest::Result<Vec<ListDeployment>> {
+    async fn collect(self) -> reqwest::Result<Vec<ListDeployment>> {
         Pager::new(self, PATH).collect().await
     }
 }

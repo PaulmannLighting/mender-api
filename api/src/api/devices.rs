@@ -12,27 +12,27 @@ mod proxy;
 const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Devices management API.
-pub trait Devices {
+pub trait Devices<'a> {
     /// List devices.
-    fn iter(&self) -> PageIterator<Device>;
+    fn iter(self) -> PageIterator<'a, 'static, Device>;
 
     /// Collect devices into a `Vec`.
-    fn collect(&self) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
+    fn collect(self) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
     /// Return a proxy object to manage the device with the specified ID.
-    fn device(&self, id: Uuid) -> Proxy;
+    fn device(self, id: Uuid) -> Proxy<'a>;
 }
 
-impl Devices for Session {
-    fn iter(&self) -> PageIterator<Device> {
+impl<'session> Devices<'session> for &'session Session {
+    fn iter(self) -> PageIterator<'session, 'static, Device> {
         Pager::new(self, PATH).into()
     }
 
-    async fn collect(&self) -> reqwest::Result<Vec<Device>> {
+    async fn collect(self) -> reqwest::Result<Vec<Device>> {
         Pager::new(self, PATH).collect().await
     }
 
-    fn device(&self, id: Uuid) -> Proxy {
+    fn device(self, id: Uuid) -> Proxy<'session> {
         Proxy::new(self, id)
     }
 }
