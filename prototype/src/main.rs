@@ -13,7 +13,6 @@ use crate::util::{IntoExitCode, OrBail};
 mod args;
 mod util;
 
-#[allow(clippy::too_many_lines)]
 #[tokio::main]
 async fn main() -> ExitCode {
     env_logger::init();
