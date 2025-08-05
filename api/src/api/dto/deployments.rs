@@ -18,12 +18,13 @@ pub struct Deployment {
     name: String,
     artifact_name: String,
     created: DateTime<FixedOffset>,
-    finished: DateTime<FixedOffset>,
+    finished: Option<DateTime<FixedOffset>>,
     id: Uuid,
     artifacts: Vec<Uuid>,
     status: Status,
     device_count: usize,
     max_devices: usize,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     groups: Vec<String>,
     #[serde(rename = "type")]
     kind: Kind,
@@ -37,7 +38,7 @@ impl Deployment {
         name: String,
         artifact_name: String,
         created: DateTime<FixedOffset>,
-        finished: DateTime<FixedOffset>,
+        finished: Option<DateTime<FixedOffset>>,
         id: Uuid,
         artifacts: Vec<Uuid>,
         status: Status,
@@ -81,7 +82,7 @@ impl Deployment {
 
     /// Returns the finish date of the deployment.
     #[must_use]
-    pub fn finished(&self) -> DateTime<FixedOffset> {
+    pub fn finished(&self) -> Option<DateTime<FixedOffset>> {
         self.finished
     }
 
