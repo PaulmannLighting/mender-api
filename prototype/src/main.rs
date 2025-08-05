@@ -15,10 +15,16 @@ mod or_bail;
 
 #[allow(clippy::too_many_lines)]
 #[tokio::main]
-async fn main() -> Result<(), ExitCode> {
+async fn main() -> ExitCode {
     env_logger::init();
 
-    let args = Args::parse();
+    match run(Args::parse()).await {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(exit_code) => exit_code,
+    }
+}
+
+async fn run(args: Args) -> Result<(), ExitCode> {
     let cert = args.certificate()?;
 
     let server = Api::new("https://mender-acc.paulmann.com".parse().or_bail()?, cert).or_bail()?;
