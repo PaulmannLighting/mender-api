@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+use macaddr::MacAddr6;
 use uuid::Uuid;
 
 #[derive(Debug, Parser)]
@@ -53,6 +54,11 @@ pub enum Deployment {
 pub enum Device {
     #[clap(name = "list")]
     List,
+    #[clap(name = "by-mac")]
+    ByMac {
+        #[clap(index = 1, help = "Find a device by its MAC address")]
+        mac_address: MacAddr6,
+    },
 }
 
 #[derive(Debug, Subcommand)]

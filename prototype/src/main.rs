@@ -40,7 +40,7 @@ async fn main() {
             Deployment::List => {
                 for deployment in Deployments::list(&session)
                     .await
-                    .expect("Failed to get releases.")
+                    .expect("Failed to get deploxments.")
                 {
                     println!("{deployment:?}");
                 }
@@ -63,9 +63,29 @@ async fn main() {
             Device::List => {
                 for device in Devices::list(&session)
                     .await
-                    .expect("Failed to get Mender deployments")
+                    .expect("Failed to get devices")
                 {
                     println!("{device:?}");
+                }
+            }
+            Device::ByMac { mac_address } => {
+                if let Some(device) = Devices::list(&session)
+                    .await
+                    .expect("Failed to get devices")
+                    .into_iter()
+                    .find_map(|device| {
+                        device.mac_address().and_then(|addr| {
+                            if addr == mac_address {
+                                Some(device)
+                            } else {
+                                None
+                            }
+                        })
+                    })
+                {
+                    println!("Device: {device:?}");
+                } else {
+                    eprintln!("Error: Device not found");
                 }
             }
         },

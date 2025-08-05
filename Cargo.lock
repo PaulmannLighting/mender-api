@@ -764,6 +764,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "log",
+ "macaddr",
  "mender-free-ext",
  "tokio",
  "uuid",
