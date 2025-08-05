@@ -60,7 +60,7 @@ impl Session {
         self
     }
 
-    /// Return an opaque type to proxy groups-related operations.
+    /// Return an opaque type to proxy releases-related operations.
     #[must_use]
     pub fn releases(&self) -> impl Releases {
         self
