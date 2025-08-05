@@ -14,6 +14,9 @@ pub trait Deployments {
         &self,
         deployment: &NewDeployment,
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
+
+    /// Collect deployments into a `Vec`.
+    fn collect(&self) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 }
 
 impl Deployments for Session {
@@ -31,5 +34,9 @@ impl Deployments for Session {
             .error_for_status()?
             .text()
             .await
+    }
+
+    async fn collect(&self) -> reqwest::Result<Vec<ListDeployment>> {
+        Pager::new(self, PATH).collect().await
     }
 }

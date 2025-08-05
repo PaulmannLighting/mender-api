@@ -40,6 +40,12 @@ async fn main() {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
+                for deployment in Deployments::collect(&session)
+                    .await
+                    .expect("Failed to collect deployments")
+                {
+                    println!("{deployment:?}");
+                }
                 let mut deployments = Deployments::list(&session);
 
                 while let Some(deployment) = deployments.next().await {
