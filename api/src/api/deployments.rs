@@ -7,7 +7,7 @@ const PATH: &str = "/api/management/v1/deployments/deployments";
 /// Deployments management API.
 pub trait Deployments {
     /// List deployments.
-    fn list(&self) -> PageIterator<ListDeployment>;
+    fn iter(&self) -> PageIterator<ListDeployment>;
 
     /// Create a new deployment.
     fn create(
@@ -20,7 +20,7 @@ pub trait Deployments {
 }
 
 impl Deployments for Session {
-    fn list(&self) -> PageIterator<ListDeployment> {
+    fn iter(&self) -> PageIterator<ListDeployment> {
         Pager::new(self, PATH).into()
     }
 

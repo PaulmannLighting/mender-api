@@ -14,7 +14,7 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Devices management API.
 pub trait Devices {
     /// List devices.
-    fn list(&self) -> PageIterator<Device>;
+    fn iter(&self) -> PageIterator<Device>;
 
     /// Collect devices into a `Vec`.
     fn collect(&self) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
@@ -24,7 +24,7 @@ pub trait Devices {
 }
 
 impl Devices for Session {
-    fn list(&self) -> PageIterator<Device> {
+    fn iter(&self) -> PageIterator<Device> {
         Pager::new(self, PATH).into()
     }
 

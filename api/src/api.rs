@@ -4,6 +4,7 @@ use std::num::NonZero;
 
 pub use deployments::Deployments;
 pub use devices::Devices;
+pub use groups::Groups;
 pub use login::Login;
 pub use releases::Releases;
 use reqwest::{Certificate, Client, Url};
