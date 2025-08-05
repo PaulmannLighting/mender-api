@@ -1,3 +1,6 @@
+use std::num::NonZero;
+
+use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::dto::Release;
 use crate::api::pager::{PageIterator, Pager};
 use crate::api::session::Session;
@@ -7,18 +10,23 @@ const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 /// Releases management API.
 pub trait Releases<'a> {
     /// List all releases available in the Mender server.
-    fn list(self) -> PageIterator<'a, 'static, Release>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Release>;
 
     /// Collect releases into a `Vec`.
-    fn collect(self) -> impl Future<Output = reqwest::Result<Vec<Release>>> + Send;
+    fn collect(
+        self,
+        page_size: Option<NonZero<usize>>,
+    ) -> impl Future<Output = reqwest::Result<Vec<Release>>> + Send;
 }
 
 impl<'session> Releases<'session> for &'session Session {
-    fn list(self) -> PageIterator<'session, 'static, Release> {
-        Pager::new(self, PATH).into()
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Release> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
-    async fn collect(self) -> reqwest::Result<Vec<Release>> {
-        Pager::new(self, PATH).collect().await
+    async fn collect(self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Release>> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
+            .collect()
+            .await
     }
 }

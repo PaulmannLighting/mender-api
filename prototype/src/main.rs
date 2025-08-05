@@ -27,7 +27,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                let mut deployments = session.deployments().iter();
+                let mut deployments = session.deployments().iter(None);
 
                 while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
@@ -48,7 +48,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                let mut devices = session.devices().iter();
+                let mut devices = session.devices().iter(None);
 
                 while let Some(device) = devices.next().await {
                     println!("{device:?}");
@@ -57,7 +57,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             Device::ByMac { mac_address } => {
                 session
                     .devices()
-                    .collect()
+                    .collect(None)
                     .await
                     .or_bail()?
                     .into_iter()
@@ -74,14 +74,14 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 }
             }
             Group::Devices { name } => {
-                for device_id in session.groups().devices_of(&name).await.or_bail()? {
+                for device_id in session.groups().devices_of(&name, None).await.or_bail()? {
                     println!("{device_id}");
                 }
             }
         },
         Endpoint::Release { action } => match action {
             Release::List => {
-                let mut releases = session.releases().list();
+                let mut releases = session.releases().list(None);
 
                 while let Some(release) = releases.next().await {
                     println!("{release:?}");
@@ -90,7 +90,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             Release::ByName { name } => {
                 session
                     .releases()
-                    .collect()
+                    .collect(None)
                     .await
                     .or_bail()?
                     .into_iter()

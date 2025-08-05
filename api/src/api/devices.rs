@@ -1,8 +1,11 @@
 //! Devices management API.
 
+use std::num::NonZero;
+
 use proxy::Proxy;
 use uuid::Uuid;
 
+use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::dto::Device;
 use crate::api::pager::{PageIterator, Pager};
 use crate::api::session::Session;
@@ -14,22 +17,27 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Devices management API.
 pub trait Devices<'a> {
     /// List devices.
-    fn iter(self) -> PageIterator<'a, 'static, Device>;
+    fn iter(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Device>;
 
     /// Collect devices into a `Vec`.
-    fn collect(self) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
+    fn collect(
+        self,
+        page_size: Option<NonZero<usize>>,
+    ) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
     /// Return a proxy object to manage the device with the specified ID.
     fn device(self, id: Uuid) -> Proxy<'a>;
 }
 
 impl<'session> Devices<'session> for &'session Session {
-    fn iter(self) -> PageIterator<'session, 'static, Device> {
-        Pager::new(self, PATH).into()
+    fn iter(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
-    async fn collect(self) -> reqwest::Result<Vec<Device>> {
-        Pager::new(self, PATH).collect().await
+    async fn collect(self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Device>> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
+            .collect()
+            .await
     }
 
     fn device(self, id: Uuid) -> Proxy<'session> {

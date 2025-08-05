@@ -22,13 +22,7 @@ pub struct Pager<'session, 'path, T> {
 impl<'session, 'path, T> Pager<'session, 'path, T> {
     /// Create a new pager.
     #[must_use]
-    pub const fn new(session: &'session Session, path: &'path str) -> Self {
-        Self::new_with_page_size(session, path, DEFAULT_PAGE_SIZE)
-    }
-
-    /// Create a new pager.
-    #[must_use]
-    pub const fn new_with_page_size(
+    pub const fn new(
         session: &'session Session,
         path: &'path str,
         page_size: NonZero<usize>,

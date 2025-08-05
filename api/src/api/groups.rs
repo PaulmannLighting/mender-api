@@ -1,5 +1,8 @@
+use std::num::NonZero;
+
 use uuid::Uuid;
 
+use crate::api::DEFAULT_PAGE_SIZE;
 use crate::api::pager::Pager;
 use crate::api::session::Session;
 
@@ -14,6 +17,7 @@ pub trait Groups {
     fn devices_of(
         self,
         group_name: &str,
+        page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 }
 
@@ -29,9 +33,17 @@ impl Groups for &Session {
             .await
     }
 
-    async fn devices_of(self, group_name: &str) -> reqwest::Result<Vec<Uuid>> {
-        Pager::new(self, &format!("{PATH}/{group_name}/devices"))
-            .collect()
-            .await
+    async fn devices_of(
+        self,
+        group_name: &str,
+        page_size: Option<NonZero<usize>>,
+    ) -> reqwest::Result<Vec<Uuid>> {
+        Pager::new(
+            self,
+            &format!("{PATH}/{group_name}/devices"),
+            page_size.unwrap_or(DEFAULT_PAGE_SIZE),
+        )
+        .collect()
+        .await
     }
 }
