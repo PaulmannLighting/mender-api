@@ -1,27 +1,15 @@
 //! Prototype for testing the API.
 
 use std::fs::read;
-use std::path::PathBuf;
 
+use args::Args;
 use clap::Parser;
 use log::error;
 use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
 
-#[derive(Debug, Parser)]
-struct Args {
-    #[clap(index = 1, help = "Username for Mender server login")]
-    username: String,
-    #[clap(index = 2, help = "Password for Mender server login")]
-    password: String,
-    #[clap(long, short, help = "Path to the certificate file (optional)")]
-    certificate: Option<PathBuf>,
-    #[clap(long, short = 'D', help = "List devices in the Mender server")]
-    list_devices: bool,
-    #[clap(long, short = 'R', help = "List releases in the Mender server")]
-    list_releases: bool,
-    #[clap(long, short = 'P', help = "List deployments in the Mender server")]
-    list_deployments: bool,
-}
+use crate::args::{Deployment, Device, Endpoint, Release};
+
+mod args;
 
 #[tokio::main]
 async fn main() {
@@ -46,30 +34,37 @@ async fn main() {
         .await
         .expect("Failed to login MenderServer");
 
-    if args.list_devices {
-        for device in Devices::list(&session)
-            .await
-            .expect("Failed to get Mender deployments")
-        {
-            println!("{device:?}");
-        }
-    }
-
-    if args.list_releases {
-        for release in Releases::list(&session)
-            .await
-            .expect("Failed to get releases.")
-        {
-            println!("{release:?}");
-        }
-    }
-
-    if args.list_deployments {
-        for deployment in Deployments::list(&session)
-            .await
-            .expect("Failed to get releases.")
-        {
-            println!("{deployment:?}");
-        }
+    match args.endpoint {
+        Endpoint::Deployment { action } => match action {
+            Deployment::List => {
+                for deployment in Deployments::list(&session)
+                    .await
+                    .expect("Failed to get releases.")
+                {
+                    println!("{deployment:?}");
+                }
+            }
+            Deployment::Add { .. } => todo!(),
+        },
+        Endpoint::Devices { action } => match action {
+            Device::List => {
+                for device in Devices::list(&session)
+                    .await
+                    .expect("Failed to get Mender deployments")
+                {
+                    println!("{device:?}");
+                }
+            }
+        },
+        Endpoint::Release { action } => match action {
+            Release::List => {
+                for release in Releases::list(&session)
+                    .await
+                    .expect("Failed to get releases.")
+                {
+                    println!("{release:?}");
+                }
+            }
+        },
     }
 }

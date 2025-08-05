@@ -766,6 +766,7 @@ dependencies = [
  "log",
  "mender-free-ext",
  "tokio",
+ "uuid",
 ]
 
 [[package]]
