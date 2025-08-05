@@ -29,7 +29,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                let mut deployments = Deployments::iter(&session);
+                let mut deployments = session.deployments().iter();
 
                 while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
@@ -41,24 +41,25 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 devices,
                 retries,
             } => {
-                Deployments::create(
-                    &session,
-                    &NewDeployment::new(name, artifact_name, devices, retries),
-                )
-                .await
-                .or_bail()?;
+                session
+                    .deployments()
+                    .create(&NewDeployment::new(name, artifact_name, devices, retries))
+                    .await
+                    .or_bail()?;
             }
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                let mut devices = Devices::iter(&session);
+                let mut devices = session.devices().iter();
 
                 while let Some(device) = devices.next().await {
                     println!("{device:?}");
                 }
             }
             Device::ByMac { mac_address } => {
-                Devices::collect(&session)
+                session
+                    .devices()
+                    .collect()
                     .await
                     .or_bail()?
                     .into_iter()
@@ -70,26 +71,28 @@ async fn run(args: Args) -> Result<(), ExitCode> {
         },
         Endpoint::Group { action } => match action {
             Group::List => {
-                for group in Groups::list(&session).await.or_bail()? {
+                for group in session.groups().list().await.or_bail()? {
                     println!("{group}");
                 }
             }
             Group::Devices { name } => {
-                for device_id in session.devices_of(&name).await.or_bail()? {
+                for device_id in session.groups().devices_of(&name).await.or_bail()? {
                     println!("{device_id}");
                 }
             }
         },
         Endpoint::Release { action } => match action {
             Release::List => {
-                let mut releases = Releases::list(&session);
+                let mut releases = session.releases().list();
 
                 while let Some(release) = releases.next().await {
                     println!("{release:?}");
                 }
             }
             Release::ByName { name } => {
-                Releases::collect(&session)
+                session
+                    .releases()
+                    .collect()
                     .await
                     .or_bail()?
                     .into_iter()
