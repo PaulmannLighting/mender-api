@@ -5,6 +5,7 @@ use std::fs::read;
 use args::Args;
 use clap::Parser;
 use log::error;
+use mender_free_ext::api::dto::NewDeployment;
 use mender_free_ext::{Api, Certificate, Deployments, Devices, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Release};
@@ -44,7 +45,19 @@ async fn main() {
                     println!("{deployment:?}");
                 }
             }
-            Deployment::Add { .. } => todo!(),
+            Deployment::Add {
+                name,
+                artifact_name,
+                devices,
+                retries,
+            } => {
+                Deployments::create(
+                    &session,
+                    &NewDeployment::new(name, artifact_name, devices, retries),
+                )
+                .await
+                .expect("Failed to create deployment");
+            }
         },
         Endpoint::Device { action } => match action {
             Device::List => {
