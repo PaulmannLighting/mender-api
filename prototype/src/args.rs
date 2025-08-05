@@ -8,7 +8,7 @@ use macaddr::MacAddr6;
 use mender_free_ext::Certificate;
 use uuid::Uuid;
 
-use crate::or_bail::OrBail;
+use crate::util::OrBail;
 
 #[derive(Debug, Parser)]
 pub struct Args {

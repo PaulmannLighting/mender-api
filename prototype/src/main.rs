@@ -8,20 +8,16 @@ use mender_free_ext::api::dto::NewDeployment;
 use mender_free_ext::{Api, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Group, Release};
-use crate::or_bail::OrBail;
+use crate::util::{IntoExitCode, OrBail};
 
 mod args;
-mod or_bail;
+mod util;
 
 #[allow(clippy::too_many_lines)]
 #[tokio::main]
 async fn main() -> ExitCode {
     env_logger::init();
-
-    match run(Args::parse()).await {
-        Ok(_) => ExitCode::SUCCESS,
-        Err(exit_code) => exit_code,
-    }
+    run(Args::parse()).await.into_exit_code()
 }
 
 async fn run(args: Args) -> Result<(), ExitCode> {

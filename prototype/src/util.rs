@@ -16,3 +16,16 @@ where
             .map_err(|_| ExitCode::FAILURE)
     }
 }
+
+pub trait IntoExitCode {
+    fn into_exit_code(self) -> ExitCode;
+}
+
+impl IntoExitCode for Result<(), ExitCode> {
+    fn into_exit_code(self) -> ExitCode {
+        match self {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(exit_code) => exit_code,
+        }
+    }
+}
