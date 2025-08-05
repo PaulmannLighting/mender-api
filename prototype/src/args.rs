@@ -1,8 +1,14 @@
+use std::fs::read;
 use std::path::PathBuf;
+use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
+use log::error;
 use macaddr::MacAddr6;
+use mender_free_ext::Certificate;
 use uuid::Uuid;
+
+use crate::or_bail::OrBail;
 
 #[derive(Debug, Parser)]
 pub struct Args {
@@ -14,6 +20,21 @@ pub struct Args {
     pub certificate: Option<PathBuf>,
     #[clap(subcommand)]
     pub endpoint: Endpoint,
+}
+
+impl Args {
+    /// Read the certificate file if it exists and parse it into a `Certificate`.
+    pub fn certificate(&self) -> Result<Option<Certificate>, ExitCode> {
+        self.certificate
+            .as_ref()
+            .and_then(|certificate| {
+                read(certificate)
+                    .inspect_err(|error| error!("Failed to read certificate file: {error}"))
+                    .ok()
+            })
+            .map(|cert| Certificate::from_pem(&cert).or_bail())
+            .transpose()
+    }
 }
 
 #[derive(Debug, Subcommand)]

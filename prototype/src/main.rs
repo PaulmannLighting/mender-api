@@ -1,41 +1,29 @@
 //! Prototype for testing the API.
 
-use std::fs::read;
+use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use log::error;
 use mender_free_ext::api::dto::NewDeployment;
-use mender_free_ext::{Api, Certificate, Deployments, Devices, Groups, Login, Releases};
+use mender_free_ext::{Api, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Group, Release};
+use crate::or_bail::OrBail;
 
 mod args;
+mod or_bail;
 
+#[allow(clippy::too_many_lines)]
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), ExitCode> {
     env_logger::init();
 
     let args = Args::parse();
-    let cert = args.certificate.and_then(|certificate| {
-        read(certificate)
-            .inspect_err(|error| error!("Failed to read certificate file: {error}"))
-            .ok()
-            .map(|cert| Certificate::from_pem(&cert).expect("Failed to parse certificate: {error}"))
-    });
+    let cert = args.certificate()?;
 
-    let server = Api::new(
-        "https://mender-acc.paulmann.com"
-            .parse()
-            .expect("Failed to parse base URL"),
-        cert,
-    )
-    .expect("Failed to create MenderServer");
+    let server = Api::new("https://mender-acc.paulmann.com".parse().or_bail()?, cert).or_bail()?;
 
-    let session = server
-        .login(args.username, args.password)
-        .await
-        .expect("Failed to login MenderServer");
+    let session = server.login(args.username, args.password).await.or_bail()?;
 
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
@@ -57,7 +45,7 @@ async fn main() {
                     &NewDeployment::new(name, artifact_name, devices, retries),
                 )
                 .await
-                .expect("Failed to create deployment");
+                .or_bail()?;
             }
         },
         Endpoint::Device { action } => match action {
@@ -71,7 +59,7 @@ async fn main() {
             Device::ByMac { mac_address } => {
                 Devices::collect(&session)
                     .await
-                    .expect("Failed to collect devices.")
+                    .or_bail()?
                     .into_iter()
                     .filter(|device| device.mac_address().is_some_and(|addr| addr == mac_address))
                     .for_each(|device| {
@@ -81,19 +69,12 @@ async fn main() {
         },
         Endpoint::Group { action } => match action {
             Group::List => {
-                for group in Groups::list(&session)
-                    .await
-                    .expect("Failed to list groups.")
-                {
+                for group in Groups::list(&session).await.or_bail()? {
                     println!("{group}");
                 }
             }
             Group::Devices { name } => {
-                for device_id in session
-                    .devices_of(&name)
-                    .await
-                    .expect("Failed to get devices.")
-                {
+                for device_id in session.devices_of(&name).await.or_bail()? {
                     println!("{device_id}");
                 }
             }
@@ -109,7 +90,7 @@ async fn main() {
             Release::ByName { name } => {
                 Releases::collect(&session)
                     .await
-                    .expect("Failed to collect releases")
+                    .or_bail()?
                     .into_iter()
                     .filter(|release| release.name() == name)
                     .for_each(|release| {
@@ -118,4 +99,6 @@ async fn main() {
             }
         },
     }
+
+    Ok(())
 }
