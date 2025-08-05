@@ -1,6 +1,7 @@
 //! Data structures for listing devices.
 
 use chrono::{DateTime, FixedOffset};
+use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -48,5 +49,20 @@ impl Device {
     #[must_use]
     pub const fn updated_ts(&self) -> &DateTime<FixedOffset> {
         &self.updated_ts
+    }
+
+    /// Return the MAC address of the device if it exists.
+    #[must_use]
+    pub fn mac_address(&self) -> Option<MacAddr6> {
+        self.attributes
+            .iter()
+            .find_map(|attr| {
+                if let Attribute::Mac(mac_value) = attr {
+                    Some(*mac_value.value())
+                } else {
+                    None
+                }
+            })
+            .map(|mac_addr| mac_addr.into())
     }
 }
