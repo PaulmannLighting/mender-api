@@ -30,11 +30,17 @@ pub struct Api {
 
 impl Api {
     /// Crate a new API instance.
-    pub fn new(base_url: Url, certificate: Option<Certificate>) -> reqwest::Result<Self> {
+    pub fn new(
+        base_url: Url,
+        certificate: Option<Certificate>,
+        accept_invalid_certificates: bool,
+    ) -> reqwest::Result<Self> {
         let mut builder = Client::builder().use_rustls_tls();
 
         if let Some(certificate) = certificate {
-            builder = builder.add_root_certificate(certificate);
+            builder = builder
+                .add_root_certificate(certificate)
+                .danger_accept_invalid_certs(accept_invalid_certificates);
         }
 
         builder.build().map(|client| Self { base_url, client })

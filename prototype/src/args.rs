@@ -18,6 +18,8 @@ pub struct Args {
     pub username: String,
     #[clap(long, short, help = "Password for Mender server login")]
     pub password: String,
+    #[clap(long, short = 'k', help = "Accept invalid certificates (insecure)")]
+    pub insecure: bool,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
     pub certificate: Option<PathBuf>,
     #[clap(subcommand)]
