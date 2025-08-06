@@ -1,5 +1,3 @@
-use serde_json::json;
-
 use crate::Api;
 use crate::api::session::Session;
 
@@ -39,7 +37,6 @@ impl Login for Api {
                 url
             })
             .basic_auth(user_name.as_ref(), Some(password.as_ref()))
-            .json(&json!({}))
             .send()
             .await?
             .error_for_status()?
