@@ -24,7 +24,7 @@ pub trait Groups {
 impl Groups for &Session {
     async fn list(self) -> reqwest::Result<Vec<String>> {
         self.client()
-            .get(self.url(PATH))
+            .get(self.format_url(PATH))
             .bearer_auth(self.bearer_token())
             .send()
             .await?

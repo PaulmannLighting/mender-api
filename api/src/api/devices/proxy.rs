@@ -24,7 +24,9 @@ impl Proxy<'_> {
     where
         T: AsRef<str>,
     {
-        let url = self.session.url(&format!("{PATH}/{}/group", self.id));
+        let url = self
+            .session
+            .format_url(&format!("{PATH}/{}/group", self.id));
         self.session
             .client()
             .post(url)
