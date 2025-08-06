@@ -65,4 +65,15 @@ impl Device {
             })
             .map(|mac_addr| mac_addr.into())
     }
+
+    /// Return the groups of the device.
+    pub fn groups(&self) -> impl Iterator<Item = &str> {
+        self.attributes.iter().filter_map(|attr| {
+            if let Attribute::Group(name) = attr {
+                Some(name.value().as_str())
+            } else {
+                None
+            }
+        })
+    }
 }
