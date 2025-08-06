@@ -1,6 +1,5 @@
 //! Devices management API.
 
-use std::marker::PhantomData;
 use std::num::NonZero;
 use std::vec::IntoIter;
 
@@ -11,14 +10,13 @@ use crate::api::session::Session;
 
 /// Generic pager.
 #[derive(Debug, Clone)]
-pub struct Pager<'session, 'path, T> {
+pub struct Pager<'session, 'path> {
     session: &'session Session,
     path: &'path str,
     page_size: NonZero<usize>,
-    phantom_data: PhantomData<T>,
 }
 
-impl<'session, 'path, T> Pager<'session, 'path, T> {
+impl<'session, 'path> Pager<'session, 'path> {
     /// Create a new pager.
     #[must_use]
     pub const fn new(
@@ -30,17 +28,16 @@ impl<'session, 'path, T> Pager<'session, 'path, T> {
             session,
             path,
             page_size,
-            phantom_data: PhantomData,
         }
     }
 }
 
-impl<T> Pager<'_, '_, T>
-where
-    for<'a> T: Deserialize<'a>,
-{
+impl Pager<'_, '_> {
     /// Return the given page.
-    pub async fn page(&self, page_no: NonZero<usize>) -> reqwest::Result<Vec<T>> {
+    pub async fn page<T>(&self, page_no: NonZero<usize>) -> reqwest::Result<Vec<T>>
+    where
+        for<'a> T: Deserialize<'a>,
+    {
         let mut url = self.session.url(self.path);
         url.set_query(Some(&format!("per_page={}&page={page_no}", self.page_size)));
         self.session
@@ -54,7 +51,10 @@ where
             .await
     }
     /// Iterate over all pages,
-    pub async fn collect(&self) -> reqwest::Result<Vec<T>> {
+    pub async fn collect<T>(&self) -> reqwest::Result<Vec<T>>
+    where
+        for<'a> T: Deserialize<'a>,
+    {
         let mut devices = Vec::new();
 
         for page_no in (1..).filter_map(NonZero::new) {
@@ -75,7 +75,7 @@ where
 /// Iterator for paginated results.
 #[derive(Debug, Clone)]
 pub struct PageIterator<'session, 'path, T> {
-    pager: Pager<'session, 'path, T>,
+    pager: Pager<'session, 'path>,
     page_no: NonZero<usize>,
     current_page: Option<IntoIter<T>>,
 }
@@ -83,7 +83,7 @@ pub struct PageIterator<'session, 'path, T> {
 impl<'session, 'path, T> PageIterator<'session, 'path, T> {
     /// Create a new page iterator with the given page size.
     #[must_use]
-    pub(crate) const fn new(pager: Pager<'session, 'path, T>) -> Self {
+    pub(crate) const fn new(pager: Pager<'session, 'path>) -> Self {
         Self {
             pager,
             page_no: NonZero::new(1).expect("1 is always non-zero."),
@@ -117,8 +117,8 @@ where
     }
 }
 
-impl<'session, 'path, T> From<Pager<'session, 'path, T>> for PageIterator<'session, 'path, T> {
-    fn from(pager: Pager<'session, 'path, T>) -> Self {
+impl<'session, 'path, T> From<Pager<'session, 'path>> for PageIterator<'session, 'path, T> {
+    fn from(pager: Pager<'session, 'path>) -> Self {
         Self::new(pager)
     }
 }
