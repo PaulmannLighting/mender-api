@@ -16,6 +16,3 @@ log = "0.4.27"
 
 [lints]
 workspace = true
-
-[clippy.lints]
-workspace = true
