@@ -25,9 +25,12 @@ impl Session {
 impl Session {
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
-    pub(crate) fn format_url(&self, path: &str) -> Url {
+    pub(crate) fn format_url<P>(&self, path: P) -> Url
+    where
+        P: AsRef<str>,
+    {
         let mut url = self.base_url.clone();
-        url.set_path(path);
+        url.set_path(path.as_ref());
         url
     }
 
