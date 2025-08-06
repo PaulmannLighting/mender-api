@@ -15,3 +15,7 @@ uuid = "1.17.0"
 
 [lints]
 workspace = true
+
+[[bin]]
+name = "mender-free-ext"
+path = "src"
