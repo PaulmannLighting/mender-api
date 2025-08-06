@@ -27,7 +27,7 @@ pub enum Attribute {
     #[serde(rename = "updated_ts")]
     Updated(Value<DateTime<FixedOffset>>),
     #[serde(rename = "status")]
-    Status(Value<Status>), // TODO: use enum for status
+    Status(Value<Status>),
     #[serde(rename = "group")]
     Group(Value<String>),
     #[serde(rename = "artifact_name")]
