@@ -692,7 +692,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
 
 [[package]]
-name = "mender-free-ext"
+name = "mender-api"
 version = "0.1.0"
 dependencies = [
  "chrono",
@@ -702,6 +702,19 @@ dependencies = [
  "reqwest",
  "semver",
  "serde",
+ "uuid",
+]
+
+[[package]]
+name = "mender-api-cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "env_logger",
+ "log",
+ "macaddr",
+ "mender-api",
+ "tokio",
  "uuid",
 ]
 
@@ -813,19 +826,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02b3e5e68a3a1a02aad3ec490a98007cbc13c37cbe84a3cd7b8e406d76e7f778"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "prototype"
-version = "0.1.0"
-dependencies = [
- "clap",
- "env_logger",
- "log",
- "macaddr",
- "mender-free-ext",
- "tokio",
- "uuid",
 ]
 
 [[package]]

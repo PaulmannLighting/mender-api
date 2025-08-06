@@ -5,7 +5,7 @@ use std::process::ExitCode;
 use clap::{Parser, Subcommand};
 use log::error;
 use macaddr::MacAddr6;
-use mender_free_ext::Certificate;
+use mender_api::Certificate;
 use uuid::Uuid;
 
 use crate::util::OrBail;

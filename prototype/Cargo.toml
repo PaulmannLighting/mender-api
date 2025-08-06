@@ -1,5 +1,5 @@
 [package]
-name = "prototype"
+name = "mender-api-cli"
 version = "0.1.0"
 edition = "2024"
 publish = false
@@ -9,13 +9,9 @@ clap = { version = "4.5.42", features = ["derive"] }
 env_logger = "0.11.8"
 log = "0.4.27"
 macaddr = "1.0.1"
-mender-free-ext = { path = "../api" }
+mender-api = { path = "../api" }
 tokio = { version = "1.47.1", features = ["rt", "rt-multi-thread", "macros"] }
 uuid = "1.17.0"
 
 [lints]
 workspace = true
-
-[[bin]]
-name = "mender-free-ext"
-path = "src/main.rs"

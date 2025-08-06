@@ -4,8 +4,8 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use mender_free_ext::api::dto::NewDeployment;
-use mender_free_ext::{Api, Deployments, Devices, Groups, Login, Releases};
+use mender_api::api::dto::NewDeployment;
+use mender_api::{Api, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Group, Release};
 use crate::util::{IntoExitCode, OrBail};
