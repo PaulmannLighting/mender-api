@@ -3,6 +3,7 @@ use std::num::NonZero;
 use uuid::Uuid;
 
 use crate::api::DEFAULT_PAGE_SIZE;
+use crate::api::dto::PatchGroupResponse;
 use crate::api::pager::Pager;
 use crate::api::session::Session;
 
@@ -19,6 +20,13 @@ pub trait Groups {
         group_name: &str,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
+
+    /// Update or create a new group with the specified name and devices.
+    fn patch(
+        &self,
+        name: &str,
+        devices: &[Uuid],
+    ) -> impl Future<Output = reqwest::Result<PatchGroupResponse>> + Send;
 }
 
 impl Groups for &Session {
@@ -45,5 +53,17 @@ impl Groups for &Session {
         )
         .collect()
         .await
+    }
+
+    async fn patch(&self, name: &str, devices: &[Uuid]) -> reqwest::Result<PatchGroupResponse> {
+        self.client()
+            .patch(self.format_url(format!("{PATH}/{name}/devices"), None))
+            .bearer_auth(self.bearer_token())
+            .json(devices)
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
     }
 }

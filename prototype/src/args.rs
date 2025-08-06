@@ -99,6 +99,13 @@ pub enum Group {
         #[clap(index = 1, help = "List the devices in a group")]
         name: String,
     },
+    #[clap(name = "patch")]
+    Patch {
+        #[clap(help = "The name of the group to patch")]
+        name: String,
+        #[clap(help = "List of device IDs to add to the group")]
+        devices: Vec<Uuid>,
+    },
 }
 
 #[derive(Debug, Subcommand)]

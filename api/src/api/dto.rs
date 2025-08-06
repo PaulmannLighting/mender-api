@@ -9,6 +9,7 @@ pub use deployments::new::Deployment as NewDeployment;
 pub use deployments::{Kind, Status as DeploymentStatus};
 pub use device_type::DeviceType;
 pub use devices::{Device, Group as DeviceGroup};
+pub use groups::PatchGroupResponse;
 pub use releases::Release;
 pub use rootfs_type::RootfsType;
 
@@ -19,6 +20,7 @@ mod country;
 mod deployments;
 mod device_type;
 mod devices;
+mod groups;
 mod releases;
 mod rootfs_type;
 mod types;

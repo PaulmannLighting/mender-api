@@ -78,6 +78,10 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     println!("{device_id}");
                 }
             }
+            Group::Patch { name, devices } => {
+                let response = session.groups().patch(&name, &devices).await.or_bail()?;
+                println!("{response:?}");
+            }
         },
         Endpoint::Release { action } => match action {
             Release::List => {
