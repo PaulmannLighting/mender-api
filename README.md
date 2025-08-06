@@ -1,2 +1,3 @@
-# mender-free-ext
-Extensions for the free version of the Mender server.
+# mender-api
+
+Rust bindings to access the Mender server API.
