@@ -38,11 +38,12 @@ impl Pager<'_, '_> {
     where
         for<'a> T: Deserialize<'a>,
     {
-        let mut url = self.session.format_url(self.path);
-        url.set_query(Some(&format!("per_page={}&page={page_no}", self.page_size)));
         self.session
             .client()
-            .get(url)
+            .get(self.session.format_url(
+                self.path,
+                format!("per_page={}&page={page_no}", self.page_size),
+            ))
             .bearer_auth(self.session.bearer_token())
             .send()
             .await?

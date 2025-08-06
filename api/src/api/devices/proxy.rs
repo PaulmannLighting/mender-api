@@ -26,7 +26,7 @@ impl Proxy<'_> {
     {
         let url = self
             .session
-            .format_url(&format!("{PATH}/{}/group", self.id));
+            .format_url(format!("{PATH}/{}/group", self.id), None);
         self.session
             .client()
             .post(url)

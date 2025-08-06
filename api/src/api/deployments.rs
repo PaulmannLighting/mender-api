@@ -35,7 +35,7 @@ impl<'session> Deployments<'session> for &'session Session {
 
     async fn create(self, deployment: &NewDeployment) -> reqwest::Result<String> {
         self.client()
-            .post(self.format_url(PATH))
+            .post(self.format_url(PATH, None))
             .bearer_auth(self.bearer_token())
             .json(deployment)
             .send()
