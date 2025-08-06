@@ -702,7 +702,6 @@ dependencies = [
  "reqwest",
  "semver",
  "serde",
- "serde_json",
  "uuid",
 ]
 

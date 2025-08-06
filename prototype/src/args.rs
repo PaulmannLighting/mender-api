@@ -12,9 +12,11 @@ use crate::util::OrBail;
 
 #[derive(Debug, Parser)]
 pub struct Args {
-    #[clap(index = 1, help = "Username for Mender server login")]
+    #[clap(help = "URL of the Mender server")]
+    pub url: String,
+    #[clap(long, short, help = "Username for Mender server login")]
     pub username: String,
-    #[clap(index = 2, help = "Password for Mender server login")]
+    #[clap(long, short, help = "Password for Mender server login")]
     pub password: String,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
     pub certificate: Option<PathBuf>,
