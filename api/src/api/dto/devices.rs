@@ -12,7 +12,7 @@ use crate::api::dto::types::MacAddress;
 mod group;
 
 /// A device in the Mender server.
-#[derive(Clone, Debug, Hash, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Device {
     id: Uuid,
     attributes: Vec<Attribute>,
