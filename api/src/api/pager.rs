@@ -60,12 +60,11 @@ impl Pager<'_, '_> {
 
         for page_no in (1..).filter_map(NonZero::new) {
             let page = self.page(page_no).await?;
+            let page_size = page.len();
+            devices.extend(page);
 
-            if page.len() < self.page_size.get() {
-                devices.extend(page);
+            if page_size < self.page_size.get() {
                 break;
-            } else {
-                devices.extend(page);
             }
         }
 
