@@ -51,7 +51,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 let mut devices = session.devices().list(None);
 
                 while let Some(device) = devices.next().await {
-                    println!("{device}");
+                    println!("{device:#}");
                 }
             }
             Device::ByMac { mac_address } => {
