@@ -56,7 +56,7 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::One(item) => write!(f, "{item}"),
+            Self::One(item) => item.fmt(f),
             Self::Many(items) => {
                 write!(f, "[")?;
 
@@ -64,7 +64,8 @@ where
                     if i > 0 {
                         write!(f, ", ")?;
                     }
-                    write!(f, "{item}")?;
+
+                    item.fmt(f)?;
                 }
 
                 write!(f, "]")
