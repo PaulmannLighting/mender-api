@@ -12,7 +12,7 @@ pub struct Session {
 
 impl Session {
     /// Create a new `Endpoint` with the specified Mender server.
-    pub(crate) fn new(client: Client, base_url: Url, bearer_token: String) -> Self {
+    pub(crate) const fn new(client: Client, base_url: Url, bearer_token: String) -> Self {
         Self {
             client,
             base_url,

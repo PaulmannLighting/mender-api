@@ -17,7 +17,7 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Devices management API.
 pub trait Devices<'a> {
     /// List devices.
-    fn iter(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Device>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Device>;
 
     /// Collect devices into a `Vec`.
     fn collect(
@@ -30,7 +30,7 @@ pub trait Devices<'a> {
 }
 
 impl<'session> Devices<'session> for &'session Session {
-    fn iter(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

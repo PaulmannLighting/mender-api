@@ -27,7 +27,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
     match args.endpoint {
         Endpoint::Deployment { action } => match action {
             Deployment::List => {
-                let mut deployments = session.deployments().iter(None);
+                let mut deployments = session.deployments().list(None);
 
                 while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
@@ -48,7 +48,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
         },
         Endpoint::Device { action } => match action {
             Device::List => {
-                let mut devices = session.devices().iter(None);
+                let mut devices = session.devices().list(None);
 
                 while let Some(device) = devices.next().await {
                     println!("{device:?}");

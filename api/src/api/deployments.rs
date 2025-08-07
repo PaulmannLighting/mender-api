@@ -10,7 +10,7 @@ const PATH: &str = "/api/management/v1/deployments/deployments";
 /// Deployments management API.
 pub trait Deployments<'a> {
     /// List deployments.
-    fn iter(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, ListDeployment>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, ListDeployment>;
 
     /// Create a new deployment.
     fn create(
@@ -26,7 +26,7 @@ pub trait Deployments<'a> {
 }
 
 impl<'session> Deployments<'session> for &'session Session {
-    fn iter(
+    fn list(
         self,
         page_size: Option<NonZero<usize>>,
     ) -> PageIterator<'session, 'static, ListDeployment> {
