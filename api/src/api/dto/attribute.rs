@@ -15,6 +15,7 @@ mod scope;
 mod status;
 mod value;
 
+/// Available attributes for devices in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "name")]
 pub enum Attribute {
