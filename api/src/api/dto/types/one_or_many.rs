@@ -16,21 +16,21 @@ impl<T> OneOrMany<T> {
     /// Convert the `OneOrMany` into a `Vec<T>`.
     pub fn into_vec(self) -> Vec<T> {
         match self {
-            OneOrMany::One(item) => vec![item],
-            OneOrMany::Many(items) => items,
+            Self::One(item) => vec![item],
+            Self::Many(items) => items,
         }
     }
 }
 
 impl<T> From<T> for OneOrMany<T> {
     fn from(item: T) -> Self {
-        OneOrMany::One(item)
+        Self::One(item)
     }
 }
 
 impl<T> From<Vec<T>> for OneOrMany<T> {
     fn from(items: Vec<T>) -> Self {
-        OneOrMany::Many(items)
+        Self::Many(items)
     }
 }
 
