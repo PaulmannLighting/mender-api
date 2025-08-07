@@ -30,7 +30,7 @@ pub trait Devices<'this, 'path> {
 }
 
 impl<'session> Devices<'session, 'session> for &'session Session {
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'session, Device> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

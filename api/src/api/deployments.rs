@@ -28,7 +28,7 @@ impl<'session> Deployments<'session, 'session> for &'session Session {
     fn list(
         self,
         page_size: Option<NonZero<usize>>,
-    ) -> PageIterator<'session, 'static, ListDeployment> {
+    ) -> PageIterator<'session, 'session, ListDeployment> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
