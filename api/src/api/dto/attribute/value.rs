@@ -41,9 +41,13 @@ impl<T> Value<T> {
     where
         F: FnOnce(&T, &mut std::fmt::Formatter<'_>) -> std::fmt::Result,
     {
-        write!(f, "Value: ")?;
-        fmt_inner(&self.inner, f)?;
-        write!(f, ", Scope: {}", self.scope)
+        if f.alternate() {
+            fmt_inner(&self.inner, f)
+        } else {
+            write!(f, "Value: ")?;
+            fmt_inner(&self.inner, f)?;
+            write!(f, ", Scope: {}", self.scope)
+        }
     }
 }
 

@@ -95,7 +95,7 @@ impl Display for Device {
         )?;
 
         for attr in &self.attributes {
-            writeln!(f, "\t\t- {attr}",)?;
+            writeln!(f, "\t\t- {attr}")?;
         }
 
         Ok(())
