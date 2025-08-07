@@ -90,12 +90,12 @@ impl Display for Device {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(
             f,
-            "id: {}, updated: {}, attributes:",
+            "Device: {}\n\t- updated: {}\n\t- attributes:",
             self.id, self.updated_ts
         )?;
 
         for attr in &self.attributes {
-            writeln!(f, "\t- {attr}",)?;
+            writeln!(f, "\t\t- {attr}",)?;
         }
 
         Ok(())

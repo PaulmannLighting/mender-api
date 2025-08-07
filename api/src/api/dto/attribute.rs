@@ -11,6 +11,7 @@ pub use value::Value;
 
 use crate::api::dto::types::{AsStr, MacAddress, OneOrMany};
 use crate::api::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
+use crate::utils::display_slice;
 
 mod scope;
 mod status;
@@ -146,7 +147,7 @@ impl Display for Attribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Name(value) => write!(f, "name: {value}"),
-            Self::Mac(value) => write!(f, "mac: {value:?}"),
+            Self::Mac(value) => write!(f, "mac: {value}"),
             Self::Created(value) => write!(f, "created_ts: {value}"),
             Self::Updated(value) => write!(f, "updated_ts: {value}"),
             Self::Status(value) => write!(f, "status: {value}"),
@@ -158,7 +159,7 @@ impl Display for Attribute {
             Self::Ipv4Eth0(value) => write!(f, "ipv4_eth0: {value}"),
             Self::Ipv6Eth0(value) => write!(f, "ipv6_eth0: {value}"),
             Self::Kernel(value) => write!(f, "kernel: {value}"),
-            Self::MacEth0(value) => write!(f, "mac_eth0: {value:?}"),
+            Self::MacEth0(value) => write!(f, "mac_eth0: {value}"),
             Self::MemTotalKB(value) => write!(f, "mem_total_kB: {value}"),
             Self::MenderBootloaderIntegration(value) => {
                 write!(f, "mender_bootloader_integration: {value}")
@@ -234,7 +235,7 @@ impl Display for Attribute {
                 write!(f, "rootfs-image.update-module.single-file.version: {value}")
             }
             Self::RootfsImageVersion(value) => write!(f, "rootfs-image.version: {value}"),
-            Self::UpdateModules(value) => write!(f, "update_modules: {value:?}"),
+            Self::UpdateModules(value) => value.display_with(f, |vec, f| display_slice(vec, f)),
         }
     }
 }

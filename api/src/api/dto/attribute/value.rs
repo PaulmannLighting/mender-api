@@ -42,6 +42,26 @@ impl<T> Value<T> {
     pub const fn description(&self) -> Option<&String> {
         self.description.as_ref()
     }
+
+    /// Display the value with the representation of the inner value given by `fmt_inner`.
+    pub(crate) fn display_with<F>(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        fmt_inner: F,
+    ) -> std::fmt::Result
+    where
+        F: FnOnce(&T, &mut std::fmt::Formatter<'_>) -> std::fmt::Result,
+    {
+        write!(f, "Value: ")?;
+        fmt_inner(&self.inner, f)?;
+        write!(f, ", Scope: {}", self.scope)?;
+
+        if let Some(ref description) = self.description {
+            write!(f, ", Description: {description}")?;
+        }
+
+        Ok(())
+    }
 }
 
 impl<T> AsRef<T> for Value<T> {
@@ -75,6 +95,6 @@ where
     T: Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Value: {}, Scope: {}", self.inner, self.scope)
+        self.display_with(f, Display::fmt)
     }
 }
