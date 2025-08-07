@@ -8,12 +8,9 @@ use crate::api::session::Session;
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
 /// Deployments management API.
-pub trait Deployments<'this> {
+pub trait Deployments<'this, 'path> {
     /// List deployments.
-    fn list(
-        self,
-        page_size: Option<NonZero<usize>>,
-    ) -> PageIterator<'this, 'static, ListDeployment>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'path, ListDeployment>;
     /// Collect deployments into a `Vec`.
     fn collect(
         self,
@@ -27,7 +24,7 @@ pub trait Deployments<'this> {
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
 }
 
-impl<'session> Deployments<'session> for &'session Session {
+impl<'session> Deployments<'session, 'session> for &'session Session {
     fn list(
         self,
         page_size: Option<NonZero<usize>>,
