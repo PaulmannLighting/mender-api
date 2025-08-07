@@ -10,7 +10,7 @@ pub struct Info {
 impl Info {
     /// Creates a new `Info` instance.
     #[must_use]
-    pub fn new(format: String, version: u8) -> Self {
+    pub const fn new(format: String, version: u8) -> Self {
         Self { format, version }
     }
 

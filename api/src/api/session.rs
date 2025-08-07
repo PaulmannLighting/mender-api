@@ -42,7 +42,7 @@ impl Session {
 
     /// Return request client for the Mender server.
     #[must_use]
-    pub(crate) fn client(&self) -> &Client {
+    pub(crate) const fn client(&self) -> &Client {
         &self.client
     }
 

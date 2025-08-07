@@ -12,13 +12,13 @@ pub struct Update {
 impl Update {
     /// Creates a new `Update` instance.
     #[must_use]
-    pub fn new(type_info: TypeInfo, files: Vec<File>) -> Self {
+    pub const fn new(type_info: TypeInfo, files: Vec<File>) -> Self {
         Self { type_info, files }
     }
 
     /// Returns the type information of the update.
     #[must_use]
-    pub fn type_info(&self) -> &TypeInfo {
+    pub const fn type_info(&self) -> &TypeInfo {
         &self.type_info
     }
 

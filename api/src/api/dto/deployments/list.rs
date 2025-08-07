@@ -38,13 +38,13 @@ impl Deployment {
 
     /// Returns the creation date of the deployment.
     #[must_use]
-    pub fn created(&self) -> DateTime<FixedOffset> {
+    pub const fn created(&self) -> DateTime<FixedOffset> {
         self.created
     }
 
     /// Returns the finish date of the deployment.
     #[must_use]
-    pub fn finished(&self) -> Option<DateTime<FixedOffset>> {
+    pub const fn finished(&self) -> Option<DateTime<FixedOffset>> {
         self.finished
     }
 

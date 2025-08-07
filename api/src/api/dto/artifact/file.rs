@@ -47,7 +47,7 @@ impl File {
 
     /// Returns the date of the file.
     #[must_use]
-    pub fn date(&self) -> DateTime<FixedOffset> {
+    pub const fn date(&self) -> DateTime<FixedOffset> {
         self.date
     }
 }

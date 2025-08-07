@@ -13,7 +13,7 @@ pub struct Proxy<'session> {
 
 impl<'session> Proxy<'session> {
     /// Create a new `Proxy` for the specified device ID.
-    pub(crate) fn new(session: &'session Session, id: Uuid) -> Self {
+    pub(crate) const fn new(session: &'session Session, id: Uuid) -> Self {
         Self { session, id }
     }
 }

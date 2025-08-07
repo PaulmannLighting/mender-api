@@ -124,13 +124,13 @@ impl Artifact {
 
     /// Returns the provides map of the artifact.
     #[must_use]
-    pub fn provides(&self) -> &BTreeMap<String, String> {
+    pub const fn provides(&self) -> &BTreeMap<String, String> {
         &self.provides
     }
 
     /// Returns the dependencies of the artifact.
     #[must_use]
-    pub fn depends(&self) -> &Dependency {
+    pub const fn depends(&self) -> &Dependency {
         &self.depends
     }
 

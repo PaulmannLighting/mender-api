@@ -16,7 +16,7 @@ impl<'name> Group<'name> {
 
     /// Returns the name of the group.
     #[must_use]
-    pub fn name(&self) -> &str {
+    pub const fn name(&self) -> &str {
         self.name
     }
 }

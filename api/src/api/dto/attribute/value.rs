@@ -35,7 +35,7 @@ impl<T> Value<T> {
 
     /// Return the description of the value.
     #[must_use]
-    pub fn description(&self) -> Option<&String> {
+    pub const fn description(&self) -> Option<&String> {
         self.description.as_ref()
     }
 }
