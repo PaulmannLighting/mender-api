@@ -24,11 +24,11 @@ pub trait Deployments<'this, 'path> {
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
 }
 
-impl<'session> Deployments<'session, 'session> for &'session Session {
+impl<'session> Deployments<'session, 'static> for &'session Session {
     fn list(
         self,
         page_size: Option<NonZero<usize>>,
-    ) -> PageIterator<'session, 'session, ListDeployment> {
+    ) -> PageIterator<'session, 'static, ListDeployment> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

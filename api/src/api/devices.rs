@@ -29,8 +29,8 @@ pub trait Devices<'this, 'path> {
     fn device(self, id: Uuid) -> Proxy<'this>;
 }
 
-impl<'session> Devices<'session, 'session> for &'session Session {
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'session, Device> {
+impl<'session> Devices<'session, 'static> for &'session Session {
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

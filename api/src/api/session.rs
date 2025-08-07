@@ -57,13 +57,13 @@ impl Session {
 impl Session {
     /// Return an opaque type to proxy deployment-related operations.
     #[must_use]
-    pub fn deployments(&self) -> impl Deployments<'_, '_> {
+    pub fn deployments(&self) -> impl Deployments<'_, 'static> {
         self
     }
 
     /// Return an opaque type to proxy devices-related operations.
     #[must_use]
-    pub fn devices(&self) -> impl Devices<'_, '_> {
+    pub fn devices(&self) -> impl Devices<'_, 'static> {
         self
     }
 
@@ -75,7 +75,7 @@ impl Session {
 
     /// Return an opaque type to proxy releases-related operations.
     #[must_use]
-    pub fn releases(&self) -> impl Releases<'_, '_> {
+    pub fn releases(&self) -> impl Releases<'_, 'static> {
         self
     }
 }
