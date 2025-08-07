@@ -30,6 +30,10 @@ pub struct Api {
 
 impl Api {
     /// Crate a new API instance.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`reqwest::Error`] if the client could not be built.
     pub fn new(
         base_url: Url,
         certificate: Option<Certificate>,
