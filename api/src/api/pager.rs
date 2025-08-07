@@ -36,7 +36,7 @@ impl Pager<'_, '_> {
     /// Return the given page.
     pub async fn page<T>(&self, page_no: NonZero<usize>) -> reqwest::Result<Vec<T>>
     where
-        for<'a> T: Deserialize<'a>,
+        for<'deserialize> T: Deserialize<'deserialize>,
     {
         self.session
             .client()
@@ -55,7 +55,7 @@ impl Pager<'_, '_> {
     /// Iterate over all pages,
     pub async fn collect<T>(&self) -> reqwest::Result<Vec<T>>
     where
-        for<'a> T: Deserialize<'a>,
+        for<'deserialize> T: Deserialize<'deserialize>,
     {
         let mut devices = Vec::new();
 
@@ -95,7 +95,7 @@ impl<'session, 'path, T> PageIterator<'session, 'path, T> {
 
 impl<T> PageIterator<'_, '_, T>
 where
-    for<'a> T: Deserialize<'a>,
+    for<'deserialize> T: Deserialize<'deserialize>,
 {
     /// Return the next item in the iterator, fetching a new page if necessary.
     pub async fn next(&mut self) -> Option<T> {
