@@ -11,6 +11,7 @@ const PATH: &str = "/api/management/v1/deployments/deployments";
 pub trait Deployments<'this, 'path> {
     /// List deployments.
     fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'path, ListDeployment>;
+
     /// Collect deployments into a `Vec`.
     fn collect(
         self,
