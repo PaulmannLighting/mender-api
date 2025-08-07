@@ -5,7 +5,7 @@ use crate::api::dto::Scope;
 /// Attribute values.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Value<T> {
-    value: T,
+    inner: T,
     scope: Scope,
     description: Option<String>,
 }
@@ -13,9 +13,9 @@ pub struct Value<T> {
 impl<T> Value<T> {
     /// Create a new `Value` with the given value, scope, and optional description.
     #[must_use]
-    pub const fn new(value: T, scope: Scope, description: Option<String>) -> Self {
+    pub const fn new(inner: T, scope: Scope, description: Option<String>) -> Self {
         Self {
-            value,
+            inner,
             scope,
             description,
         }
@@ -23,8 +23,8 @@ impl<T> Value<T> {
 
     /// Return the inner value.
     #[must_use]
-    pub const fn value(&self) -> &T {
-        &self.value
+    pub const fn inner(&self) -> &T {
+        &self.inner
     }
 
     /// Return the scope of the value.

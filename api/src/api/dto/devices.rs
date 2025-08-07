@@ -58,7 +58,7 @@ impl Device {
             .iter()
             .filter_map(|attr| {
                 if let Attribute::Mac(mac_value) = attr {
-                    Some(*mac_value.value())
+                    Some(*mac_value.inner())
                 } else {
                     None
                 }
@@ -76,7 +76,7 @@ impl Device {
     pub fn groups(&self) -> impl Iterator<Item = &str> {
         self.attributes.iter().filter_map(|attr| {
             if let Attribute::Group(name) = attr {
-                Some(name.value().as_str())
+                Some(name.inner().as_str())
             } else {
                 None
             }
