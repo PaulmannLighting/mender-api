@@ -15,9 +15,9 @@ mod proxy;
 const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Devices management API.
-pub trait Devices<'a> {
+pub trait Devices<'this> {
     /// List devices.
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Device>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'static, Device>;
 
     /// Collect devices into a `Vec`.
     fn collect(
@@ -26,7 +26,7 @@ pub trait Devices<'a> {
     ) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
     /// Return a proxy object to manage the device with the specified ID.
-    fn device(self, id: Uuid) -> Proxy<'a>;
+    fn device(self, id: Uuid) -> Proxy<'this>;
 }
 
 impl<'session> Devices<'session> for &'session Session {

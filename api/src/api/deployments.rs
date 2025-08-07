@@ -8,9 +8,12 @@ use crate::api::session::Session;
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
 /// Deployments management API.
-pub trait Deployments<'a> {
+pub trait Deployments<'this> {
     /// List deployments.
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, ListDeployment>;
+    fn list(
+        self,
+        page_size: Option<NonZero<usize>>,
+    ) -> PageIterator<'this, 'static, ListDeployment>;
 
     /// Create a new deployment.
     fn create(

@@ -8,9 +8,9 @@ use crate::api::session::Session;
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 
 /// Releases management API.
-pub trait Releases<'a> {
+pub trait Releases<'this> {
     /// List all releases available in the Mender server.
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'a, 'static, Release>;
+    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'static, Release>;
 
     /// Collect releases into a `Vec`.
     fn collect(
