@@ -51,6 +51,7 @@ impl Pager<'_, '_> {
             .json()
             .await
     }
+
     /// Iterate over all pages,
     pub async fn collect<T>(&self) -> reqwest::Result<Vec<T>>
     where
