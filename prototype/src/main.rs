@@ -51,7 +51,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 let mut devices = session.devices().list(None);
 
                 while let Some(device) = devices.next().await {
-                    println!("{device:?}");
+                    println!("{device}");
                 }
             }
             Device::ByMac { mac_address } => {
@@ -63,7 +63,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     .into_iter()
                     .filter(|device| device.mac_address().is_some_and(|addr| addr == mac_address))
                     .for_each(|device| {
-                        println!("Device: {device:?}");
+                        println!("{device}");
                     });
             }
         },
