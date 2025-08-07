@@ -1,6 +1,6 @@
 //! Data structures for listing devices.
 
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
 use chrono::{DateTime, FixedOffset};
 pub use group::Group;
@@ -94,8 +94,10 @@ impl Display for Device {
             self.id, self.updated_ts
         )?;
 
-        for attr in &self.attributes {
-            writeln!(f, "\t\t- {attr}")?;
+        for attribute in &self.attributes {
+            write!(f, "\t\t- ")?;
+            Display::fmt(attribute, f)?;
+            writeln!(f)?;
         }
 
         Ok(())
