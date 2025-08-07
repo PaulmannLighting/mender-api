@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 /// Attribute scopes.
@@ -12,4 +14,15 @@ pub enum Scope {
     Inventory,
     /// The attribute is specific to tags.
     Tags,
+}
+
+impl Display for Scope {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Identity => write!(f, "identity"),
+            Self::System => write!(f, "system"),
+            Self::Inventory => write!(f, "inventory"),
+            Self::Tags => write!(f, "tags"),
+        }
+    }
 }

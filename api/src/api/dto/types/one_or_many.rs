@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::vec::IntoIter;
 
 use serde::{Deserialize, Serialize};
@@ -46,5 +47,28 @@ impl<T> IntoIterator for OneOrMany<T> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.into_vec().into_iter()
+    }
+}
+
+impl<T> Display for OneOrMany<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::One(item) => write!(f, "{}", item),
+            Self::Many(items) => {
+                write!(f, "[")?;
+
+                for (i, item) in items.iter().enumerate() {
+                    if i > 0 {
+                        write!(f, ", ")?;
+                    }
+                    write!(f, "{item}")?;
+                }
+
+                write!(f, "]")
+            }
+        }
     }
 }

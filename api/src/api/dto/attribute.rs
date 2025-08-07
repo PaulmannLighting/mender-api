@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::net::IpAddr;
 
 use chrono::{DateTime, FixedOffset};
@@ -139,4 +140,101 @@ pub enum Attribute {
     /// Update modules.
     #[serde(rename = "update_modules")]
     UpdateModules(Value<Vec<String>>),
+}
+
+impl Display for Attribute {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Name(value) => write!(f, "name: {value}"),
+            Self::Mac(value) => write!(f, "mac: {value:?}"),
+            Self::Created(value) => write!(f, "created_ts: {value}"),
+            Self::Updated(value) => write!(f, "updated_ts: {value}"),
+            Self::Status(value) => write!(f, "status: {value}"),
+            Self::Group(value) => write!(f, "group: {value}"),
+            Self::ArtifactName(value) => write!(f, "artifact_name: {value}"),
+            Self::CpuModel(value) => write!(f, "cpu_model: {value}"),
+            Self::DeviceType(value) => write!(f, "device_type: {value}"),
+            Self::Hostname(value) => write!(f, "hostname: {value}"),
+            Self::Ipv4Eth0(value) => write!(f, "ipv4_eth0: {value}"),
+            Self::Ipv6Eth0(value) => write!(f, "ipv6_eth0: {value}"),
+            Self::Kernel(value) => write!(f, "kernel: {value}"),
+            Self::MacEth0(value) => write!(f, "mac_eth0: {value:?}"),
+            Self::MemTotalKB(value) => write!(f, "mem_total_kB: {value}"),
+            Self::MenderBootloaderIntegration(value) => {
+                write!(f, "mender_bootloader_integration: {value}")
+            }
+            Self::MenderClientVersion(value) => {
+                write!(f, "mender_client_version: {value}")
+            }
+            Self::NetworkInterfaces(value) => {
+                write!(f, "network_interfaces: {value}")
+            }
+            Self::Os(value) => write!(f, "os: {value}"),
+            Self::RootfsType(value) => write!(f, "rootfs_type: {value}"),
+            Self::GeoCity(value) => write!(f, "geo-city: {value}"),
+            Self::GeoCountry(value) => write!(f, "geo-country: {value}"),
+            Self::GeoIp(value) => write!(f, "geo-ip: {value}"),
+            Self::GeoTimezone(value) => write!(f, "geo-timezone: {value}"),
+            Self::MacSit0(value) => write!(f, "mac_sit0: {value}"),
+            Self::RootfsImageChecksum(value) => {
+                write!(f, "rootfs-image.checksum: {value}")
+            }
+            Self::RootfsImageUpdateModuleDebMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.deb.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleDebVersion(value) => {
+                write!(f, "rootfs-image.update-module.deb.version: {value}")
+            }
+            Self::RootfsImageUpdateModuleDirectoryMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.directory.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleDirectoryVersion(value) => {
+                write!(f, "rootfs-image.update-module.directory.version: {value}")
+            }
+            Self::RootfsImageUpdateModuleDockerMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.docker.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleDockerVersion(value) => {
+                write!(f, "rootfs-image.update-module.docker.version: {value}")
+            }
+            Self::RootfsImageUpdateModuleRpmMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.rpm.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleRpmVersion(value) => {
+                write!(f, "rootfs-image.update-module.rpm.version: {value}")
+            }
+            Self::RootfsImageUpdateModuleScriptMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.script.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleScriptVersion(value) => {
+                write!(f, "rootfs-image.update-module.script.version: {value}")
+            }
+            Self::RootfsImageUpdateModuleSingleFileMenderUpdateModule(value) => {
+                write!(
+                    f,
+                    "rootfs-image.update-module.single-file.mender_update_module: {value}"
+                )
+            }
+            Self::RootfsImageUpdateModuleSingleFileVersion(value) => {
+                write!(f, "rootfs-image.update-module.single-file.version: {value}")
+            }
+            Self::RootfsImageVersion(value) => write!(f, "rootfs-image.version: {value}"),
+            Self::UpdateModules(value) => write!(f, "update_modules: {value:?}"),
+        }
+    }
 }
