@@ -1,5 +1,7 @@
 //! Data structures for listing devices.
 
+use std::fmt::Display;
+
 use chrono::{DateTime, FixedOffset};
 pub use group::Group;
 use macaddr::MacAddr6;
@@ -81,5 +83,21 @@ impl Device {
                 None
             }
         })
+    }
+}
+
+impl Display for Device {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "id: {}, updated: {}, attributes:",
+            self.id, self.updated_ts
+        )?;
+
+        for attr in &self.attributes {
+            writeln!(f, "\t- {attr}",)?;
+        }
+
+        Ok(())
     }
 }
