@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut};
+
 use serde::{Deserialize, Serialize};
 
 use crate::api::dto::Scope;
@@ -37,5 +39,31 @@ impl<T> Value<T> {
     #[must_use]
     pub const fn description(&self) -> Option<&String> {
         self.description.as_ref()
+    }
+}
+
+impl<T> AsRef<T> for Value<T> {
+    fn as_ref(&self) -> &T {
+        &self.inner
+    }
+}
+
+impl<T> AsMut<T> for Value<T> {
+    fn as_mut(&mut self) -> &mut T {
+        &mut self.inner
+    }
+}
+
+impl<T> Deref for Value<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+impl<T> DerefMut for Value<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
     }
 }
