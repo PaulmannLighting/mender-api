@@ -7,6 +7,7 @@ use crate::api::dto::Scope;
 /// Attribute values.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 pub struct Value<T> {
+    #[serde(rename = "value")]
     inner: T,
     scope: Scope,
     description: Option<String>,
