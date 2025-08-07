@@ -137,5 +137,5 @@ pub enum Attribute {
     RootfsImageVersion(Value<String>),
     /// Update modules.
     #[serde(rename = "update_modules")]
-    RootfsImageChecksumType(Value<Vec<String>>),
+    UpdateModules(Value<Vec<String>>),
 }
