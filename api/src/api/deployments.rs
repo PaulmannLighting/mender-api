@@ -14,18 +14,17 @@ pub trait Deployments<'this> {
         self,
         page_size: Option<NonZero<usize>>,
     ) -> PageIterator<'this, 'static, ListDeployment>;
+    /// Collect deployments into a `Vec`.
+    fn collect(
+        self,
+        page_size: Option<NonZero<usize>>,
+    ) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 
     /// Create a new deployment.
     fn create(
         self,
         deployment: &NewDeployment,
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
-
-    /// Collect deployments into a `Vec`.
-    fn collect(
-        self,
-        page_size: Option<NonZero<usize>>,
-    ) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 }
 
 impl<'session> Deployments<'session> for &'session Session {
@@ -34,6 +33,15 @@ impl<'session> Deployments<'session> for &'session Session {
         page_size: Option<NonZero<usize>>,
     ) -> PageIterator<'session, 'static, ListDeployment> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
+    }
+
+    async fn collect(
+        self,
+        page_size: Option<NonZero<usize>>,
+    ) -> reqwest::Result<Vec<ListDeployment>> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
+            .collect()
+            .await
     }
 
     async fn create(self, deployment: &NewDeployment) -> reqwest::Result<String> {
@@ -45,15 +53,6 @@ impl<'session> Deployments<'session> for &'session Session {
             .await?
             .error_for_status()?
             .text()
-            .await
-    }
-
-    async fn collect(
-        self,
-        page_size: Option<NonZero<usize>>,
-    ) -> reqwest::Result<Vec<ListDeployment>> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
-            .collect()
             .await
     }
 }
