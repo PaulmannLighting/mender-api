@@ -11,18 +11,13 @@ pub struct Value<T> {
     #[serde(rename = "value")]
     inner: T,
     scope: Scope,
-    description: Option<String>,
 }
 
 impl<T> Value<T> {
     /// Create a new `Value` with the given value, scope, and optional description.
     #[must_use]
-    pub const fn new(inner: T, scope: Scope, description: Option<String>) -> Self {
-        Self {
-            inner,
-            scope,
-            description,
-        }
+    pub const fn new(inner: T, scope: Scope) -> Self {
+        Self { inner, scope }
     }
 
     /// Return the inner value.
@@ -37,12 +32,6 @@ impl<T> Value<T> {
         &self.scope
     }
 
-    /// Return the description of the value.
-    #[must_use]
-    pub const fn description(&self) -> Option<&String> {
-        self.description.as_ref()
-    }
-
     /// Display the value with the representation of the inner value given by `fmt_inner`.
     pub(crate) fn display_with<F>(
         &self,
@@ -54,13 +43,7 @@ impl<T> Value<T> {
     {
         write!(f, "Value: ")?;
         fmt_inner(&self.inner, f)?;
-        write!(f, ", Scope: {}", self.scope)?;
-
-        if let Some(ref description) = self.description {
-            write!(f, ", Description: {description}")?;
-        }
-
-        Ok(())
+        write!(f, ", Scope: {}", self.scope)
     }
 }
 
