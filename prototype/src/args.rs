@@ -107,6 +107,16 @@ pub enum DevAuth {
 pub enum Device {
     #[clap(name = "list")]
     List,
+    Get {
+        #[clap(index = 1, help = "ID of the device to retrieve")]
+        id: Uuid,
+    },
+    AddToGroup {
+        #[clap(index = 1, help = "ID of the device to add to a group")]
+        id: Uuid,
+        #[clap(index = 2, help = "Name of the group to add the device to")]
+        group_name: String,
+    },
     #[clap(name = "by-mac")]
     ByMac {
         #[clap(index = 1, help = "Find a device by its MAC address")]

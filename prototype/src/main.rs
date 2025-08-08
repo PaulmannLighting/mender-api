@@ -80,6 +80,15 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     println!("{device:#}");
                 }
             }
+            Device::Get { id } => {
+                let device = Devices::get(&session, id).await.or_bail()?;
+                println!("{device:#}");
+            }
+            Device::AddToGroup { id, group_name } => {
+                Devices::add_to_group(&session, id, group_name)
+                    .await
+                    .or_bail()?;
+            }
             Device::ByMac { mac_address } => {
                 Devices::collect(&session, None)
                     .await
