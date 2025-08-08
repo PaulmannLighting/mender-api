@@ -53,7 +53,6 @@ pub enum Attribute {
     /// The status of the device.
     #[serde(rename = "status")]
     Status {
-        /// The actual device status.
         /// The attribute value.
         value: Status,
         /// The scope of this attribute.
@@ -87,7 +86,6 @@ pub enum Attribute {
     /// The type of the device.
     #[serde(rename = "device_type")]
     DeviceType {
-        /// The actual device type.
         /// The attribute value.
         value: DeviceType,
 
