@@ -23,207 +23,330 @@ pub enum Attribute {
     /// The name of the device.
     #[serde(rename = "name")]
     Name {
-        /// The actual name.
+        /// The attribute value.
         value: String,
-        /// The scope of the name's value.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The device's MAC address.
     #[serde(rename = "mac")]
     Mac {
-        /// The actual MAC address.
+        /// The attribute value.
         #[serde(with = "as_str")]
         value: MacAddr6,
-        /// The scope of the MAC address.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The timestamp when the device was created.
     #[serde(rename = "created_ts")]
     Created {
-        /// The actual creation timestamp.
+        /// The attribute value.
         value: DateTime<FixedOffset>,
-        /// The scope of the creation timestamp.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The timestamp when the device was last updated.
     #[serde(rename = "updated_ts")]
     Updated {
-        /// The actual update timestamp.
+        /// The attribute value.
         value: DateTime<FixedOffset>,
-        /// The scope of the update timestamp.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The status of the device.
     #[serde(rename = "status")]
     Status {
         /// The actual device status.
+        /// The attribute value.
         value: Status,
-        /// The scope of the device status.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The names of the groups that the device is a member of.
     #[serde(rename = "group")]
     Group {
-        /// The actual group name.
+        /// The attribute value.
         value: String,
-        /// The scope of the group name.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The name of the artifact currently installed on the device.
     #[serde(rename = "artifact_name")]
     ArtifactName {
-        /// The actual artifact name.
+        /// The attribute value.
         value: String,
-        /// The scope of the artifact name.
+
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The model of the CPU on the device.
     #[serde(rename = "cpu_model")]
     CpuModel {
-        /// The actual CPU model.
+        /// The attribute value.
         value: String,
-        /// The scope of the CPU model.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The type of the device.
     #[serde(rename = "device_type")]
     DeviceType {
         /// The actual device type.
+        /// The attribute value.
         value: DeviceType,
-        /// The scope of the device type.
+
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The hostname of the device.
     #[serde(rename = "hostname")]
     Hostname {
-        /// The actual host name.
+        /// The attribute value.
         value: String,
-        /// The scope of the host name.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The IPv4 address assigned to the device's first Ethernet interface (eth0).
     #[serde(rename = "ipv4_eth0")]
     Ipv4Eth0 {
-        /// The actual IPv4 addresses.
+        /// The attribute value.
         value: OneOrMany<Ipv4Net>,
-        /// The scope of the IPv4 addresses.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The IPv6 address assigned to the device's first Ethernet interface (eth0).
     #[serde(rename = "ipv6_eth0")]
     Ipv6Eth0 {
-        /// The actual IPv6 addresses.
+        /// The attribute value.
         value: OneOrMany<Ipv6Net>,
-        /// The scope of the IPv6 addresses.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The kernel running on the device.
     #[serde(rename = "kernel")]
     Kernel {
-        /// The actual kernel name and version.
+        /// The attribute value.
         value: String,
-        /// The scope of the kernel name and version.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The MAC address of the device's first Ethernet interface (eth0).
     #[serde(rename = "mac_eth0")]
     MacEth0 {
-        /// The actual MAC address.
+        /// The attribute value.
         #[serde(with = "as_str")]
         value: MacAddr6,
-        /// The scope of the MAC address.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The amount of memory available on the device, in kilobytes.
     #[serde(rename = "mem_total_kB")]
     MemTotalKB {
-        /// The actual amount of memory in kB.
+        /// The attribute value.
         #[serde(with = "as_str")]
         value: usize,
-        /// The scope of the memory amount.
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The bootloader integration used by the device.
     #[serde(rename = "mender_bootloader_integration")]
     MenderBootloaderIntegration {
+        /// The attribute value.
         value: BootloaderIntegration,
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The Mender client version running on the device.
     #[serde(rename = "mender_client_version")]
-    MenderClientVersion { value: Version, scope: Scope },
+    MenderClientVersion {
+        /// The attribute value.
+        value: Version,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The networking interfaces available on the device.
     #[serde(rename = "network_interfaces")]
     NetworkInterfaces {
+        /// The attribute value.
         value: OneOrMany<String>,
+        /// The scope of this attribute.
         scope: Scope,
     },
     /// The operating system running on the device.
     #[serde(rename = "os")]
-    Os { value: String, scope: Scope },
+    Os {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The file system type of the device's root filesystem.
     #[serde(rename = "rootfs_type")]
-    RootfsType { value: RootfsType, scope: Scope },
+    RootfsType {
+        /// The attribute value.
+        value: RootfsType,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The city where the device is located.
     #[serde(rename = "geo-city")]
-    GeoCity { value: String, scope: Scope },
+    GeoCity {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The country where the device is located.
     #[serde(rename = "geo-country")]
-    GeoCountry { value: Country, scope: Scope },
+    GeoCountry {
+        /// The attribute value.
+        value: Country,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The IP address of the device, used for geolocation.
     #[serde(rename = "geo-ip")]
-    GeoIp { value: IpAddr, scope: Scope },
+    GeoIp {
+        /// The attribute value.
+        value: IpAddr,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The timezone of the device, used for geolocation.
     #[serde(rename = "geo-timezone")]
-    GeoTimezone { value: String, scope: Scope },
+    GeoTimezone {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// Some weird 4-byte MAC-like address. Purpose unknown.
     #[serde(rename = "mac_sit0")]
-    MacSit0 { value: String, scope: Scope },
+    MacSit0 {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The checksum of the root filesystem image.
     #[serde(rename = "rootfs-image.checksum")]
-    RootfsImageChecksum { value: String, scope: Scope },
+    RootfsImageChecksum {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.deb.mender_update_module")]
-    RootfsImageUpdateModuleDebMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleDebMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.deb.version")]
-    RootfsImageUpdateModuleDebVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleDebVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.directory.mender_update_module")]
-    RootfsImageUpdateModuleDirectoryMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleDirectoryMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.directory.version")]
-    RootfsImageUpdateModuleDirectoryVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleDirectoryVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.docker.mender_update_module")]
-    RootfsImageUpdateModuleDockerMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleDockerMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.docker.version")]
-    RootfsImageUpdateModuleDockerVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleDockerVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.rpm.mender_update_module")]
-    RootfsImageUpdateModuleRpmMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleRpmMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.rpm.version")]
-    RootfsImageUpdateModuleRpmVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleRpmVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.script.mender_update_module")]
-    RootfsImageUpdateModuleScriptMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleScriptMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.script.version")]
-    RootfsImageUpdateModuleScriptVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleScriptVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.single-file.mender_update_module")]
-    RootfsImageUpdateModuleSingleFileMenderUpdateModule { value: String, scope: Scope },
+    RootfsImageUpdateModuleSingleFileMenderUpdateModule {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// TODO: Field with unknown purpose.
     #[serde(rename = "rootfs-image.update-module.single-file.version")]
-    RootfsImageUpdateModuleSingleFileVersion { value: String, scope: Scope },
+    RootfsImageUpdateModuleSingleFileVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// The version of the root filesystem image installed on the device.
     #[serde(rename = "rootfs-image.version")]
-    RootfsImageVersion { value: String, scope: Scope },
+    RootfsImageVersion {
+        /// The attribute value.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
     /// Update modules.
     #[serde(rename = "update_modules")]
-    UpdateModules { value: Vec<String>, scope: Scope },
+    UpdateModules {
+        /// The attribute value.
+        value: Vec<String>,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
 }
 
 impl Display for Attribute {
