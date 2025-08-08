@@ -19,6 +19,7 @@ async fn main() -> ExitCode {
     run(Args::parse()).await.into_exit_code()
 }
 
+#[allow(clippy::cognitive_complexity)]
 #[allow(clippy::too_many_lines)]
 async fn run(args: Args) -> Result<(), ExitCode> {
     let cert = args.certificate()?;
