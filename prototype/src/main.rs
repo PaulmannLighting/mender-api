@@ -33,6 +33,11 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     println!("{deployment:?}");
                 }
             }
+            Deployment::DevicesOf { id } => {
+                for device_id in session.deployments().devices_of(id).await.or_bail()? {
+                    println!("{device_id}");
+                }
+            }
             Deployment::Add {
                 name,
                 artifact_name,

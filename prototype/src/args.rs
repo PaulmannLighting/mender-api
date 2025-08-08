@@ -66,6 +66,11 @@ pub enum Endpoint {
 pub enum Deployment {
     #[clap(name = "list")]
     List,
+    #[clap(name = "devices-of")]
+    DevicesOf {
+        #[clap(index = 1, help = "List devices for a specific deployment")]
+        id: Uuid,
+    },
     #[clap(name = "add")]
     Add {
         #[clap(index = 1, help = "Name of the deployment")]
