@@ -10,6 +10,7 @@ pub struct Session {
     bearer_token: String,
 }
 
+/// Crate internals.
 impl Session {
     /// Create a new `Endpoint` with the specified Mender server.
     pub(crate) const fn new(client: Client, base_url: Url, bearer_token: String) -> Self {
@@ -19,10 +20,7 @@ impl Session {
             bearer_token,
         }
     }
-}
 
-/// Crate internals.
-impl Session {
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
     pub(crate) fn format_url<P, Q>(&self, path: P, query: Q) -> Url
