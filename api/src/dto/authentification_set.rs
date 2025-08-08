@@ -1,3 +1,4 @@
+use chrono::{DateTime, FixedOffset};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -11,7 +12,8 @@ pub struct AuthentificationSet {
     #[serde(rename = "identity_data")]
     identity: Identity,
     pubkey: String,
-    ts: String,
+    #[serde(rename = "ts")]
+    timestamp: DateTime<FixedOffset>,
     status: Status,
 }
 
@@ -36,8 +38,8 @@ impl AuthentificationSet {
 
     /// Returns the timestamp of the authentification set.
     #[must_use]
-    pub fn ts(&self) -> &str {
-        &self.ts
+    pub const fn timestamp(&self) -> DateTime<FixedOffset> {
+        self.timestamp
     }
 
     /// Returns the status of the authentification set.
