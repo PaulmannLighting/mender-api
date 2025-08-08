@@ -9,7 +9,6 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::dto::Attribute;
-use crate::dto::types::MacAddress;
 
 mod group;
 
@@ -56,16 +55,13 @@ impl Device {
 
     /// Return the MAC addresses of the device.
     pub fn mac_addresses(&self) -> impl Iterator<Item = MacAddr6> {
-        self.attributes
-            .iter()
-            .filter_map(|attr| {
-                if let Attribute::Mac(mac_value) = attr {
-                    Some(*mac_value.inner())
-                } else {
-                    None
-                }
-            })
-            .map(MacAddress::into_inner)
+        self.attributes.iter().filter_map(|attr| {
+            if let Attribute::Mac { value, .. } = attr {
+                Some(*value)
+            } else {
+                None
+            }
+        })
     }
 
     /// Return the MAC address of the device if it exists.
@@ -77,8 +73,8 @@ impl Device {
     /// Return the groups of the device.
     pub fn groups(&self) -> impl Iterator<Item = &str> {
         self.attributes.iter().filter_map(|attr| {
-            if let Attribute::Group(name) = attr {
-                Some(name.inner().as_str())
+            if let Attribute::Group { value, .. } = attr {
+                Some(value.as_str())
             } else {
                 None
             }

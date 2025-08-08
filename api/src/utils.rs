@@ -1,4 +1,8 @@
+//! Common utility functions for formatting and displaying data.
+
 use std::fmt::Display;
+
+pub mod as_str;
 
 /// Display a slice of items, formatting them as a comma-separated list enclosed in square brackets.
 pub fn display_slice<T>(items: &[T], f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result
