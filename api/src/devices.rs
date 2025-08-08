@@ -8,7 +8,7 @@ use crate::dto::{Device, DeviceGroup};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
-const PATH: &str = "/api/management/v1/inventory/device";
+const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Devices management API.
 pub trait Devices {
@@ -29,7 +29,7 @@ pub trait Devices {
         &self,
         id: Uuid,
         group_name: T,
-    ) -> impl Future<Output = reqwest::Result<()>> + Send
+    ) -> impl Future<Output = reqwest::Result<String>> + Send
     where
         T: AsRef<str> + Send;
 }
@@ -56,7 +56,7 @@ impl Devices for Session {
             .await
     }
 
-    async fn add_to_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
+    async fn add_to_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<String>
     where
         T: AsRef<str> + Send,
     {
@@ -66,7 +66,8 @@ impl Devices for Session {
             .json(&DeviceGroup::new(group_name.as_ref()))
             .send()
             .await?
-            .error_for_status()?;
-        Ok(())
+            .error_for_status()?
+            .text()
+            .await
     }
 }
