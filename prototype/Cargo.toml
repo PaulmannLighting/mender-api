@@ -9,7 +9,7 @@ clap = { version = "4.5.42", features = ["derive"] }
 env_logger = "0.11.8"
 log = "0.4.27"
 macaddr = "1.0.1"
-mender-api = { path = "../api" }
+mender-api = { path = "../api", features = ["clap"] }
 tokio = { version = "1.47.1", features = ["rt", "rt-multi-thread", "macros"] }
 uuid = "1.17.0"
 

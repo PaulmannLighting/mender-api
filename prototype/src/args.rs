@@ -6,6 +6,7 @@ use clap::{Parser, Subcommand};
 use log::error;
 use macaddr::MacAddr6;
 use mender_api::Certificate;
+use mender_api::dto::Status;
 use uuid::Uuid;
 
 use crate::util::OrBail;
@@ -43,10 +44,13 @@ impl Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Endpoint {
-    #[clap(name = "deployment")]
     Deployment {
         #[clap(subcommand)]
         action: Deployment,
+    },
+    DevAuth {
+        #[clap(subcommand)]
+        action: DevAuth,
     },
     Device {
         #[clap(subcommand)]
@@ -81,6 +85,21 @@ pub enum Deployment {
         devices: Vec<Uuid>,
         #[clap(long, short = 'R', help = "Number of retries for the deployment")]
         retries: usize,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum DevAuth {
+    #[clap(name = "list")]
+    List,
+    #[clap(name = "set-status")]
+    SetStatus {
+        #[clap(help = "UUID of the device to set status for")]
+        id: Uuid,
+        #[clap(help = "Authentication UUID of the device")]
+        auth_id: Uuid,
+        #[clap(help = "Status to set for the device")]
+        status: Status,
     },
 }
 

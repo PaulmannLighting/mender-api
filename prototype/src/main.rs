@@ -5,9 +5,9 @@ use std::process::ExitCode;
 use args::Args;
 use clap::Parser;
 use mender_api::dto::NewDeployment;
-use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
+use mender_api::{Client, Deployments, DevAuth, Devices, Groups, Login, Releases};
 
-use crate::args::{Deployment, Device, Endpoint, Group, Release};
+use crate::args::{Deployment, DevAuth as DevAuthArg, Device, Endpoint, Group, Release};
 use crate::util::{IntoExitCode, OrBail};
 
 mod args;
@@ -19,6 +19,7 @@ async fn main() -> ExitCode {
     run(Args::parse()).await.into_exit_code()
 }
 
+#[allow(clippy::too_many_lines)]
 async fn run(args: Args) -> Result<(), ExitCode> {
     let cert = args.certificate()?;
     let server = Client::new(args.url.parse().or_bail()?, cert, args.insecure).or_bail()?;
@@ -50,6 +51,24 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 )
                 .await
                 .or_bail()?;
+            }
+        },
+        Endpoint::DevAuth { action } => match action {
+            DevAuthArg::List => {
+                let mut devices = DevAuth::list(&session, None);
+
+                while let Some(device) = devices.next().await {
+                    println!("{device:?}");
+                }
+            }
+            DevAuthArg::SetStatus {
+                id,
+                auth_id,
+                status,
+            } => {
+                DevAuth::set_status(&session, id, auth_id, status)
+                    .await
+                    .or_bail()?;
             }
         },
         Endpoint::Device { action } => match action {
