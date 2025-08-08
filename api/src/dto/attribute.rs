@@ -139,7 +139,7 @@ pub enum Attribute {
     MemTotalKB {
         /// The actual amount of memory in kB.
         #[serde(with = "as_str")]
-        value: u32,
+        value: usize,
         /// The scope of the memory amount.
         scope: Scope,
     },
