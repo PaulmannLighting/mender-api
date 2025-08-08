@@ -7,6 +7,7 @@ use crate::dto::deployments::Status;
 
 /// Represents a deployment in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Deployment {
     name: String,
     artifact_name: String,

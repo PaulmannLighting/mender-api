@@ -6,6 +6,7 @@ use crate::dto::Artifact;
 
 /// Represents a release in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Release {
     #[serde(rename = "Name")]
     name: String,

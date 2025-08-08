@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Response from a patch operation on a group.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct PatchGroupResponse {
     #[serde(rename = "matched_count")]
     matched: usize,

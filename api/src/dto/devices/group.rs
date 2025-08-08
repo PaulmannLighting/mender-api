@@ -2,6 +2,7 @@ use serde::Serialize;
 
 /// Group payload for adding a device to a group.
 #[derive(Clone, Debug, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Group<'name> {
     #[serde(rename = "group")]
     name: &'name str,

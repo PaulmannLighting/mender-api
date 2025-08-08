@@ -4,6 +4,7 @@ use super::{File, TypeInfo};
 
 /// Update information of an artifact.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Update {
     type_info: TypeInfo,
     files: Vec<File>,

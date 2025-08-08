@@ -4,6 +4,7 @@ use crate::dto::DeviceType;
 
 /// Artifact dependencies.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Dependency {
     device_type: Vec<DeviceType>,
 }

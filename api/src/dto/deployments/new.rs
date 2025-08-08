@@ -3,6 +3,7 @@ use uuid::Uuid;
 
 /// A new deployment request.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Deployment {
     name: String,
     artifact_name: String,

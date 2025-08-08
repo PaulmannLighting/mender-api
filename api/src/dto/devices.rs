@@ -14,6 +14,7 @@ mod group;
 
 /// A device in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Device {
     id: Uuid,
     attributes: Vec<Attribute>,

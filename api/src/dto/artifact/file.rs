@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 /// File information for an artifact.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct File {
     name: String,
     checksum: String,

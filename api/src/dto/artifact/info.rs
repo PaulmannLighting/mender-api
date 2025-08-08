@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// Information about an artifact.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Info {
     format: String, // TODO: use a specific enum for format
     version: u8,

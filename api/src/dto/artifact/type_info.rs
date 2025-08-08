@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// Type information for artifacts in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct TypeInfo {
     r#type: String,
 }
