@@ -11,14 +11,14 @@ use crate::session::Session;
 
 mod proxy;
 
-const PATH: &str = "/api/management/v1/inventory/devices";
+const PATH: &str = "/api/management/v1/inventory/device";
 
 /// Devices management API.
 pub trait Devices {
-    /// List devices.
+    /// List device.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Device>;
 
-    /// Collect devices into a `Vec`.
+    /// Collect device into a `Vec`.
     fn collect(
         &self,
         page_size: Option<NonZero<usize>>,

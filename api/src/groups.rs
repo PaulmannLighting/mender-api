@@ -13,14 +13,14 @@ pub trait Groups {
     /// List all groups available in the Mender server.
     fn list(&self) -> impl Future<Output = reqwest::Result<Vec<String>>> + Send;
 
-    /// List all devices that are members of the specified group.
+    /// List all device that are members of the specified group.
     fn devices_of(
         &self,
         group_name: &str,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 
-    /// Update or create a new group with the specified name and devices.
+    /// Update or create a new group with the specified name and device.
     fn patch(
         &self,
         name: &str,
@@ -47,7 +47,7 @@ impl Groups for Session {
     ) -> reqwest::Result<Vec<Uuid>> {
         Pager::new(
             self,
-            &format!("{PATH}/{group_name}/devices"),
+            &format!("{PATH}/{group_name}/device"),
             page_size.unwrap_or(DEFAULT_PAGE_SIZE),
         )
         .collect()
@@ -56,7 +56,7 @@ impl Groups for Session {
 
     async fn patch(&self, name: &str, devices: &[Uuid]) -> reqwest::Result<PatchGroupResponse> {
         self.client()
-            .patch(self.format_url(format!("{PATH}/{name}/devices"), None))
+            .patch(self.format_url(format!("{PATH}/{name}/device"), None))
             .bearer_auth(self.bearer_token())
             .json(devices)
             .send()

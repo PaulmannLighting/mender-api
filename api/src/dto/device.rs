@@ -1,4 +1,4 @@
-//! Data structures for listing devices.
+//! Data structures for listing device.
 
 use std::fmt::{Debug, Display};
 

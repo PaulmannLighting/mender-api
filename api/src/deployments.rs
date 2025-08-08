@@ -6,20 +6,20 @@ use crate::dto::{ListDeployment, NewDeployment};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
-const PATH: &str = "/api/management/v1/deployments/deployments";
+const PATH: &str = "/api/management/v1/deployment/deployment";
 
 /// Deployments management API.
 pub trait Deployments {
-    /// List deployments.
+    /// List deployment.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, ListDeployment>;
 
-    /// Collect deployments into a `Vec`.
+    /// Collect deployment into a `Vec`.
     fn collect(
         &self,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 
-    /// List devices of the given deployment.
+    /// List device of the given deployment.
     fn devices_of(&self, id: Uuid) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 
     /// Create a new deployment.

@@ -3,7 +3,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::dto::Kind;
-use crate::dto::deployments::Status;
+use crate::dto::deployment::Status;
 
 /// Represents a deployment in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize)]
@@ -67,13 +67,13 @@ impl Deployment {
         &self.status
     }
 
-    /// Returns the number of devices in the deployment.
+    /// Returns the number of device in the deployment.
     #[must_use]
     pub const fn device_count(&self) -> usize {
         self.device_count
     }
 
-    /// Returns the maximum number of devices allowed in the deployment.
+    /// Returns the maximum number of device allowed in the deployment.
     #[must_use]
     pub const fn max_devices(&self) -> usize {
         self.max_devices

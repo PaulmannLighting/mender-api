@@ -7,11 +7,11 @@ use crate::dto::{DevAuthDevice, Status};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
-const PATH: &str = "/api/management/v2/devauth/devices";
+const PATH: &str = "/api/management/v2/devauth/device";
 
 /// API to the device authentication (`DevAuth`) service.
 pub trait DevAuth {
-    /// List devices with the specified page size.
+    /// List device with the specified page size.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, DevAuthDevice>;
 
     /// Set the status of the device with the specified ID.

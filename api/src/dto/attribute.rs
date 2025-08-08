@@ -13,7 +13,7 @@ use crate::dto::types::OneOrMany;
 use crate::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
 use crate::utils::{as_str, display_slice};
 
-/// Available attributes for devices in the Mender inventory API.
+/// Available attributes for device in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "name")]
 pub enum Attribute {

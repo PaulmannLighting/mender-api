@@ -70,9 +70,9 @@ pub enum Endpoint {
 pub enum Deployment {
     #[clap(name = "list")]
     List,
-    #[clap(name = "devices-of")]
+    #[clap(name = "device-of")]
     DevicesOf {
-        #[clap(index = 1, help = "List devices for a specific deployment")]
+        #[clap(index = 1, help = "List device for a specific deployment")]
         id: Uuid,
     },
     #[clap(name = "add")]
@@ -118,9 +118,9 @@ pub enum Device {
 pub enum Group {
     #[clap(name = "list")]
     List,
-    #[clap(name = "devices")]
+    #[clap(name = "device")]
     Devices {
-        #[clap(index = 1, help = "List the devices in a group")]
+        #[clap(index = 1, help = "List the device in a group")]
         name: String,
     },
     #[clap(name = "patch")]

@@ -4,7 +4,7 @@ use crate::dto::Release;
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
-const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
+const PATH: &str = "/api/management/v1/deployment/deployment/releases/list";
 
 /// Releases management API.
 pub trait Releases {
