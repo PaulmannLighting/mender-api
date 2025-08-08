@@ -4,17 +4,14 @@ use std::net::IpAddr;
 use chrono::{DateTime, FixedOffset};
 use ipnet::{Ipv4Net, Ipv6Net};
 use macaddr::MacAddr6;
-pub use scope::Scope;
 use semver::Version;
 use serde::{Deserialize, Serialize};
-pub use status::Status;
 
+use crate::dto::scope::Scope;
+use crate::dto::status::Status;
 use crate::dto::types::OneOrMany;
 use crate::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
 use crate::utils::{as_str, display_slice};
-
-mod scope;
-mod status;
 
 /// Available attributes for devices in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]

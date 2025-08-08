@@ -19,6 +19,23 @@ impl<'session> Proxy<'session> {
 }
 
 impl Proxy<'_> {
+    /// Return the status of the device.
+    pub async fn status(&self) -> reqwest::Result<String> {
+        let url = self
+            .session
+            .format_url(format!("{PATH}/{}/status", self.id), None);
+        let response = self
+            .session
+            .client()
+            .get(url)
+            .bearer_auth(self.session.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?;
+        let status: String = response.json().await?;
+        Ok(status)
+    }
+
     /// Add the device to the specified group.
     pub async fn add_to_group<T>(&self, group_name: T) -> reqwest::Result<()>
     where
