@@ -251,6 +251,8 @@ pub enum Attribute {
         /// The scope of this attribute.
         scope: Scope,
     },
+    #[serde(other)]
+    Other,
 }
 
 impl Display for Attribute {
@@ -366,6 +368,7 @@ impl Display for Attribute {
                 Display::fmt(value, f)
             }
             Self::UpdateModules { value, .. } => display_slice(value, f),
+            Self::Other => write!(f, "other"),
         }
     }
 }
