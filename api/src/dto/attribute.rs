@@ -22,71 +22,125 @@ mod status;
 pub enum Attribute {
     /// The name of the device.
     #[serde(rename = "name")]
-    Name { value: String, scope: Scope },
+    Name {
+        /// The actual name.
+        value: String,
+        /// The scope of the name's value.
+        scope: Scope,
+    },
     /// The device's MAC address.
     #[serde(rename = "mac")]
     Mac {
+        /// The actual MAC address.
         #[serde(with = "as_str")]
         value: MacAddr6,
+        /// The scope of the MAC address.
         scope: Scope,
     },
     /// The timestamp when the device was created.
     #[serde(rename = "created_ts")]
     Created {
+        /// The actual creation timestamp.
         value: DateTime<FixedOffset>,
+        /// The scope of the creation timestamp.
         scope: Scope,
     },
     /// The timestamp when the device was last updated.
     #[serde(rename = "updated_ts")]
     Updated {
+        /// The actual update timestamp.
         value: DateTime<FixedOffset>,
+        /// The scope of the update timestamp.
         scope: Scope,
     },
     /// The status of the device.
     #[serde(rename = "status")]
-    Status { value: Status, scope: Scope },
+    Status {
+        /// The actual device status.
+        value: Status,
+        /// The scope of the device status.
+        scope: Scope,
+    },
     /// The names of the groups that the device is a member of.
     #[serde(rename = "group")]
-    Group { value: String, scope: Scope },
+    Group {
+        /// The actual group name.
+        value: String,
+        /// The scope of the group name.
+        scope: Scope,
+    },
     /// The name of the artifact currently installed on the device.
     #[serde(rename = "artifact_name")]
-    ArtifactName { value: String, scope: Scope },
+    ArtifactName {
+        /// The actual artifact name.
+        value: String,
+        /// The scope of the artifact name.
+        scope: Scope,
+    },
     /// The model of the CPU on the device.
     #[serde(rename = "cpu_model")]
-    CpuModel { value: String, scope: Scope },
+    CpuModel {
+        /// The actual CPU model.
+        value: String,
+        /// The scope of the CPU model.
+        scope: Scope,
+    },
     /// The type of the device.
     #[serde(rename = "device_type")]
-    DeviceType { value: DeviceType, scope: Scope },
+    DeviceType {
+        /// The actual device type.
+        value: DeviceType,
+        /// The scope of the device type.
+        scope: Scope,
+    },
     /// The hostname of the device.
     #[serde(rename = "hostname")]
-    Hostname { value: String, scope: Scope },
+    Hostname {
+        /// The actual host name.
+        value: String,
+        /// The scope of the host name.
+        scope: Scope,
+    },
     /// The IPv4 address assigned to the device's first Ethernet interface (eth0).
     #[serde(rename = "ipv4_eth0")]
     Ipv4Eth0 {
+        /// The actual IPv4 addresses.
         value: OneOrMany<Ipv4Net>,
+        /// The scope of the IPv4 addresses.
         scope: Scope,
     },
     /// The IPv6 address assigned to the device's first Ethernet interface (eth0).
     #[serde(rename = "ipv6_eth0")]
     Ipv6Eth0 {
+        /// The actual IPv6 addresses.
         value: OneOrMany<Ipv6Net>,
+        /// The scope of the IPv6 addresses.
         scope: Scope,
     },
     /// The kernel running on the device.
     #[serde(rename = "kernel")]
-    Kernel { value: String, scope: Scope },
+    Kernel {
+        /// The actual kernel name and version.
+        value: String,
+        /// The scope of the kernel name and version.
+        scope: Scope,
+    },
     /// The MAC address of the device's first Ethernet interface (eth0).
     #[serde(rename = "mac_eth0")]
     MacEth0 {
+        /// The actual MAC address.
         #[serde(with = "as_str")]
         value: MacAddr6,
+        /// The scope of the MAC address.
         scope: Scope,
     },
     /// The amount of memory available on the device, in kilobytes.
     #[serde(rename = "mem_total_kB")]
     MemTotalKB {
+        /// The actual amount of memory in kB.
         #[serde(with = "as_str")]
         value: u32,
+        /// The scope of the memory amount.
         scope: Scope,
     },
     /// The bootloader integration used by the device.
