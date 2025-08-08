@@ -251,6 +251,7 @@ pub enum Attribute {
         /// The scope of this attribute.
         scope: Scope,
     },
+    /// Unknown, unimplemented or unused other attributes.
     #[serde(other)]
     Other,
 }
