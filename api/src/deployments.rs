@@ -1,5 +1,7 @@
 use std::num::NonZero;
 
+use uuid::Uuid;
+
 use crate::dto::{ListDeployment, NewDeployment};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
@@ -16,6 +18,9 @@ pub trait Deployments<'this, 'path> {
         self,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
+
+    /// List devices of the given deployment.
+    fn devices_of(self, id: Uuid) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 
     /// Create a new deployment.
     fn create(
@@ -38,6 +43,17 @@ impl<'session> Deployments<'session, 'static> for &'session Session {
     ) -> reqwest::Result<Vec<ListDeployment>> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
+            .await
+    }
+
+    async fn devices_of(self, id: Uuid) -> reqwest::Result<Vec<Uuid>> {
+        self.client()
+            .get(self.format_url(format!("{PATH}/{id}/device_list"), None))
+            .bearer_auth(self.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
             .await
     }
 
