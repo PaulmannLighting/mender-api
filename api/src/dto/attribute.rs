@@ -15,8 +15,36 @@ use crate::utils::{as_str, display_slice};
 
 /// Available attributes for device in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
-#[serde(tag = "name")]
+#[serde(untagged)]
 pub enum Attribute {
+    /// Known attributes with known types.
+    Known(KnownAttribute),
+    /// Unknown attributes with unknown types.
+    Unknown {
+        /// The name of the unknown attribute.
+        name: String,
+        /// The value of the unknown attribute.
+        value: String,
+        /// The scope of this attribute.
+        scope: Scope,
+    },
+}
+
+impl Display for Attribute {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Known(known) => Display::fmt(known, f),
+            Self::Unknown { name, value, scope } => {
+                write!(f, "{name}: {value} ({scope})")
+            }
+        }
+    }
+}
+
+/// Known attributes for device in the Mender inventory API.
+#[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[serde(tag = "name")]
+pub enum KnownAttribute {
     /// The name of the device.
     #[serde(rename = "name")]
     Name {
@@ -246,12 +274,9 @@ pub enum Attribute {
         /// The scope of this attribute.
         scope: Scope,
     },
-    /// Unknown, unimplemented or unused other attributes.
-    #[serde(other)]
-    Other,
 }
 
-impl Display for Attribute {
+impl Display for KnownAttribute {
     #[allow(clippy::too_many_lines)]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -364,7 +389,6 @@ impl Display for Attribute {
                 Display::fmt(value, f)
             }
             Self::UpdateModules { value, .. } => display_slice(value, f),
-            Self::Other => write!(f, "other"),
         }
     }
 }

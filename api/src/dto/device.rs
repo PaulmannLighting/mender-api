@@ -8,7 +8,7 @@ use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::dto::Attribute;
+use crate::dto::{Attribute, KnownAttribute};
 
 mod group;
 
@@ -54,10 +54,21 @@ impl Device {
         &self.updated_ts
     }
 
+    /// Return an iterator over known attributes of the device.
+    pub fn known_attributes(&self) -> impl Iterator<Item = &KnownAttribute> {
+        self.attributes.iter().filter_map(|attr| {
+            if let Attribute::Known(known_attr) = attr {
+                Some(known_attr)
+            } else {
+                None
+            }
+        })
+    }
+
     /// Return the MAC addresses of the device.
     pub fn mac_addresses(&self) -> impl Iterator<Item = MacAddr6> {
-        self.attributes.iter().filter_map(|attr| {
-            if let Attribute::Mac { value, .. } = attr {
+        self.known_attributes().filter_map(|attr| {
+            if let KnownAttribute::Mac { value, .. } = attr {
                 Some(*value)
             } else {
                 None
@@ -73,8 +84,8 @@ impl Device {
 
     /// Return the groups of the device.
     pub fn groups(&self) -> impl Iterator<Item = &str> {
-        self.attributes.iter().filter_map(|attr| {
-            if let Attribute::Group { value, .. } = attr {
+        self.known_attributes().filter_map(|attr| {
+            if let KnownAttribute::Group { value, .. } = attr {
                 Some(value.as_str())
             } else {
                 None
@@ -91,11 +102,7 @@ impl Display for Device {
             self.id, self.updated_ts
         )?;
 
-        for attribute in self
-            .attributes
-            .iter()
-            .filter(|&attribute| attribute != &Attribute::Other)
-        {
+        for attribute in self.attributes.iter() {
             write!(f, "\t\t- ")?;
             Display::fmt(attribute, f)?;
             writeln!(f)?;
