@@ -1,7 +1,5 @@
 use reqwest::{Client, Url};
 
-use crate::{Deployments, Devices, Groups, Releases};
-
 /// Represents an endpoint for the Mender server API.
 #[derive(Clone, Debug)]
 pub struct Session {
@@ -10,7 +8,6 @@ pub struct Session {
     bearer_token: String,
 }
 
-/// Crate internals.
 impl Session {
     /// Create a new `Endpoint` with the specified Mender server.
     pub(crate) const fn new(client: Client, base_url: Url, bearer_token: String) -> Self {
@@ -48,32 +45,5 @@ impl Session {
     #[must_use]
     pub(crate) fn bearer_token(&self) -> &str {
         &self.bearer_token
-    }
-}
-
-/// External API.
-impl Session {
-    /// Return an opaque type to proxy deployment-related operations.
-    #[must_use]
-    pub fn deployments(&self) -> impl Deployments<'_, 'static> {
-        self
-    }
-
-    /// Return an opaque type to proxy devices-related operations.
-    #[must_use]
-    pub fn devices(&self) -> impl Devices<'_, 'static> {
-        self
-    }
-
-    /// Return an opaque type to proxy groups-related operations.
-    #[must_use]
-    pub fn groups(&self) -> impl Groups {
-        self
-    }
-
-    /// Return an opaque type to proxy releases-related operations.
-    #[must_use]
-    pub fn releases(&self) -> impl Releases<'_, 'static> {
-        self
     }
 }

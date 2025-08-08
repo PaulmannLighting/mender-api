@@ -7,23 +7,23 @@ use crate::session::Session;
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 
 /// Releases management API.
-pub trait Releases<'this, 'path> {
+pub trait Releases {
     /// List all releases available in the Mender server.
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'path, Release>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Release>;
 
     /// Collect releases into a `Vec`.
     fn collect(
-        self,
+        &self,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Release>>> + Send;
 }
 
-impl<'session> Releases<'session, 'static> for &'session Session {
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Release> {
+impl Releases for Session {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Release> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
-    async fn collect(self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Release>> {
+    async fn collect(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Release>> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
             .await

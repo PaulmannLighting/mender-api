@@ -14,32 +14,32 @@ mod proxy;
 const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Devices management API.
-pub trait Devices<'this, 'path> {
+pub trait Devices {
     /// List devices.
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'this, 'path, Device>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Device>;
 
     /// Collect devices into a `Vec`.
     fn collect(
-        self,
+        &self,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
     /// Return a proxy object to manage the device with the specified ID.
-    fn device(self, id: Uuid) -> Proxy<'this>;
+    fn device(&self, id: Uuid) -> Proxy<'_>;
 }
 
-impl<'session> Devices<'session, 'static> for &'session Session {
-    fn list(self, page_size: Option<NonZero<usize>>) -> PageIterator<'session, 'static, Device> {
+impl Devices for Session {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Device> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
-    async fn collect(self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Device>> {
+    async fn collect(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Device>> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
             .await
     }
 
-    fn device(self, id: Uuid) -> Proxy<'session> {
+    fn device(&self, id: Uuid) -> Proxy<'_> {
         Proxy::new(self, id)
     }
 }
