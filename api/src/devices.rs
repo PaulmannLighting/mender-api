@@ -2,14 +2,11 @@
 
 use std::num::NonZero;
 
-use proxy::Proxy;
 use uuid::Uuid;
 
-use crate::dto::Device;
+use crate::dto::{Device, DeviceGroup};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
-
-mod proxy;
 
 const PATH: &str = "/api/management/v1/inventory/device";
 
@@ -24,8 +21,17 @@ pub trait Devices {
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
-    /// Return a proxy object to manage the device with the specified ID.
-    fn device(&self, id: Uuid) -> Proxy<'_>;
+    /// Return the status of the device.
+    fn status(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
+
+    /// Add the device to the specified group.
+    fn add_to_group<T>(
+        &self,
+        id: Uuid,
+        group_name: T,
+    ) -> impl Future<Output = reqwest::Result<()>> + Send
+    where
+        T: AsRef<str> + Send;
 }
 
 impl Devices for Session {
@@ -39,7 +45,28 @@ impl Devices for Session {
             .await
     }
 
-    fn device(&self, id: Uuid) -> Proxy<'_> {
-        Proxy::new(self, id)
+    async fn status(&self, id: Uuid) -> reqwest::Result<String> {
+        self.client()
+            .get(self.format_url(format!("{PATH}/{id}/status"), None))
+            .bearer_auth(self.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await
+    }
+
+    async fn add_to_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
+    where
+        T: AsRef<str> + Send,
+    {
+        self.client()
+            .post(self.format_url(format!("{PATH}/{id}/group"), None))
+            .bearer_auth(self.bearer_token())
+            .json(&DeviceGroup::new(group_name.as_ref()))
+            .send()
+            .await?
+            .error_for_status()?;
+        Ok(())
     }
 }
