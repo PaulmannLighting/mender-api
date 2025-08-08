@@ -21,9 +21,6 @@ pub trait Devices {
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<Device>>> + Send;
 
-    /// Return the status of the device.
-    fn status(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
-
     /// Add the device to the specified group.
     fn add_to_group<T>(
         &self,
@@ -42,17 +39,6 @@ impl Devices for Session {
     async fn collect(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Device>> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
-            .await
-    }
-
-    async fn status(&self, id: Uuid) -> reqwest::Result<String> {
-        self.client()
-            .get(self.format_url(format!("{PATH}/{id}/status"), None))
-            .bearer_auth(self.bearer_token())
-            .send()
-            .await?
-            .error_for_status()?
-            .text()
             .await
     }
 
