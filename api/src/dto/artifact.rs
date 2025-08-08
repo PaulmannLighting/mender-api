@@ -9,7 +9,7 @@ pub use type_info::TypeInfo;
 pub use update::Update;
 use uuid::Uuid;
 
-use crate::api::dto::DeviceType;
+use crate::dto::DeviceType;
 
 mod dependency;
 mod file;

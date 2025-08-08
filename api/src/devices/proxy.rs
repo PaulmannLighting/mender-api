@@ -1,8 +1,8 @@
 use uuid::Uuid;
 
 use super::PATH;
-use crate::api::dto::DeviceGroup;
-use crate::api::session::Session;
+use crate::dto::DeviceGroup;
+use crate::session::Session;
 
 /// Proxy object to manage a device on the Mender server.
 #[derive(Clone, Debug)]

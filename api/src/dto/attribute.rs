@@ -9,8 +9,8 @@ use serde::{Deserialize, Serialize};
 pub use status::Status;
 pub use value::Value;
 
-use crate::api::dto::types::{AsStr, MacAddress, OneOrMany};
-use crate::api::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
+use crate::dto::types::{AsStr, MacAddress, OneOrMany};
+use crate::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
 use crate::utils::display_slice;
 
 mod scope;

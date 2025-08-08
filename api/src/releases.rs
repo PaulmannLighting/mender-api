@@ -1,9 +1,8 @@
 use std::num::NonZero;
 
-use crate::api::DEFAULT_PAGE_SIZE;
-use crate::api::dto::Release;
-use crate::api::pager::{PageIterator, Pager};
-use crate::api::session::Session;
+use crate::dto::Release;
+use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments/releases/list";
 

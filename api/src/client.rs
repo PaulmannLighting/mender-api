@@ -1,34 +1,13 @@
-//!  Implementation of the Mender server API.
-
-use std::num::NonZero;
-
-pub use deployments::Deployments;
-pub use devices::Devices;
-pub use groups::Groups;
-pub use login::Login;
-pub use releases::Releases;
-use reqwest::{Certificate, Client, Url};
-
-mod deployments;
-pub mod devices;
-pub mod dto;
-mod groups;
-mod login;
-mod pager;
-mod releases;
-mod session;
-
-const DEFAULT_PAGE_SIZE: NonZero<usize> =
-    NonZero::new(500).expect("Default page should be be non-zero.");
+use reqwest::{Certificate, Url};
 
 /// Mender server API client.
 #[derive(Clone, Debug)]
-pub struct Api {
+pub struct Client {
     pub(crate) base_url: Url,
-    pub(crate) client: Client,
+    pub(crate) client: reqwest::Client,
 }
 
-impl Api {
+impl Client {
     /// Crate a new API instance.
     ///
     /// # Errors
@@ -39,7 +18,7 @@ impl Api {
         certificate: Option<Certificate>,
         accept_invalid_certificates: bool,
     ) -> reqwest::Result<Self> {
-        let mut builder = Client::builder().use_rustls_tls();
+        let mut builder = reqwest::Client::builder().use_rustls_tls();
 
         if let Some(certificate) = certificate {
             builder = builder

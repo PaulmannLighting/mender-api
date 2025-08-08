@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 
 use serde::{Deserialize, Serialize};
 
-use crate::api::dto::Scope;
+use crate::dto::Scope;
 
 /// Attribute values.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]

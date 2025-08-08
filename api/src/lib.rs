@@ -1,7 +1,20 @@
-//! API to the mender server extensions.
+//!  Implementation of the Mender server API.
 
-pub use api::{Api, Deployments, Devices, Groups, Login, Releases};
+pub use client::Client;
+pub use deployments::Deployments;
+pub use devices::Devices;
+pub use groups::Groups;
+pub use login::Login;
+pub use releases::Releases;
 pub use reqwest::Certificate;
 
-pub mod api;
+mod client;
+mod deployments;
+mod devices;
+pub mod dto;
+mod groups;
+mod login;
+mod pager;
+mod releases;
+mod session;
 mod utils;

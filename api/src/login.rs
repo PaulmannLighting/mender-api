@@ -1,5 +1,5 @@
-use crate::Api;
-use crate::api::session::Session;
+use crate::Client;
+use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/useradm/auth/login";
 
@@ -24,7 +24,7 @@ pub trait Login {
         P: AsRef<str> + Send;
 }
 
-impl Login for Api {
+impl Login for Client {
     async fn login<U, P>(self, user_name: U, password: P) -> reqwest::Result<Session>
     where
         U: AsRef<str> + Send,

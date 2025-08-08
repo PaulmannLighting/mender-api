@@ -4,8 +4,8 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use mender_api::api::dto::NewDeployment;
-use mender_api::{Api, Deployments, Devices, Groups, Login, Releases};
+use mender_api::dto::NewDeployment;
+use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{Deployment, Device, Endpoint, Group, Release};
 use crate::util::{IntoExitCode, OrBail};
@@ -21,7 +21,7 @@ async fn main() -> ExitCode {
 
 async fn run(args: Args) -> Result<(), ExitCode> {
     let cert = args.certificate()?;
-    let server = Api::new(args.url.parse().or_bail()?, cert, args.insecure).or_bail()?;
+    let server = Client::new(args.url.parse().or_bail()?, cert, args.insecure).or_bail()?;
     let session = server.login(args.username, args.password).await.or_bail()?;
 
     match args.endpoint {

@@ -6,7 +6,10 @@ use std::vec::IntoIter;
 use log::error;
 use serde::Deserialize;
 
-use crate::api::session::Session;
+use crate::session::Session;
+
+pub const DEFAULT_PAGE_SIZE: NonZero<usize> =
+    NonZero::new(500).expect("Default page should be be non-zero.");
 
 /// Generic pager.
 #[derive(Debug, Clone)]

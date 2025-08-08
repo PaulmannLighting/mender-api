@@ -2,8 +2,8 @@ use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 use uuid::Uuid;
 
-use crate::api::dto::Kind;
-use crate::api::dto::deployments::Status;
+use crate::dto::Kind;
+use crate::dto::deployments::Status;
 
 /// Represents a deployment in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize)]

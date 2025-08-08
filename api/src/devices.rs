@@ -5,10 +5,9 @@ use std::num::NonZero;
 use proxy::Proxy;
 use uuid::Uuid;
 
-use crate::api::DEFAULT_PAGE_SIZE;
-use crate::api::dto::Device;
-use crate::api::pager::{PageIterator, Pager};
-use crate::api::session::Session;
+use crate::dto::Device;
+use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::session::Session;
 
 mod proxy;
 

@@ -8,8 +8,8 @@ use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::api::dto::Attribute;
-use crate::api::dto::types::MacAddress;
+use crate::dto::Attribute;
+use crate::dto::types::MacAddress;
 
 mod group;
 

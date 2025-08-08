@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::api::dto::DeviceType;
+use crate::dto::DeviceType;
 
 /// Artifact dependencies.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]

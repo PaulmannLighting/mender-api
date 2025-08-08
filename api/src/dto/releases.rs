@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::api::dto::Artifact;
+use crate::dto::Artifact;
 
 /// Represents a release in the Mender server.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
