@@ -141,6 +141,14 @@ pub enum DeviceProxyAction {
 
 #[derive(Debug, Subcommand)]
 pub enum TagAction {
+    Add {
+        #[clap(help = "Tag name")]
+        name: String,
+        #[clap(help = "Tag value")]
+        value: String,
+        #[clap(long, short = 'd', help = "Optional description for the tag")]
+        description: Option<String>,
+    },
     Assign {
         #[clap(help = "Tag name")]
         name: String,

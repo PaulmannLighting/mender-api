@@ -128,6 +128,16 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     println!("{}", device.get().await.or_bail()?);
                 }
                 DeviceProxyAction::Tag { action } => match action {
+                    TagAction::Add {
+                        name,
+                        value,
+                        description,
+                    } => {
+                        device
+                            .add_tags(&[Tag::new(name, value, description)])
+                            .await
+                            .or_bail()?;
+                    }
                     TagAction::Assign {
                         name,
                         value,
