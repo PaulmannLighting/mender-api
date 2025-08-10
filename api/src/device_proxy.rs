@@ -32,7 +32,12 @@ impl DeviceProxy<'_> {
         Devices::add_to_group(self.session, self.id, group_name).await
     }
 
-    /// Add a tag to the device.
+    /// Add tags to the device.
+    pub async fn add_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
+        Tags::add(self.session, self.id, tags).await
+    }
+
+    /// Assign tags to the device.
     pub async fn assign_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
         Tags::assign(self.session, self.id, tags).await
     }
