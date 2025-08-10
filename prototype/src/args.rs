@@ -43,22 +43,18 @@ impl Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Endpoint {
-    #[clap(name = "deployments")]
     Deployments {
         #[clap(subcommand)]
         action: DeploymentAction,
     },
-    #[clap(name = "devices")]
     Devices {
         #[clap(subcommand)]
         action: DeviceAction,
     },
-    #[clap(name = "groups")]
     Groups {
         #[clap(subcommand)]
         action: GroupAction,
     },
-    #[clap(name = "releases")]
     Releases {
         #[clap(subcommand)]
         action: ReleaseAction,
@@ -74,14 +70,11 @@ pub enum Endpoint {
 
 #[derive(Debug, Subcommand)]
 pub enum DeploymentAction {
-    #[clap(name = "list")]
     List,
-    #[clap(name = "device-of")]
     DevicesOf {
         #[clap(index = 1, help = "List device for a specific deployment")]
         id: Uuid,
     },
-    #[clap(name = "add")]
     Add {
         #[clap(index = 1, help = "Name of the deployment")]
         name: String,
@@ -96,7 +89,6 @@ pub enum DeploymentAction {
 
 #[derive(Debug, Subcommand)]
 pub enum DeviceAction {
-    #[clap(name = "list")]
     List,
     Get {
         #[clap(index = 1, help = "ID of the device to retrieve")]
@@ -108,7 +100,6 @@ pub enum DeviceAction {
         #[clap(index = 2, help = "Name of the group to add the device to")]
         group_name: String,
     },
-    #[clap(name = "by-mac")]
     ByMac {
         #[clap(index = 1, help = "Find a device by its MAC address")]
         mac_address: MacAddr6,
@@ -117,14 +108,11 @@ pub enum DeviceAction {
 
 #[derive(Debug, Subcommand)]
 pub enum GroupAction {
-    #[clap(name = "list")]
     List,
-    #[clap(name = "device")]
     Devices {
         #[clap(index = 1, help = "List the device in a group")]
         name: String,
     },
-    #[clap(name = "patch")]
     Patch {
         #[clap(help = "The name of the group to patch")]
         name: String,
@@ -135,9 +123,7 @@ pub enum GroupAction {
 
 #[derive(Debug, Subcommand)]
 pub enum ReleaseAction {
-    #[clap(name = "list")]
     List,
-    #[clap(name = "by-name")]
     ByName {
         #[clap(index = 1, help = "Find a release by its name")]
         name: String,
@@ -146,9 +132,7 @@ pub enum ReleaseAction {
 
 #[derive(Debug, Subcommand)]
 pub enum DeviceProxyAction {
-    #[clap(name = "get")]
     Get,
-    #[clap(name = "tag")]
     Tag {
         #[clap(subcommand)]
         action: TagAction,
@@ -157,7 +141,6 @@ pub enum DeviceProxyAction {
 
 #[derive(Debug, Subcommand)]
 pub enum TagAction {
-    #[clap(name = "get")]
     Add {
         #[clap(help = "Tag name")]
         name: String,
