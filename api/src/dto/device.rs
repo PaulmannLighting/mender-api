@@ -21,6 +21,7 @@ pub struct Device {
     updated_ts: DateTime<FixedOffset>,
 }
 
+/// Core functionality.
 impl Device {
     /// Create a new `Device` with the given ID, attributes, and updated timestamp.
     #[must_use]
@@ -53,7 +54,10 @@ impl Device {
     pub const fn updated_ts(&self) -> &DateTime<FixedOffset> {
         &self.updated_ts
     }
+}
 
+/// Convenience methods.
+impl Device {
     /// Iterate over all tags of the device.
     pub fn tags(&self) -> impl Iterator<Item = &Attribute> {
         self.attributes()
