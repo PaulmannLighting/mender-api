@@ -26,8 +26,8 @@ impl AuthentificationSet {
 
     /// Returns the identity associated with the authentification set.
     #[must_use]
-    pub const fn identity(&self) -> &Identity {
-        &self.identity
+    pub const fn identity(&self) -> Identity {
+        self.identity
     }
 
     /// Returns the public key of the authentification set.

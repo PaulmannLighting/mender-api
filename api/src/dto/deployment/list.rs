@@ -51,8 +51,8 @@ impl Deployment {
 
     /// Returns the ID of the deployment.
     #[must_use]
-    pub const fn id(&self) -> &Uuid {
-        &self.id
+    pub const fn id(&self) -> Uuid {
+        self.id
     }
 
     /// Returns the list of artifact IDs associated with the deployment.
@@ -63,8 +63,8 @@ impl Deployment {
 
     /// Returns the status of the deployment.
     #[must_use]
-    pub const fn status(&self) -> &Status {
-        &self.status
+    pub const fn status(&self) -> Status {
+        self.status
     }
 
     /// Returns the number of device in the deployment.
@@ -87,7 +87,7 @@ impl Deployment {
 
     /// Returns the kind of the deployment.
     #[must_use]
-    pub const fn kind(&self) -> &Kind {
-        &self.kind
+    pub const fn kind(&self) -> Kind {
+        self.kind
     }
 }

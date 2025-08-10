@@ -4,19 +4,20 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TypeInfo {
-    r#type: String,
+    #[serde(rename = "type")]
+    typ: String,
 }
 
 impl TypeInfo {
     /// Creates a new `TypeInfo` instance.
     #[must_use]
-    pub const fn new(r#type: String) -> Self {
-        Self { r#type }
+    pub const fn new(typ: String) -> Self {
+        Self { typ }
     }
 
     /// Returns the type of the artifact.
     #[must_use]
     pub fn typ(&self) -> &str {
-        &self.r#type
+        &self.typ
     }
 }

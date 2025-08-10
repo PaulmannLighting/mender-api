@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::utils::as_str;
 
 /// Represents the identity of a device in the Mender server.
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Identity {
     #[serde(with = "as_str")]

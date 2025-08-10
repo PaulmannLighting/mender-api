@@ -83,8 +83,8 @@ impl Artifact {
 
     /// Returns the ID of the artifact.
     #[must_use]
-    pub const fn id(&self) -> &Uuid {
-        &self.id
+    pub const fn id(&self) -> Uuid {
+        self.id
     }
 
     /// Returns the description of the artifact.
