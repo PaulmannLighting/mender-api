@@ -8,7 +8,7 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Manage device tags.
 pub trait Tags {
     /// Add a tag to the specified device.
-    fn add(
+    fn assign(
         &self,
         device_id: Uuid,
         tags: &[Tag],
@@ -16,7 +16,7 @@ pub trait Tags {
 }
 
 impl Tags for Session {
-    async fn add(&self, device_id: Uuid, tags: &[Tag]) -> reqwest::Result<String> {
+    async fn assign(&self, device_id: Uuid, tags: &[Tag]) -> reqwest::Result<String> {
         self.client()
             .put(self.format_url(format!("{PATH}/{device_id}/tags"), None))
             .bearer_auth(self.bearer_token())

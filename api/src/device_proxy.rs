@@ -33,7 +33,7 @@ impl DeviceProxy<'_> {
     }
 
     /// Add a tag to the device.
-    pub async fn add_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
-        Tags::add(self.session, self.id, tags).await
+    pub async fn assign_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
+        Tags::assign(self.session, self.id, tags).await
     }
 }

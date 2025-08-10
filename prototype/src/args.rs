@@ -141,7 +141,7 @@ pub enum DeviceProxyAction {
 
 #[derive(Debug, Subcommand)]
 pub enum TagAction {
-    Add {
+    Assign {
         #[clap(help = "Tag name")]
         name: String,
         #[clap(help = "Tag value")]
