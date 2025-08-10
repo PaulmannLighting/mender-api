@@ -133,14 +133,14 @@ pub enum ReleaseAction {
 #[derive(Debug, Subcommand)]
 pub enum DeviceProxyAction {
     Get,
-    Tag {
+    Tags {
         #[clap(subcommand)]
-        action: TagAction,
+        action: TagsAction,
     },
 }
 
 #[derive(Debug, Subcommand)]
-pub enum TagAction {
+pub enum TagsAction {
     Add {
         #[clap(help = "Tag name")]
         name: String,

@@ -9,7 +9,7 @@ use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{
     DeploymentAction, DeviceAction, DeviceProxyAction, Endpoint, GroupAction, ReleaseAction,
-    TagAction,
+    TagsAction,
 };
 use crate::util::{IntoExitCode, OrBail};
 
@@ -127,8 +127,8 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 DeviceProxyAction::Get => {
                     println!("{}", device.get().await.or_bail()?);
                 }
-                DeviceProxyAction::Tag { action } => match action {
-                    TagAction::Add {
+                DeviceProxyAction::Tags { action } => match action {
+                    TagsAction::Add {
                         name,
                         value,
                         description,
@@ -138,7 +138,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             .await
                             .or_bail()?;
                     }
-                    TagAction::Assign {
+                    TagsAction::Assign {
                         name,
                         value,
                         description,
@@ -148,7 +148,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             .await
                             .or_bail()?;
                     }
-                    TagAction::Clear => {
+                    TagsAction::Clear => {
                         device.clear_tags().await.or_bail()?;
                     }
                 },
