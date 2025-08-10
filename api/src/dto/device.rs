@@ -87,7 +87,7 @@ impl Device {
         })
     }
 
-    /// Return the MAC address of the device if it exists.
+    /// Return the first MAC address of the device if it exists.
     #[must_use]
     pub fn mac_address(&self) -> Option<MacAddr6> {
         self.mac_addresses().next()
