@@ -6,7 +6,7 @@ pub use devices::Devices;
 pub use groups::Groups;
 pub use login::Login;
 pub use releases::Releases;
-pub use reqwest::Certificate;
+pub use reqwest::{Certificate, Error, Result};
 pub use tags::Tags;
 
 mod client;
