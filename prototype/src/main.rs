@@ -125,7 +125,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
 
             match action {
                 DeviceProxyAction::Get => {
-                    unimplemented!()
+                    println!("{}", device.get().await.or_bail()?);
                 }
                 DeviceProxyAction::Tag { action } => match action {
                     TagAction::Add {
