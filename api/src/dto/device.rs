@@ -25,8 +25,8 @@ pub struct Device {
 impl Device {
     /// Return the ID of the device.
     #[must_use]
-    pub const fn id(&self) -> &Uuid {
-        &self.id
+    pub const fn id(&self) -> Uuid {
+        self.id
     }
 
     /// Return the attributes of the device.
@@ -37,8 +37,8 @@ impl Device {
 
     /// Return the updated timestamp of the device.
     #[must_use]
-    pub const fn updated_ts(&self) -> &DateTime<FixedOffset> {
-        &self.updated_ts
+    pub const fn updated_ts(&self) -> DateTime<FixedOffset> {
+        self.updated_ts
     }
 }
 
