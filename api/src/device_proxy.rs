@@ -41,4 +41,9 @@ impl DeviceProxy<'_> {
     pub async fn assign_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
         Tags::assign(self.session, self.id, tags).await
     }
+
+    /// Assign tags to the device.
+    pub async fn clear_tags(&self) -> reqwest::Result<String> {
+        Tags::clear(self.session, self.id).await
+    }
 }

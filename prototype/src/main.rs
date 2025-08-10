@@ -148,6 +148,9 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             .await
                             .or_bail()?;
                     }
+                    TagAction::Clear => {
+                        device.clear_tags().await.or_bail()?;
+                    }
                 },
             }
         }

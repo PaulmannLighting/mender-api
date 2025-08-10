@@ -157,4 +157,5 @@ pub enum TagAction {
         #[clap(long, short = 'd', help = "Optional description for the tag")]
         description: Option<String>,
     },
+    Clear,
 }

@@ -20,6 +20,9 @@ pub trait Tags {
         device_id: Uuid,
         tags: &[Tag],
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
+
+    /// Clear tags of the specified device.
+    fn clear(&self, device_id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
 }
 
 impl Tags for Session {
@@ -45,5 +48,9 @@ impl Tags for Session {
             .error_for_status()?
             .text()
             .await
+    }
+
+    async fn clear(&self, device_id: Uuid) -> reqwest::Result<String> {
+        self.assign(device_id, &[]).await
     }
 }
