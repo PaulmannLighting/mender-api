@@ -2,11 +2,13 @@
 
 pub use client::Client;
 pub use deployments::Deployments;
+pub use device_proxy::DeviceProxy;
 pub use devices::Devices;
 pub use groups::Groups;
 pub use login::Login;
 pub use releases::Releases;
 pub use reqwest::{Certificate, Error, Result};
+pub use session::Session;
 pub use tags::Tags;
 
 mod client;

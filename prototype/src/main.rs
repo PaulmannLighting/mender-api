@@ -134,7 +134,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                         description,
                     } => {
                         device
-                            .add(&[Tag::new(name, value, description)])
+                            .add_tags(&[Tag::new(name, value, description)])
                             .await
                             .or_bail()?;
                     }

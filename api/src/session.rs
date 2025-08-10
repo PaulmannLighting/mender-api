@@ -1,6 +1,6 @@
 use reqwest::{Client, Url};
 
-/// Represents an endpoint for the Mender server API.
+/// A session on the Mender server API.
 #[derive(Clone, Debug)]
 pub struct Session {
     client: Client,

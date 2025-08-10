@@ -1,8 +1,8 @@
 use uuid::Uuid;
 
-use crate::Devices;
-use crate::dto::Device;
+use crate::dto::{Device, Tag};
 use crate::session::Session;
+use crate::{Devices, Tags};
 
 /// A proxy for a device in the Mender server.
 pub struct DeviceProxy<'session> {
@@ -15,18 +15,6 @@ impl<'session> DeviceProxy<'session> {
     #[must_use]
     pub(crate) const fn new(session: &'session Session, id: Uuid) -> Self {
         Self { session, id }
-    }
-
-    /// Return the session associated with this device proxy.
-    #[must_use]
-    pub(crate) const fn session(&self) -> &Session {
-        self.session
-    }
-
-    /// Return the ID of the device.
-    #[must_use]
-    pub(crate) const fn id(&self) -> Uuid {
-        self.id
     }
 }
 
@@ -42,5 +30,10 @@ impl DeviceProxy<'_> {
         T: AsRef<str> + Send,
     {
         Devices::add_to_group(self.session, self.id, group_name).await
+    }
+
+    /// Add a tag to the device.
+    pub async fn add_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
+        Tags::add(self.session, self.id, tags).await
     }
 }

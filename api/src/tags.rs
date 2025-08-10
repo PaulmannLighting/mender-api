@@ -1,23 +1,25 @@
-use crate::device_proxy::DeviceProxy;
+use uuid::Uuid;
+
 use crate::dto::Tag;
+use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
 
 /// Manage device tags.
 pub trait Tags {
     /// Add a tag to the specified device.
-    fn add(&self, tags: &[Tag]) -> impl Future<Output = reqwest::Result<String>> + Send;
+    fn add(
+        &self,
+        device_id: Uuid,
+        tags: &[Tag],
+    ) -> impl Future<Output = reqwest::Result<String>> + Send;
 }
 
-impl Tags for DeviceProxy<'_> {
-    async fn add(&self, tags: &[Tag]) -> reqwest::Result<String> {
-        self.session()
-            .client()
-            .put(
-                self.session()
-                    .format_url(format!("{PATH}/{}/tags", self.id()), None),
-            )
-            .bearer_auth(self.session().bearer_token())
+impl Tags for Session {
+    async fn add(&self, device_id: Uuid, tags: &[Tag]) -> reqwest::Result<String> {
+        self.client()
+            .put(self.format_url(format!("{PATH}/{device_id}/tags"), None))
+            .bearer_auth(self.bearer_token())
             .json(tags)
             .send()
             .await?
