@@ -6,7 +6,6 @@ use clap::{Parser, Subcommand};
 use log::error;
 use macaddr::MacAddr6;
 use mender_api::Certificate;
-use mender_api::dto::Status;
 use uuid::Uuid;
 
 use crate::util::OrBail;
@@ -44,25 +43,32 @@ impl Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Endpoint {
+    #[clap(name = "deployments")]
     Deployment {
         #[clap(subcommand)]
         action: Deployment,
     },
-    DevAuth {
-        #[clap(subcommand)]
-        action: DevAuth,
-    },
+    #[clap(name = "devices")]
     Device {
         #[clap(subcommand)]
         action: Device,
     },
+    #[clap(name = "groups")]
     Group {
         #[clap(subcommand)]
         action: Group,
     },
+    #[clap(name = "releases")]
     Release {
         #[clap(subcommand)]
         action: Release,
+    },
+    #[clap(name = "device")]
+    DeviceProxy {
+        #[clap(help = "ID of the device to manage")]
+        id: Uuid,
+        #[clap(subcommand)]
+        action: DeviceProxy,
     },
 }
 
@@ -85,21 +91,6 @@ pub enum Deployment {
         devices: Vec<Uuid>,
         #[clap(long, short = 'R', help = "Number of retries for the deployment")]
         retries: usize,
-    },
-}
-
-#[derive(Debug, Subcommand)]
-pub enum DevAuth {
-    #[clap(name = "list")]
-    List,
-    #[clap(name = "set-status")]
-    SetStatus {
-        #[clap(help = "UUID of the device to set status for")]
-        id: Uuid,
-        #[clap(help = "Authentication UUID of the device")]
-        auth_id: Uuid,
-        #[clap(help = "Status to set for the device")]
-        status: Status,
     },
 }
 
@@ -150,5 +141,29 @@ pub enum Release {
     ByName {
         #[clap(index = 1, help = "Find a release by its name")]
         name: String,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum DeviceProxy {
+    #[clap(name = "get")]
+    Get,
+    #[clap(name = "tag")]
+    Tag {
+        #[clap(subcommand)]
+        action: TagAction,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+pub enum TagAction {
+    #[clap(name = "get")]
+    Add {
+        #[clap(help = "Tag name")]
+        name: String,
+        #[clap(help = "Tag value")]
+        value: String,
+        #[clap(long, short = 'd', help = "Optional description for the tag")]
+        description: Option<String>,
     },
 }

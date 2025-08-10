@@ -4,10 +4,10 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use mender_api::dto::NewDeployment;
-use mender_api::{Client, Deployments, DevAuth, Devices, Groups, Login, Releases};
+use mender_api::dto::{NewDeployment, Tag};
+use mender_api::{Client, Deployments, Devices, Groups, Login, Releases, Tags};
 
-use crate::args::{Deployment, DevAuth as DevAuthArg, Device, Endpoint, Group, Release};
+use crate::args::{Deployment, Device, DeviceProxy, Endpoint, Group, Release, TagAction};
 use crate::util::{IntoExitCode, OrBail};
 
 mod args;
@@ -52,24 +52,6 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 )
                 .await
                 .or_bail()?;
-            }
-        },
-        Endpoint::DevAuth { action } => match action {
-            DevAuthArg::List => {
-                let mut devices = DevAuth::list(&session, None);
-
-                while let Some(device) = devices.next().await {
-                    println!("{device:?}");
-                }
-            }
-            DevAuthArg::SetStatus {
-                id,
-                auth_id,
-                status,
-            } => {
-                DevAuth::set_status(&session, id, auth_id, status)
-                    .await
-                    .or_bail()?;
             }
         },
         Endpoint::Device { action } => match action {
@@ -135,6 +117,27 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     });
             }
         },
+        Endpoint::DeviceProxy { id, action } => {
+            let device = session.proxy(id);
+
+            match action {
+                DeviceProxy::Get => {
+                    unimplemented!()
+                }
+                DeviceProxy::Tag { action } => match action {
+                    TagAction::Add {
+                        name,
+                        value,
+                        description,
+                    } => {
+                        device
+                            .add(&[Tag::new(name, value, description)])
+                            .await
+                            .or_bail()?;
+                    }
+                },
+            }
+        }
     }
 
     Ok(())
