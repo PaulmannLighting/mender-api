@@ -23,20 +23,6 @@ pub struct Device {
 
 /// Core functionality.
 impl Device {
-    /// Create a new `Device` with the given ID, attributes, and updated timestamp.
-    #[must_use]
-    pub const fn new(
-        id: Uuid,
-        attributes: Vec<Attribute>,
-        updated_ts: DateTime<FixedOffset>,
-    ) -> Self {
-        Self {
-            id,
-            attributes,
-            updated_ts,
-        }
-    }
-
     /// Return the ID of the device.
     #[must_use]
     pub const fn id(&self) -> &Uuid {
