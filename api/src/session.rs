@@ -18,6 +18,18 @@ impl Session {
         }
     }
 
+    /// Return request client for the Mender server.
+    #[must_use]
+    pub(crate) const fn client(&self) -> &Client {
+        &self.client
+    }
+
+    /// Return the bearer token for authentication.
+    #[must_use]
+    pub(crate) fn bearer_token(&self) -> &str {
+        &self.bearer_token
+    }
+
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
     pub(crate) fn format_url<P, Q>(&self, path: P, query: Q) -> Url
@@ -33,17 +45,5 @@ impl Session {
         }
 
         url
-    }
-
-    /// Return request client for the Mender server.
-    #[must_use]
-    pub(crate) const fn client(&self) -> &Client {
-        &self.client
-    }
-
-    /// Return the bearer token for authentication.
-    #[must_use]
-    pub(crate) fn bearer_token(&self) -> &str {
-        &self.bearer_token
     }
 }
