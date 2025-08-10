@@ -25,6 +25,8 @@ pub enum Attribute {
         name: String,
         /// The value of the unknown attribute.
         value: String,
+        /// An optional description.
+        description: Option<String>,
         /// The scope of this attribute.
         scope: Scope,
     },
@@ -34,8 +36,17 @@ impl Display for Attribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Known(known) => Display::fmt(known, f),
-            Self::Unknown { name, value, scope } => {
-                write!(f, "{name}: {value} ({scope})")
+            Self::Unknown {
+                name,
+                value,
+                description,
+                scope,
+            } => {
+                if let Some(desc) = description {
+                    write!(f, "{name}: {value} ({desc}) [{scope}]")
+                } else {
+                    write!(f, "{name}: {value} [{scope}]")
+                }
             }
         }
     }
