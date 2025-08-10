@@ -26,6 +26,17 @@ pub enum Attribute {
     },
 }
 
+impl Attribute {
+    /// Return the attribute's scope.
+    #[must_use]
+    pub const fn scope(&self) -> &Scope {
+        match self {
+            Self::Known(known) => known.scope(),
+            Self::Unknown { scope, .. } => scope,
+        }
+    }
+}
+
 impl Display for Attribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {

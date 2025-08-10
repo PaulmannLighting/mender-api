@@ -248,6 +248,43 @@ pub enum KnownAttribute {
     },
 }
 
+impl KnownAttribute {
+    /// Return the attribute's scope.
+    #[must_use]
+    pub const fn scope(&self) -> &Scope {
+        match self {
+            Self::Name { scope, .. }
+            | Self::Mac { scope, .. }
+            | Self::Created { scope, .. }
+            | Self::Updated { scope, .. }
+            | Self::Status { scope, .. }
+            | Self::Group { scope, .. }
+            | Self::ArtifactName { scope, .. }
+            | Self::CpuModel { scope, .. }
+            | Self::DeviceType { scope, .. }
+            | Self::Hostname { scope, .. }
+            | Self::Ipv4Eth0 { scope, .. }
+            | Self::Ipv6Eth0 { scope, .. }
+            | Self::Kernel { scope, .. }
+            | Self::MacEth0 { scope, .. }
+            | Self::MemTotalKB { scope, .. }
+            | Self::MenderBootloaderIntegration { scope, .. }
+            | Self::MenderClientVersion { scope, .. }
+            | Self::NetworkInterfaces { scope, .. }
+            | Self::Os { scope, .. }
+            | Self::RootfsType { scope, .. }
+            | Self::GeoCity { scope, .. }
+            | Self::GeoCountry { scope, .. }
+            | Self::GeoIp { scope, .. }
+            | Self::GeoTimezone { scope, .. }
+            | Self::MacSit0 { scope, .. }
+            | Self::RootfsImageChecksum { scope, .. }
+            | Self::RootfsImageVersion { scope, .. }
+            | Self::UpdateModules { scope, .. } => scope,
+        }
+    }
+}
+
 impl Display for KnownAttribute {
     #[allow(clippy::too_many_lines)]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -8,7 +8,7 @@ use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::dto::{Attribute, KnownAttribute};
+use crate::dto::{Attribute, KnownAttribute, Scope};
 
 mod group;
 
@@ -52,6 +52,13 @@ impl Device {
     #[must_use]
     pub const fn updated_ts(&self) -> &DateTime<FixedOffset> {
         &self.updated_ts
+    }
+
+    /// Iterate over all tags of the device.
+    pub fn tags(&self) -> impl Iterator<Item = &Attribute> {
+        self.attributes()
+            .iter()
+            .filter(|attr| attr.scope() == &Scope::Tags)
     }
 
     /// Return an iterator over known attributes of the device.
