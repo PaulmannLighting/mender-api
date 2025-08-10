@@ -7,6 +7,7 @@ pub use groups::Groups;
 pub use login::Login;
 pub use releases::Releases;
 pub use reqwest::Certificate;
+pub use tags::Tags;
 
 mod client;
 mod deployments;
@@ -17,4 +18,5 @@ mod login;
 mod pager;
 mod releases;
 mod session;
+mod tags;
 mod utils;
