@@ -7,7 +7,10 @@ use clap::Parser;
 use mender_api::dto::{NewDeployment, Tag};
 use mender_api::{Client, Deployments, Devices, Groups, Login, Releases, Tags};
 
-use crate::args::{Deployment, Device, DeviceProxy, Endpoint, Group, Release, TagAction};
+use crate::args::{
+    DeploymentAction, DeviceAction, DeviceProxyAction, Endpoint, GroupAction, ReleaseAction,
+    TagAction,
+};
 use crate::util::{IntoExitCode, OrBail};
 
 mod args;
@@ -27,20 +30,20 @@ async fn run(args: Args) -> Result<(), ExitCode> {
     let session = server.login(args.username, args.password).await.or_bail()?;
 
     match args.endpoint {
-        Endpoint::Deployment { action } => match action {
-            Deployment::List => {
+        Endpoint::Deployments { action } => match action {
+            DeploymentAction::List => {
                 let mut deployments = Deployments::list(&session, None);
 
                 while let Some(deployment) = deployments.next().await {
                     println!("{deployment:?}");
                 }
             }
-            Deployment::DevicesOf { id } => {
+            DeploymentAction::DevicesOf { id } => {
                 for device_id in Deployments::devices_of(&session, id).await.or_bail()? {
                     println!("{device_id}");
                 }
             }
-            Deployment::Add {
+            DeploymentAction::Add {
                 name,
                 artifact_name,
                 devices,
@@ -54,24 +57,24 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 .or_bail()?;
             }
         },
-        Endpoint::Device { action } => match action {
-            Device::List => {
+        Endpoint::Devices { action } => match action {
+            DeviceAction::List => {
                 let mut devices = Devices::list(&session, None);
 
                 while let Some(device) = devices.next().await {
                     println!("{device:#}");
                 }
             }
-            Device::Get { id } => {
+            DeviceAction::Get { id } => {
                 let device = Devices::get(&session, id).await.or_bail()?;
                 println!("{device:#}");
             }
-            Device::AddToGroup { id, group_name } => {
+            DeviceAction::AddToGroup { id, group_name } => {
                 Devices::add_to_group(&session, id, group_name)
                     .await
                     .or_bail()?;
             }
-            Device::ByMac { mac_address } => {
+            DeviceAction::ByMac { mac_address } => {
                 Devices::collect(&session, None)
                     .await
                     .or_bail()?
@@ -82,31 +85,31 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     });
             }
         },
-        Endpoint::Group { action } => match action {
-            Group::List => {
+        Endpoint::Groups { action } => match action {
+            GroupAction::List => {
                 for group in Groups::list(&session).await.or_bail()? {
                     println!("{group}");
                 }
             }
-            Group::Devices { name } => {
+            GroupAction::Devices { name } => {
                 for device_id in Groups::devices_of(&session, &name, None).await.or_bail()? {
                     println!("{device_id}");
                 }
             }
-            Group::Patch { name, devices } => {
+            GroupAction::Patch { name, devices } => {
                 let response = Groups::patch(&session, &name, &devices).await.or_bail()?;
                 println!("{response:?}");
             }
         },
-        Endpoint::Release { action } => match action {
-            Release::List => {
+        Endpoint::Releases { action } => match action {
+            ReleaseAction::List => {
                 let mut releases = Releases::list(&session, None);
 
                 while let Some(release) = releases.next().await {
                     println!("{release:?}");
                 }
             }
-            Release::ByName { name } => {
+            ReleaseAction::ByName { name } => {
                 Releases::collect(&session, None)
                     .await
                     .or_bail()?
@@ -121,10 +124,10 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             let device = session.proxy(id);
 
             match action {
-                DeviceProxy::Get => {
+                DeviceProxyAction::Get => {
                     unimplemented!()
                 }
-                DeviceProxy::Tag { action } => match action {
+                DeviceProxyAction::Tag { action } => match action {
                     TagAction::Add {
                         name,
                         value,

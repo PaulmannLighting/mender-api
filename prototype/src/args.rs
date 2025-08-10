@@ -44,36 +44,36 @@ impl Args {
 #[derive(Debug, Subcommand)]
 pub enum Endpoint {
     #[clap(name = "deployments")]
-    Deployment {
+    Deployments {
         #[clap(subcommand)]
-        action: Deployment,
+        action: DeploymentAction,
     },
     #[clap(name = "devices")]
-    Device {
+    Devices {
         #[clap(subcommand)]
-        action: Device,
+        action: DeviceAction,
     },
     #[clap(name = "groups")]
-    Group {
+    Groups {
         #[clap(subcommand)]
-        action: Group,
+        action: GroupAction,
     },
     #[clap(name = "releases")]
-    Release {
+    Releases {
         #[clap(subcommand)]
-        action: Release,
+        action: ReleaseAction,
     },
     #[clap(name = "device")]
     DeviceProxy {
         #[clap(help = "ID of the device to manage")]
         id: Uuid,
         #[clap(subcommand)]
-        action: DeviceProxy,
+        action: DeviceProxyAction,
     },
 }
 
 #[derive(Debug, Subcommand)]
-pub enum Deployment {
+pub enum DeploymentAction {
     #[clap(name = "list")]
     List,
     #[clap(name = "device-of")]
@@ -95,7 +95,7 @@ pub enum Deployment {
 }
 
 #[derive(Debug, Subcommand)]
-pub enum Device {
+pub enum DeviceAction {
     #[clap(name = "list")]
     List,
     Get {
@@ -116,7 +116,7 @@ pub enum Device {
 }
 
 #[derive(Debug, Subcommand)]
-pub enum Group {
+pub enum GroupAction {
     #[clap(name = "list")]
     List,
     #[clap(name = "device")]
@@ -134,7 +134,7 @@ pub enum Group {
 }
 
 #[derive(Debug, Subcommand)]
-pub enum Release {
+pub enum ReleaseAction {
     #[clap(name = "list")]
     List,
     #[clap(name = "by-name")]
@@ -145,7 +145,7 @@ pub enum Release {
 }
 
 #[derive(Debug, Subcommand)]
-pub enum DeviceProxy {
+pub enum DeviceProxyAction {
     #[clap(name = "get")]
     Get,
     #[clap(name = "tag")]
