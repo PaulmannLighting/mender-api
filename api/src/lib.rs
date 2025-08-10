@@ -11,6 +11,7 @@ pub use tags::Tags;
 
 mod client;
 mod deployments;
+mod device_proxy;
 mod devices;
 pub mod dto;
 mod groups;

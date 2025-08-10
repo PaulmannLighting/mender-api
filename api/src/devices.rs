@@ -4,6 +4,7 @@ use std::num::NonZero;
 
 use uuid::Uuid;
 
+use crate::device_proxy::DeviceProxy;
 use crate::dto::{Device, DeviceGroup};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
@@ -32,6 +33,9 @@ pub trait Devices {
     ) -> impl Future<Output = reqwest::Result<String>> + Send
     where
         T: AsRef<str> + Send;
+
+    /// Return a device proxy for the specified device ID.
+    fn proxy(&self, id: Uuid) -> DeviceProxy<'_>;
 }
 
 impl Devices for Session {
@@ -69,5 +73,9 @@ impl Devices for Session {
             .error_for_status()?
             .text()
             .await
+    }
+
+    fn proxy(&self, id: Uuid) -> DeviceProxy<'_> {
+        DeviceProxy::new(self, id)
     }
 }

@@ -17,6 +17,7 @@ pub use release::Release;
 pub use rootfs_type::RootfsType;
 pub use scope::Scope;
 pub use status::Status;
+pub use tag::Tag;
 
 mod artifact;
 mod attribute;
@@ -33,4 +34,5 @@ mod release;
 mod rootfs_type;
 mod scope;
 mod status;
+mod tag;
 mod types;
