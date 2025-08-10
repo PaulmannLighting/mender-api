@@ -5,7 +5,7 @@ use std::process::ExitCode;
 use args::Args;
 use clap::Parser;
 use mender_api::dto::{NewDeployment, Tag};
-use mender_api::{Client, Deployments, Devices, Groups, Login, Releases, Tags};
+use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{
     DeploymentAction, DeviceAction, DeviceProxyAction, Endpoint, GroupAction, ReleaseAction,
