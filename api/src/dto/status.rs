@@ -41,7 +41,13 @@ impl Display for Status {
 #[cfg(feature = "clap")]
 impl clap::ValueEnum for Status {
     fn value_variants<'a>() -> &'a [Self] {
-        &[Self::Pending, Self::Accepted, Self::NoAuth, Self::Rejected]
+        &[
+            Self::Pending,
+            Self::Accepted,
+            Self::NoAuth,
+            Self::Rejected,
+            Self::Aborted,
+        ]
     }
 
     fn to_possible_value(&self) -> Option<clap::builder::PossibleValue> {
