@@ -1,4 +1,4 @@
-//! Devices management API.
+//! Paging of multi-page result listings.
 
 use std::num::NonZero;
 use std::vec::IntoIter;
