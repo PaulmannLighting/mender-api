@@ -1,5 +1,6 @@
 use std::num::NonZero;
 
+use log::error;
 use uuid::Uuid;
 
 use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
@@ -89,11 +90,15 @@ impl Deployments for Session {
 
     async fn abort_all(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {
         let mut deployments = self.list(page_size);
+        let mut last_error = None;
 
         while let Some(deployment) = deployments.next().await {
-            self.abort(deployment?.id()).await?;
+            if let Err(error) = self.abort(deployment?.id()).await {
+                error!("Failed to abort deployment: {error}");
+                last_error.replace(error);
+            }
         }
 
-        Ok(())
+        last_error.map_or_else(|| Ok(()), Err)
     }
 }
