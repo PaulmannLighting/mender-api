@@ -32,8 +32,8 @@ async fn run(args: Args) -> Result<(), ExitCode> {
 
     match args.endpoint {
         Endpoint::Deployments { action } => match action {
-            DeploymentAction::List => {
-                let mut deployments = Deployments::list(&session, None);
+            DeploymentAction::List { page_size } => {
+                let mut deployments = Deployments::list(&session, page_size);
 
                 while let Some(result) = deployments.next().await {
                     match result {
@@ -73,8 +73,8 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             }
         },
         Endpoint::Devices { action } => match action {
-            DeviceAction::List => {
-                let mut devices = Devices::list(&session, None);
+            DeviceAction::List { page_size } => {
+                let mut devices = Devices::list(&session, page_size);
 
                 while let Some(result) = devices.next().await {
                     match result {
@@ -95,8 +95,11 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     .await
                     .or_bail()?;
             }
-            DeviceAction::ByMac { mac_address } => {
-                Devices::collect(&session, None)
+            DeviceAction::ByMac {
+                mac_address,
+                page_size,
+            } => {
+                Devices::collect(&session, page_size)
                     .await
                     .or_bail()?
                     .into_iter()
@@ -112,8 +115,11 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     println!("{group}");
                 }
             }
-            GroupAction::Devices { name } => {
-                for device_id in Groups::devices_of(&session, &name, None).await.or_bail()? {
+            GroupAction::Devices { name, page_size } => {
+                for device_id in Groups::devices_of(&session, &name, page_size)
+                    .await
+                    .or_bail()?
+                {
                     println!("{device_id}");
                 }
             }
@@ -122,16 +128,16 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 println!("{response:?}");
             }
         },
-        Endpoint::Releases { action } => match action {
+        Endpoint::Releases { action, page_size } => match action {
             ReleaseAction::List => {
-                let mut releases = Releases::list(&session, None);
+                let mut releases = Releases::list(&session, page_size);
 
                 while let Some(release) = releases.next().await {
                     println!("{release:?}");
                 }
             }
-            ReleaseAction::ByName { name } => {
-                Releases::collect(&session, None)
+            ReleaseAction::ByName { name, page_size } => {
+                Releases::collect(&session, page_size)
                     .await
                     .or_bail()?
                     .into_iter()

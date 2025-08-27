@@ -59,6 +59,8 @@ pub enum Endpoint {
     Releases {
         #[clap(subcommand)]
         action: ReleaseAction,
+        #[clap(long, short = 'p', help = "Page size for releases listing")]
+        page_size: Option<NonZero<usize>>,
     },
     #[clap(name = "device")]
     DeviceProxy {
@@ -71,7 +73,10 @@ pub enum Endpoint {
 
 #[derive(Debug, Subcommand)]
 pub enum DeploymentAction {
-    List,
+    List {
+        #[clap(long, short = 'p', help = "Page size for deployment listing")]
+        page_size: Option<NonZero<usize>>,
+    },
     DevicesOf {
         #[clap(index = 1, help = "List device for a specific deployment")]
         id: Uuid,
@@ -98,7 +103,10 @@ pub enum DeploymentAction {
 
 #[derive(Debug, Subcommand)]
 pub enum DeviceAction {
-    List,
+    List {
+        #[clap(long, short = 'p', help = "Page size for device listing")]
+        page_size: Option<NonZero<usize>>,
+    },
     Get {
         #[clap(index = 1, help = "ID of the device to retrieve")]
         id: Uuid,
@@ -112,6 +120,8 @@ pub enum DeviceAction {
     ByMac {
         #[clap(index = 1, help = "Find a device by its MAC address")]
         mac_address: MacAddr6,
+        #[clap(long, short = 'p', help = "Page size for device listing")]
+        page_size: Option<NonZero<usize>>,
     },
 }
 
@@ -121,6 +131,8 @@ pub enum GroupAction {
     Devices {
         #[clap(index = 1, help = "List the device in a group")]
         name: String,
+        #[clap(long, short = 'p', help = "Page size for group listing")]
+        page_size: Option<NonZero<usize>>,
     },
     Patch {
         #[clap(help = "The name of the group to patch")]
@@ -136,6 +148,8 @@ pub enum ReleaseAction {
     ByName {
         #[clap(index = 1, help = "Find a release by its name")]
         name: String,
+        #[clap(long, short = 'p', help = "Page size for releases listing")]
+        page_size: Option<NonZero<usize>>,
     },
 }
 
