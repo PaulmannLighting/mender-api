@@ -6,7 +6,7 @@ use crate::dto::{ListDeployment, NewDeployment};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
-const PATH: &str = "/api/management/v1/deployment/deployment";
+const PATH: &str = "/api/management/v1/deployments/deployments";
 
 /// Deployments management API.
 pub trait Deployments {
