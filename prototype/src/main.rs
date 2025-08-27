@@ -39,7 +39,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     match result {
                         Ok(deployment) => println!("{deployment:?}"),
                         Err(error) => {
-                            error!("Error: {error}");
+                            error!("{error}");
                             return Err(ExitCode::FAILURE);
                         }
                     }
@@ -78,7 +78,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     match result {
                         Ok(device) => println!("{device:#}"),
                         Err(error) => {
-                            error!("Error: {error}");
+                            error!("{error}");
                             return Err(ExitCode::FAILURE);
                         }
                     }
