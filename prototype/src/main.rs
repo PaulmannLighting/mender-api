@@ -4,6 +4,7 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
+use log::error;
 use mender_api::dto::{NewDeployment, Tag};
 use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
@@ -38,7 +39,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     match result {
                         Ok(deployment) => println!("{deployment:?}"),
                         Err(error) => {
-                            eprintln!("Error: {error}");
+                            error!("Error: {error}");
                             return Err(ExitCode::FAILURE);
                         }
                     }
@@ -71,7 +72,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                     match result {
                         Ok(device) => println!("{device:#}"),
                         Err(error) => {
-                            eprintln!("Error: {error}");
+                            error!("Error: {error}");
                             return Err(ExitCode::FAILURE);
                         }
                     }
