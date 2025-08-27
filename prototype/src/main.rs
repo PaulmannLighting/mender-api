@@ -66,8 +66,10 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             DeploymentAction::Abort { id } => {
                 Deployments::abort(&session, id).await.or_bail()?;
             }
-            DeploymentAction::AbortAll => {
-                Deployments::abort_all(&session).await.or_bail()?;
+            DeploymentAction::AbortAll { page_size } => {
+                Deployments::abort_all(&session, page_size)
+                    .await
+                    .or_bail()?;
             }
         },
         Endpoint::Devices { action } => match action {

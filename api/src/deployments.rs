@@ -32,7 +32,10 @@ pub trait Deployments {
     fn abort(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
 
     /// Abort all ongoing deployments.
-    fn abort_all(&self) -> impl Future<Output = reqwest::Result<()>> + Send;
+    fn abort_all(
+        &self,
+        page_size: Option<NonZero<usize>>,
+    ) -> impl Future<Output = reqwest::Result<()>> + Send;
 }
 
 impl Deployments for Session {
@@ -84,8 +87,8 @@ impl Deployments for Session {
             .await
     }
 
-    async fn abort_all(&self) -> reqwest::Result<()> {
-        let mut deployments = self.list(None);
+    async fn abort_all(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {
+        let mut deployments = self.list(page_size);
 
         while let Some(deployment) = deployments.next().await {
             self.abort(deployment?.id()).await?;

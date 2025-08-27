@@ -1,4 +1,5 @@
 use std::fs::read;
+use std::num::NonZero;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -89,7 +90,10 @@ pub enum DeploymentAction {
         #[clap(index = 1, help = "ID of the deployment to abort")]
         id: Uuid,
     },
-    AbortAll,
+    AbortAll {
+        #[clap(long, short = 'p', help = "Page size for deployment querying")]
+        page_size: Option<NonZero<usize>>,
+    },
 }
 
 #[derive(Debug, Subcommand)]
