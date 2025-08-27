@@ -101,23 +101,25 @@ where
     for<'deserialize> T: Deserialize<'deserialize>,
 {
     /// Return the next item in the iterator, fetching a new page if necessary.
-    pub async fn next(&mut self) -> Option<T> {
+    pub async fn next(&mut self) -> Option<reqwest::Result<T>> {
         if let Some(item) = self.current_page.as_mut().and_then(Iterator::next) {
-            return Some(item);
+            return Some(Ok(item));
         }
 
-        let mut next_page = self
+        let mut next_page = match self
             .pager
             .page(self.page_no)
             .await
             .inspect_err(|error| error!("{error}"))
-            .ok()?
-            .into_iter();
+        {
+            Ok(next_page) => next_page.into_iter(),
+            Err(error) => return Some(Err(error)),
+        };
 
         let item = next_page.next()?;
         self.current_page.replace(next_page);
         self.page_no = self.page_no.saturating_add(1);
-        Some(item)
+        Some(Ok(item))
     }
 }
 

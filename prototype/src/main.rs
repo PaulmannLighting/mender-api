@@ -34,8 +34,14 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             DeploymentAction::List => {
                 let mut deployments = Deployments::list(&session, None);
 
-                while let Some(deployment) = deployments.next().await {
-                    println!("{deployment:?}");
+                while let Some(result) = deployments.next().await {
+                    match result {
+                        Ok(deployment) => println!("{deployment:?}"),
+                        Err(error) => {
+                            eprintln!("Error: {error}");
+                            return Err(ExitCode::FAILURE);
+                        }
+                    }
                 }
             }
             DeploymentAction::DevicesOf { id } => {
@@ -61,8 +67,14 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             DeviceAction::List => {
                 let mut devices = Devices::list(&session, None);
 
-                while let Some(device) = devices.next().await {
-                    println!("{device:#}");
+                while let Some(result) = devices.next().await {
+                    match result {
+                        Ok(device) => println!("{device:#}"),
+                        Err(error) => {
+                            eprintln!("Error: {error}");
+                            return Err(ExitCode::FAILURE);
+                        }
+                    }
                 }
             }
             DeviceAction::Get { id } => {
