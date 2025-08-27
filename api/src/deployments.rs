@@ -2,7 +2,7 @@ use std::num::NonZero;
 
 use uuid::Uuid;
 
-use crate::dto::{ListDeployment, NewDeployment};
+use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
 use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
@@ -27,6 +27,12 @@ pub trait Deployments {
         &self,
         deployment: &NewDeployment,
     ) -> impl Future<Output = reqwest::Result<String>> + Send;
+
+    /// Abort a deployment.
+    fn abort(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
+
+    /// Abort all ongoing deployments.
+    fn abort_all(&self) -> impl Future<Output = reqwest::Result<()>> + Send;
 }
 
 impl Deployments for Session {
@@ -64,5 +70,27 @@ impl Deployments for Session {
             .error_for_status()?
             .text()
             .await
+    }
+
+    async fn abort(&self, id: Uuid) -> reqwest::Result<String> {
+        self.client()
+            .put(self.format_url(format!("{PATH}/{id}/status"), None))
+            .bearer_auth(self.bearer_token())
+            .json(&PutDeployment::new(Status::Aborted))
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await
+    }
+
+    async fn abort_all(&self) -> reqwest::Result<()> {
+        let mut deployments = self.list(None);
+
+        while let Some(deployment) = deployments.next().await {
+            self.abort(deployment?.id()).await?;
+        }
+
+        Ok(())
     }
 }

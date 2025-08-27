@@ -63,6 +63,12 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 .await
                 .or_bail()?;
             }
+            DeploymentAction::Abort { id } => {
+                Deployments::abort(&session, id).await.or_bail()?;
+            }
+            DeploymentAction::AbortAll => {
+                Deployments::abort_all(&session).await.or_bail()?;
+            }
         },
         Endpoint::Devices { action } => match action {
             DeviceAction::List => {

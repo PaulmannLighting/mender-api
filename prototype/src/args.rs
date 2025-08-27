@@ -85,6 +85,11 @@ pub enum DeploymentAction {
         #[clap(long, short = 'R', help = "Number of retries for the deployment")]
         retries: usize,
     },
+    Abort {
+        #[clap(index = 1, help = "ID of the deployment to abort")]
+        id: Uuid,
+    },
+    AbortAll,
 }
 
 #[derive(Debug, Subcommand)]

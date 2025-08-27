@@ -14,6 +14,8 @@ pub enum Status {
     NoAuth,
     /// Request was rejected.
     Rejected,
+    /// Deployment was aborted.
+    Aborted,
 }
 
 impl Status {
@@ -25,6 +27,7 @@ impl Status {
             Self::Accepted => "accepted",
             Self::NoAuth => "noauth",
             Self::Rejected => "rejected",
+            Self::Aborted => "aborted",
         }
     }
 }

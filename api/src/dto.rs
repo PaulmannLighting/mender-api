@@ -7,6 +7,7 @@ pub use bootloader_integration::BootloaderIntegration;
 pub use country::Country;
 pub use deployment::list::Deployment as ListDeployment;
 pub use deployment::new::Deployment as NewDeployment;
+pub use deployment::put::Deployment as PutDeployment;
 pub use deployment::{Kind, Status as DeploymentStatus};
 pub use device::{Device, Group as DeviceGroup};
 pub use device_type::DeviceType;
