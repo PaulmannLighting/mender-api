@@ -4,21 +4,21 @@ use uuid::Uuid;
 /// A new deployment request.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct Deployment {
-    name: String,
-    artifact_name: String,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    devices: Vec<Uuid>,
+pub struct Deployment<'name, 'artifact, 'devices> {
+    name: &'name str,
+    artifact_name: &'artifact str,
+    #[serde(skip_serializing_if = "<[Uuid]>::is_empty")]
+    devices: &'devices [Uuid],
     retries: usize,
 }
 
-impl Deployment {
+impl<'name, 'artifact, 'devices> Deployment<'name, 'artifact, 'devices> {
     /// Creates a new `Deployment` instance.
     #[must_use]
     pub const fn new(
-        name: String,
-        artifact_name: String,
-        devices: Vec<Uuid>,
+        name: &'name str,
+        artifact_name: &'artifact str,
+        devices: &'devices [Uuid],
         retries: usize,
     ) -> Self {
         Self {

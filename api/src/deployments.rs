@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::num::NonZero;
 
 use log::error;
@@ -24,10 +25,29 @@ pub trait Deployments {
     fn devices_of(&self, id: Uuid) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 
     /// Create a new deployment.
-    fn create(
+    fn create<N, A>(
         &self,
-        deployment: &NewDeployment,
-    ) -> impl Future<Output = reqwest::Result<String>> + Send;
+        name: N,
+        artifact_name: A,
+        devices: &[Uuid],
+        retries: usize,
+    ) -> impl Future<Output = reqwest::Result<String>> + Send
+    where
+        N: AsRef<str> + Send + Sync,
+        A: AsRef<str> + Send + Sync;
+
+    /// Create a new deployment for a group of devices.
+    fn create_for_group<N, A, G>(
+        &self,
+        name: N,
+        artifact_name: A,
+        group_name: G,
+        retries: usize,
+    ) -> impl Future<Output = reqwest::Result<String>> + Send
+    where
+        N: AsRef<str> + Send + Sync,
+        A: AsRef<str> + Send + Sync,
+        G: Display + Send + Sync;
 
     /// Abort a deployment.
     fn abort(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
@@ -64,11 +84,54 @@ impl Deployments for Session {
             .await
     }
 
-    async fn create(&self, deployment: &NewDeployment) -> reqwest::Result<String> {
+    async fn create<N, A>(
+        &self,
+        name: N,
+        artifact_name: A,
+        devices: &[Uuid],
+        retries: usize,
+    ) -> reqwest::Result<String>
+    where
+        N: AsRef<str> + Send + Sync,
+        A: AsRef<str> + Send + Sync,
+    {
         self.client()
             .post(self.format_url(PATH, None))
             .bearer_auth(self.bearer_token())
-            .json(deployment)
+            .json(&NewDeployment::new(
+                name.as_ref(),
+                artifact_name.as_ref(),
+                devices,
+                retries,
+            ))
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await
+    }
+
+    async fn create_for_group<N, A, G>(
+        &self,
+        name: N,
+        artifact_name: A,
+        group_name: G,
+        retries: usize,
+    ) -> reqwest::Result<String>
+    where
+        N: AsRef<str> + Send + Sync,
+        A: AsRef<str> + Send + Sync,
+        G: Display + Send + Sync,
+    {
+        self.client()
+            .post(self.format_url(format!("{PATH}/group/{group_name}"), None))
+            .bearer_auth(self.bearer_token())
+            .json(&NewDeployment::new(
+                name.as_ref(),
+                artifact_name.as_ref(),
+                &[],
+                retries,
+            ))
             .send()
             .await?
             .error_for_status()?
