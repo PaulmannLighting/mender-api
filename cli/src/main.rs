@@ -91,7 +91,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 println!("{device:#}");
             }
             DeviceAction::AddToGroup { id, group_name } => {
-                Devices::add_to_group(&session, id, group_name)
+                Devices::set_group(&session, id, group_name)
                     .await
                     .or_bail()?;
             }

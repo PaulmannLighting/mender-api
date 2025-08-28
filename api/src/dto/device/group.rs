@@ -1,23 +1,28 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Group payload for adding a device to a group.
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct Group<'name> {
+pub struct Group<T = String> {
     #[serde(rename = "group")]
-    name: &'name str,
+    name: T,
 }
 
-impl<'name> Group<'name> {
+impl<T> Group<T> {
     /// Creates a new `Group` instance.
     #[must_use]
-    pub const fn new(name: &'name str) -> Self {
+    pub const fn new(name: T) -> Self {
         Self { name }
     }
+}
 
+impl<T> Group<T>
+where
+    T: AsRef<str>,
+{
     /// Returns the name of the group.
     #[must_use]
-    pub const fn name(&self) -> &str {
+    pub fn name(self) -> T {
         self.name
     }
 }

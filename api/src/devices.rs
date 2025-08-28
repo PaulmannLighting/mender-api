@@ -25,8 +25,11 @@ pub trait Devices {
     /// Get a specific device by its ID.
     fn get(&self, id: Uuid) -> impl Future<Output = reqwest::Result<Device>> + Send;
 
+    /// Get the group of the specified device.
+    fn get_group(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
+
     /// Add the device to the specified group.
-    fn add_to_group<T>(
+    fn set_group<T>(
         &self,
         id: Uuid,
         group_name: T,
@@ -60,7 +63,19 @@ impl Devices for Session {
             .await
     }
 
-    async fn add_to_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<String>
+    async fn get_group(&self, id: Uuid) -> reqwest::Result<String> {
+        self.client()
+            .get(self.format_url(format!("{PATH}/{id}/group"), None))
+            .bearer_auth(self.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await
+            .map(DeviceGroup::name)
+    }
+
+    async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<String>
     where
         T: AsRef<str> + Send,
     {

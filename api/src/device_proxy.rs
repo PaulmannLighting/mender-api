@@ -28,6 +28,15 @@ impl DeviceProxy<'_> {
         Devices::get(self.session, self.id).await
     }
 
+    /// Get the group of the specified device.
+    ///
+    /// # Errors
+    ///
+    /// Return a [`reqwest::Error`] if the request fails.
+    pub async fn get_group(&self) -> reqwest::Result<String> {
+        Devices::get_group(self.session, self.id).await
+    }
+
     /// Add the device to the specified group.
     ///
     /// # Errors
@@ -37,7 +46,7 @@ impl DeviceProxy<'_> {
     where
         T: AsRef<str> + Send,
     {
-        Devices::add_to_group(self.session, self.id, group_name).await
+        Devices::set_group(self.session, self.id, group_name).await
     }
 
     /// Add tags to the device.
