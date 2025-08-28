@@ -110,14 +110,13 @@ impl Display for Device {
             for attribute in &self.attributes {
                 write!(f, "\t\t- ")?;
                 Display::fmt(attribute, f)?;
-                writeln!(f)?;
             }
 
             Ok(())
         } else if let Some(mac_address) = self.mac_address() {
-            writeln!(f, "{} ({mac_address})", self.id)
+            write!(f, "{} ({mac_address})", self.id)
         } else {
-            writeln!(f, "{}", self.id)
+            write!(f, "{}", self.id)
         }
     }
 }
