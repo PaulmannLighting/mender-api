@@ -2,19 +2,16 @@ use serde::{Deserialize, Serialize};
 
 /// Represents a tag of a device.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
-pub struct Tag<T = String> {
-    name: T,
+pub struct Tag {
+    name: String,
     value: String,
     description: Option<String>,
 }
 
-impl<T> Tag<T>
-where
-    T: AsRef<str>,
-{
+impl Tag {
     /// Create a new `Tag` with the specified name, value, and optional description.
     #[must_use]
-    pub const fn new(name: T, value: String, description: Option<String>) -> Self {
+    pub const fn new(name: String, value: String, description: Option<String>) -> Self {
         Self {
             name,
             value,

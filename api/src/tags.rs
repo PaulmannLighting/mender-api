@@ -1,3 +1,4 @@
+use serde::Serialize;
 use uuid::Uuid;
 
 use crate::dto::Tag;

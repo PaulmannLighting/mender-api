@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 /// Group payload for adding a device to a group.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct Group<T = String> {
+pub struct Group<T> {
     #[serde(rename = "group")]
     name: T,
 }
