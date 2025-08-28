@@ -64,9 +64,19 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 Deployments::abort(&session, id).await.or_bail()?;
             }
             DeploymentAction::AbortAll { page_size } => {
-                Deployments::abort_all(&session, page_size)
-                    .await
-                    .or_bail()?;
+                let mut devices = Devices::list(&session, page_size);
+                let mut return_value = Ok(());
+
+                while let Some(device) = devices.next().await {
+                    if let Ok(device) = device
+                        && let Err(error) = Deployments::abort_device(&session, device.id()).await
+                    {
+                        error!("Failed to abort deployment for device {device}: {error}",);
+                        return_value = Err(ExitCode::FAILURE);
+                    }
+                }
+
+                return return_value;
             }
         },
         Endpoint::Devices { action } => match action {
