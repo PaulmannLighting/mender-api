@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use crate::dto::{Device, Tag};
 use crate::session::Session;
-use crate::{Devices, Tags};
+use crate::{Deployments, Devices, Tags};
 
 /// A proxy for a device in the Mender server.
 pub struct DeviceProxy<'session> {
@@ -74,5 +74,16 @@ impl DeviceProxy<'_> {
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn clear_tags(&self) -> reqwest::Result<String> {
         Tags::clear(self.session, self.id).await
+    }
+
+    /// Abort any ongoing deployment for the device.
+    ///
+    /// # Errors
+    ///
+    /// Return a [`reqwest::Error`] if the request fails.
+    pub async fn abort_deployment(&self) -> reqwest::Result<()> {
+        Deployments::abort_device(self.session, self.id)
+            .await
+            .map(drop)
     }
 }
