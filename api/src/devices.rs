@@ -72,7 +72,7 @@ impl Devices for Session {
             .error_for_status()?
             .json()
             .await
-            .map(DeviceGroup::name)
+            .map(DeviceGroup::into_name)
     }
 
     async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<String>

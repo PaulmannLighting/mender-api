@@ -8,21 +8,24 @@ pub struct Group<T = String> {
     name: T,
 }
 
-impl<T> Group<T> {
+impl<T> Group<T>
+where
+    T: AsRef<str>,
+{
     /// Creates a new `Group` instance.
     #[must_use]
     pub const fn new(name: T) -> Self {
         Self { name }
     }
-}
 
-impl<T> Group<T>
-where
-    T: AsRef<str>,
-{
     /// Returns the name of the group.
     #[must_use]
-    pub fn name(self) -> T {
+    pub fn name(&self) -> &str {
+        self.name.as_ref()
+    }
+
+    #[must_use]
+    pub fn into_name(self) -> T {
         self.name
     }
 }
