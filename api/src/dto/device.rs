@@ -93,18 +93,24 @@ impl Device {
 
 impl Display for Device {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "Device: {}\n\t- updated: {}\n\t- attributes:",
-            self.id, self.updated_ts
-        )?;
+        if f.alternate() {
+            writeln!(
+                f,
+                "Device: {}\n\t- updated: {}\n\t- attributes:",
+                self.id, self.updated_ts
+            )?;
 
-        for attribute in &self.attributes {
-            write!(f, "\t\t- ")?;
-            Display::fmt(attribute, f)?;
-            writeln!(f)?;
+            for attribute in &self.attributes {
+                write!(f, "\t\t- ")?;
+                Display::fmt(attribute, f)?;
+                writeln!(f)?;
+            }
+
+            Ok(())
+        } else if let Some(mac_address) = self.mac_address() {
+            write!(f, "{} ({})", self.id, mac_address)
+        } else {
+            write!(f, "{}", self.id)
         }
-
-        Ok(())
     }
 }
