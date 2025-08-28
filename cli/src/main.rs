@@ -5,7 +5,7 @@ use std::process::ExitCode;
 use args::Args;
 use clap::Parser;
 use log::error;
-use mender_api::dto::{NewDeployment, Tag};
+use mender_api::dto::Tag;
 use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
 use crate::args::{
@@ -56,12 +56,9 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 devices,
                 retries,
             } => {
-                Deployments::create(
-                    &session,
-                    &NewDeployment::new(name, artifact_name, devices, retries),
-                )
-                .await
-                .or_bail()?;
+                Deployments::create(&session, name, artifact_name, &devices, retries)
+                    .await
+                    .or_bail()?;
             }
             DeploymentAction::Abort { id } => {
                 Deployments::abort(&session, id).await.or_bail()?;
