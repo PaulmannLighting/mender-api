@@ -4,7 +4,7 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use log::error;
+use log::{error, info};
 use mender_api::dto::Tag;
 use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
 
@@ -68,11 +68,21 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 let mut return_value = Ok(());
 
                 while let Some(device) = devices.next().await {
-                    if let Ok(device) = device
-                        && let Err(error) = Deployments::abort_device(&session, device.id()).await
-                    {
-                        error!("Failed to abort deployment for device {device}: {error}",);
-                        return_value = Err(ExitCode::FAILURE);
+                    match device {
+                        Ok(device) => {
+                            if let Err(error) =
+                                Deployments::abort_device(&session, device.id()).await
+                            {
+                                error!("Failed to abort deployment for device {device}: {error}",);
+                                return_value = Err(ExitCode::FAILURE);
+                            } else {
+                                info!("Aborted deployment for device {device}");
+                            }
+                        }
+                        Err(error) => {
+                            error!("Failed to get device: {error}");
+                            return_value = Err(ExitCode::FAILURE);
+                        }
                     }
                 }
 
