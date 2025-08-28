@@ -24,6 +24,7 @@ where
         self.name.as_ref()
     }
 
+    /// Consumes the `Group` and returns its name.
     #[must_use]
     pub fn into_name(self) -> T {
         self.name
