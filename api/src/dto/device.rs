@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::dto::{Attribute, KnownAttribute, Scope};
+use crate::{DeviceProxy, Session};
 
 mod group;
 
@@ -39,6 +40,12 @@ impl Device {
     #[must_use]
     pub const fn updated_ts(&self) -> DateTime<FixedOffset> {
         self.updated_ts
+    }
+
+    /// Create a proxy for the device using the provided session.
+    #[must_use]
+    pub const fn as_proxy<'session>(&self, session: &'session Session) -> DeviceProxy<'session> {
+        DeviceProxy::new(session, self.id)
     }
 }
 
