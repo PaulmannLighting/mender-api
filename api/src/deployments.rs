@@ -57,6 +57,10 @@ pub trait Deployments {
         &self,
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<()>> + Send;
+
+    /// Abort a deployment for a given device.
+    fn abort_device(&self, device_id: Uuid)
+    -> impl Future<Output = reqwest::Result<String>> + Send;
 }
 
 impl Deployments for Session {
@@ -163,5 +167,16 @@ impl Deployments for Session {
         }
 
         last_error.map_or_else(|| Ok(()), Err)
+    }
+
+    async fn abort_device(&self, device_id: Uuid) -> reqwest::Result<String> {
+        self.client()
+            .delete(self.format_url(format!("{PATH}/devices/{device_id}"), None))
+            .bearer_auth(self.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await
     }
 }
