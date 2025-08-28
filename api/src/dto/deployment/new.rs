@@ -7,6 +7,7 @@ use uuid::Uuid;
 pub struct Deployment {
     name: String,
     artifact_name: String,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     devices: Vec<Uuid>,
     retries: usize,
 }
