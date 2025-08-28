@@ -71,7 +71,6 @@ pub enum KnownAttribute {
     ArtifactName {
         /// The attribute value.
         value: String,
-
         /// The scope of this attribute.
         scope: Scope,
     },
@@ -88,7 +87,6 @@ pub enum KnownAttribute {
     DeviceType {
         /// The attribute value.
         value: DeviceType,
-
         /// The scope of this attribute.
         scope: Scope,
     },
