@@ -115,9 +115,9 @@ impl Display for Device {
 
             Ok(())
         } else if let Some(mac_address) = self.mac_address() {
-            write!(f, "{} ({})", self.id, mac_address)
+            writeln!(f, "{} ({mac_address})", self.id)
         } else {
-            write!(f, "{}", self.id)
+            writeln!(f, "{}", self.id)
         }
     }
 }
