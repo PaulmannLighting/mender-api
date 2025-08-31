@@ -4,9 +4,10 @@ use std::process::ExitCode;
 
 use args::Args;
 use clap::Parser;
-use log::{error, info};
+use log::{debug, error, info};
 use mender_api::dto::Tag;
 use mender_api::{Client, Deployments, Devices, Groups, Login, Releases};
+use tokio::time::Instant;
 
 use crate::args::{
     DeploymentAction, DeviceAction, DeviceProxyAction, Endpoint, GroupAction, ReleaseAction,
@@ -66,17 +67,25 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             DeploymentAction::AbortAll { page_size } => {
                 let mut devices = Devices::list(&session, page_size);
                 let mut return_value = Ok(());
+                let mut fetch_device = Instant::now();
 
                 while let Some(device) = devices.next().await {
+                    debug!("Fetched device in {:?}", fetch_device.elapsed());
+                    fetch_device = Instant::now();
+
                     match device {
                         Ok(device) => {
+                            let start = Instant::now();
+
                             if let Err(error) =
                                 Deployments::abort_device(&session, device.id()).await
                             {
                                 error!("Failed to abort deployment for device {device}: {error}",);
+                                debug!("A bort took {:?}", start.elapsed());
                                 return_value = Err(ExitCode::FAILURE);
                             } else {
                                 info!("Aborted deployment for device {device}");
+                                debug!("A bort took {:?}", start.elapsed());
                             }
                         }
                         Err(error) => {
