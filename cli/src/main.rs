@@ -80,7 +80,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             if let Err(error) =
                                 Deployments::abort_device(&session, device.id()).await
                             {
-                                error!("Failed to abort deployment for device {device}: {error}",);
+                                error!("Failed to abort deployment for device {device}: {error}");
                                 debug!("A bort took {:?}", start.elapsed());
                                 return_value = Err(ExitCode::FAILURE);
                             } else {
