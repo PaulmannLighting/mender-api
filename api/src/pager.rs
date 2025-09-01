@@ -37,6 +37,10 @@ impl<'session, 'path> Pager<'session, 'path> {
 
 impl Pager<'_, '_> {
     /// Return the given page.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`reqwest::Error`] if the request fails or the response cannot be deserialized.
     pub async fn page<T>(&self, page_no: NonZero<usize>) -> reqwest::Result<Vec<T>>
     where
         for<'deserialize> T: Deserialize<'deserialize>,
@@ -55,7 +59,11 @@ impl Pager<'_, '_> {
             .await
     }
 
-    /// Iterate over all pages,
+    /// Iterate over all pages and collect the results into a `Vec`.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`reqwest::Error`] if any of the page requests fail.
     pub async fn collect<T>(&self) -> reqwest::Result<Vec<T>>
     where
         for<'deserialize> T: Deserialize<'deserialize>,
