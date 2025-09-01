@@ -81,22 +81,24 @@ impl DeploymentAction {
                     devices.len(),
                     start.elapsed()
                 );
-                let mut return_value = Ok(());
+                let mut handles = Vec::with_capacity(devices.len());
 
                 for device in devices {
-                    let start = Instant::now();
-
-                    if let Err(error) = Deployments::abort_device(session, device.id()).await {
-                        error!("Failed to abort deployment for device {device}: {error}");
-                        debug!("Abort took {:?}", start.elapsed());
-                        return_value = Err(ExitCode::FAILURE);
-                    } else {
-                        info!("Aborted deployment for device {device}");
-                        debug!("Abort took {:?}", start.elapsed());
-                    }
+                    let my_session = session.clone();
+                    handles.push(tokio::spawn(async move {
+                        if let Err(error) =
+                            Deployments::abort_device(&my_session, device.id()).await
+                        {
+                            error!("Failed to abort deployment for device {device}: {error}");
+                        } else {
+                            info!("Aborted deployment for device {device}");
+                        }
+                    }));
                 }
 
-                return return_value;
+                for handle in handles {
+                    let _ = handle.await;
+                }
             }
         }
 
