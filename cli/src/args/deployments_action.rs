@@ -3,6 +3,7 @@ use std::process::ExitCode;
 
 use clap::Subcommand;
 use log::error;
+use mender_api::dto::DeploymentStatus;
 use mender_api::{Deployments, Session};
 use uuid::Uuid;
 
@@ -13,6 +14,10 @@ pub enum DeploymentAction {
     List {
         #[clap(long, short = 'p', help = "Page size for deployment listing")]
         page_size: Option<NonZero<usize>>,
+        #[clap(long, short = 'v', help = "Verbose output")]
+        verbose: bool,
+        #[clap(long, short = 'u', help = "List only unfinished deployments")]
+        unfinished: bool,
     },
     DevicesOf {
         #[clap(index = 1, help = "List device for a specific deployment")]
@@ -45,12 +50,24 @@ pub enum DeploymentAction {
 impl DeploymentAction {
     pub async fn run(self, session: &Session) -> Result<(), ExitCode> {
         match self {
-            Self::List { page_size } => {
+            Self::List {
+                page_size,
+                verbose,
+                unfinished,
+            } => {
                 let mut deployments = Deployments::list(session, page_size);
 
                 while let Some(result) = deployments.next().await {
                     match result {
-                        Ok(deployment) => println!("{deployment:?}"),
+                        Ok(deployment) => {
+                            if !unfinished || deployment.status() != DeploymentStatus::Finished {
+                                if verbose {
+                                    println!("{deployment:?}");
+                                } else {
+                                    println!("{}", deployment.id());
+                                }
+                            }
+                        }
                         Err(error) => {
                             error!("{error}");
                             return Err(ExitCode::FAILURE);
