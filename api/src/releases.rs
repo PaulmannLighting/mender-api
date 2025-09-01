@@ -1,7 +1,7 @@
 use std::num::NonZero;
 
 use crate::dto::Release;
-use crate::paging::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/deployment/deployment/releases/list";
@@ -9,7 +9,7 @@ const PATH: &str = "/api/management/v1/deployment/deployment/releases/list";
 /// Releases management API.
 pub trait Releases {
     /// List all releases available in the Mender server.
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Release>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, Release>;
 
     /// Collect releases into a `Vec`.
     fn collect(
@@ -19,7 +19,7 @@ pub trait Releases {
 }
 
 impl Releases for Session {
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Release> {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, Release> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 use crate::device_proxy::DeviceProxy;
 use crate::dto::{Device, DeviceGroup};
-use crate::paging::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
@@ -14,7 +14,7 @@ const PATH: &str = "/api/management/v1/inventory/devices";
 /// Devices management API.
 pub trait Devices {
     /// List device.
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Device>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, Device>;
 
     /// Collect device into a `Vec`.
     fn collect(
@@ -42,7 +42,7 @@ pub trait Devices {
 }
 
 impl Devices for Session {
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, Device> {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, Device> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

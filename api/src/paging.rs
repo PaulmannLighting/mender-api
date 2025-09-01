@@ -2,11 +2,11 @@
 
 use std::num::NonZero;
 
-pub use page_iterator::PageIterator;
+pub use paged_iterator::PagedIterator;
 pub use pager::Pager;
 pub use pages::Pages;
 
-mod page_iterator;
+mod paged_iterator;
 mod pager;
 mod pages;
 

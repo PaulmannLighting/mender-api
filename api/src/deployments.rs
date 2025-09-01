@@ -5,7 +5,7 @@ use log::error;
 use uuid::Uuid;
 
 use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
-use crate::paging::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments";
@@ -13,7 +13,7 @@ const PATH: &str = "/api/management/v1/deployments/deployments";
 /// Deployments management API.
 pub trait Deployments {
     /// List deployment.
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, ListDeployment>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment>;
 
     /// Collect deployment into a `Vec`.
     fn collect(
@@ -63,7 +63,7 @@ pub trait Deployments {
 }
 
 impl Deployments for Session {
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PageIterator<'_, '_, ListDeployment> {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

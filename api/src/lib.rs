@@ -6,7 +6,7 @@ pub use device_proxy::DeviceProxy;
 pub use devices::Devices;
 pub use groups::Groups;
 pub use login::Login;
-pub use paging::{PageIterator, Pager, Pages};
+pub use paging::{PagedIterator, Pager, Pages};
 pub use releases::Releases;
 pub use reqwest::{Certificate, Error, Result};
 pub use session::Session;
