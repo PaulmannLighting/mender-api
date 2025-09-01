@@ -4,6 +4,7 @@ use std::num::NonZero;
 use log::{error, info};
 use uuid::Uuid;
 
+use crate::Devices;
 use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment};
 use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
@@ -63,6 +64,12 @@ pub trait Deployments {
 
     /// Abort a deployment for a given device.
     fn abort_device(&self, device_id: Uuid) -> impl Future<Output = reqwest::Result<()>> + Send;
+
+    /// Abort all deployments by-device.
+    fn abort_all_by_device(
+        &self,
+        page_size: Option<NonZero<usize>>,
+    ) -> impl Future<Output = reqwest::Result<()>> + Send;
 }
 
 impl Deployments for Session {
@@ -162,7 +169,7 @@ impl Deployments for Session {
     }
 
     async fn abort_all(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {
-        let mut pages = self.pages(page_size);
+        let mut pages = Deployments::pages(self, page_size);
 
         while let Some(page) = pages.next().await {
             let page = page?;
@@ -200,5 +207,31 @@ impl Deployments for Session {
             .bytes()
             .await
             .map(drop)
+    }
+
+    async fn abort_all_by_device(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {
+        let mut pages = Devices::pages(self, page_size);
+
+        while let Some(page) = pages.next().await {
+            let page = page?;
+            let mut handles = Vec::with_capacity(page.len());
+
+            for device in page {
+                handles.push(async move {
+                    self.abort_device(device.id())
+                        .await
+                        .inspect(|()| info!("Aborted deployment for device {device}"))
+                        .inspect_err(|error| {
+                            error!("Failed to abort deployment for device {device}: {error}");
+                        })
+                });
+            }
+
+            for handle in handles {
+                handle.await?;
+            }
+        }
+
+        Ok(())
     }
 }

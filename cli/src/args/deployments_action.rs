@@ -2,8 +2,8 @@ use std::num::NonZero;
 use std::process::ExitCode;
 
 use clap::Subcommand;
-use log::{error, info};
-use mender_api::{Deployments, Devices, Session};
+use log::error;
+use mender_api::{Deployments, Session};
 use uuid::Uuid;
 
 use crate::util::OrBail;
@@ -80,29 +80,9 @@ impl DeploymentAction {
                 Deployments::abort_all(session, page_size).await.or_bail()?;
             }
             Self::AbortAllByDevice { page_size } => {
-                let mut pages = Devices::pages(session, page_size);
-
-                while let Some(page) = pages.next().await {
-                    let page = page.or_bail()?;
-                    let mut handles = Vec::with_capacity(page.len());
-
-                    for device in page {
-                        handles.push(async move {
-                            Deployments::abort_device(session, device.id())
-                                .await
-                                .inspect(|()| info!("Aborted deployment for device {device}"))
-                                .inspect_err(|error| {
-                                    error!(
-                                        "Failed to abort deployment for device {device}: {error}"
-                                    );
-                                })
-                        });
-                    }
-
-                    for handle in handles {
-                        handle.await.or_bail()?;
-                    }
-                }
+                Deployments::abort_all_by_device(session, page_size)
+                    .await
+                    .or_bail()?;
             }
         }
 
