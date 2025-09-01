@@ -65,38 +65,23 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 Deployments::abort(&session, id).await.or_bail()?;
             }
             DeploymentAction::AbortAll { page_size } => {
-                let mut devices = Devices::list(&session, page_size);
+                let devices = Devices::collect(&session, page_size).await.or_bail()?;
                 let mut return_value = Ok(());
-                let mut fetch_device = Instant::now();
 
-                while let Some(device) = devices.next().await {
-                    debug!("Fetched device in {:?}", fetch_device.elapsed());
+                for device in devices {
+                    let start = Instant::now();
 
-                    match device {
-                        Ok(device) => {
-                            let start = Instant::now();
-
-                            match Deployments::abort_device(&session, device.id()).await {
-                                Err(error) => {
-                                    error!(
-                                        "Failed to abort deployment for device {device}: {error}"
-                                    );
-                                    debug!("Abort took {:?}", start.elapsed());
-                                    return_value = Err(ExitCode::FAILURE);
-                                }
-                                Ok(text) => {
-                                    info!("Aborted deployment for device {device}: {text}");
-                                    debug!("Abort took {:?}", start.elapsed());
-                                }
-                            }
-                        }
+                    match Deployments::abort_device(&session, device.id()).await {
                         Err(error) => {
-                            error!("Failed to get device: {error}");
+                            error!("Failed to abort deployment for device {device}: {error}");
+                            debug!("Abort took {:?}", start.elapsed());
                             return_value = Err(ExitCode::FAILURE);
                         }
+                        Ok(text) => {
+                            info!("Aborted deployment for device {device}: {text}");
+                            debug!("Abort took {:?}", start.elapsed());
+                        }
                     }
-
-                    fetch_device = Instant::now();
                 }
 
                 return return_value;
