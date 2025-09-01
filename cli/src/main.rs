@@ -65,7 +65,13 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                 Deployments::abort(&session, id).await.or_bail()?;
             }
             DeploymentAction::AbortAll { page_size } => {
+                let start = Instant::now();
                 let devices = Devices::collect(&session, page_size).await.or_bail()?;
+                debug!(
+                    "Collected {} devices in {:?}",
+                    devices.len(),
+                    start.elapsed()
+                );
                 let mut return_value = Ok(());
 
                 for device in devices {
