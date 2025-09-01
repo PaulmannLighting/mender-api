@@ -84,7 +84,7 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             return_value = Err(ExitCode::FAILURE);
                         }
                         Ok(text) => {
-                            info!("Aborted deployment for device {device}: {text}");
+                            info!(r#"Aborted deployment for device {device}: "{text}""#);
                             debug!("Abort took {:?}", start.elapsed());
                         }
                     }
