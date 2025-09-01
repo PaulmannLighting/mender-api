@@ -4,7 +4,7 @@ use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
 use log::error;
-use mender_api::{Certificate, Devices, Session};
+use mender_api::{Certificate, Client, Devices, Login, Session};
 use uuid::Uuid;
 
 use crate::args::deployments_action::DeploymentAction;
@@ -48,6 +48,15 @@ impl Args {
             })
             .map(|cert| Certificate::from_pem(&cert).or_bail())
             .transpose()
+    }
+}
+
+impl Args {
+    pub async fn run(self) -> Result<(), ExitCode> {
+        let cert = self.certificate()?;
+        let server = Client::new(self.url.parse().or_bail()?, cert, self.insecure).or_bail()?;
+        let session = server.login(self.username, self.password).await.or_bail()?;
+        self.endpoint.run(&session).await
     }
 }
 
