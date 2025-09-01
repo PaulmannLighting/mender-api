@@ -1,17 +1,20 @@
 use std::fmt::Display;
 use std::num::NonZero;
 
-use log::error;
+use log::{error, info};
 use uuid::Uuid;
 
 use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
-use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
 /// Deployments management API.
 pub trait Deployments {
+    /// Iterate over deployment pages.
+    fn pages(&self, page_size: Option<NonZero<usize>>) -> Pages<'_, '_, ListDeployment>;
+
     /// List deployment.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment>;
 
@@ -63,6 +66,10 @@ pub trait Deployments {
 }
 
 impl Deployments for Session {
+    fn pages(&self, page_size: Option<NonZero<usize>>) -> Pages<'_, '_, ListDeployment> {
+        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
+    }
+
     fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
@@ -155,17 +162,31 @@ impl Deployments for Session {
     }
 
     async fn abort_all(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {
-        let mut deployments = self.list(page_size);
-        let mut last_error = None;
+        let mut pages = self.pages(page_size);
 
-        while let Some(deployment) = deployments.next().await {
-            if let Err(error) = self.abort(deployment?.id()).await {
-                error!("Failed to abort deployment: {error}");
-                last_error.replace(error);
+        while let Some(page) = pages.next().await {
+            let page = page?;
+            let mut tasks = Vec::with_capacity(page.len());
+
+            for deployment in page {
+                let id = deployment.id();
+                let this = self.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    if let Err(error) = this.abort(id).await {
+                        error!("Failed to abort deployment: {error}");
+                    } else {
+                        info!("Aborted deployment {id}");
+                    }
+                }));
+            }
+
+            for task in tasks {
+                task.await.expect("Joining task failed");
             }
         }
 
-        last_error.map_or_else(|| Ok(()), Err)
+        Ok(())
     }
 
     async fn abort_device(&self, device_id: Uuid) -> reqwest::Result<()> {

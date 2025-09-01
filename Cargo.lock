@@ -711,6 +711,7 @@ dependencies = [
  "reqwest",
  "semver",
  "serde",
+ "tokio",
  "uuid",
 ]
 

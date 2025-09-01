@@ -36,6 +36,10 @@ pub enum DeploymentAction {
         #[clap(long, short = 'p', help = "Page size for deployment querying")]
         page_size: Option<NonZero<usize>>,
     },
+    AbortAllByDevice {
+        #[clap(long, short = 'p', help = "Page size for deployment querying")]
+        page_size: Option<NonZero<usize>>,
+    },
 }
 
 impl DeploymentAction {
@@ -73,6 +77,9 @@ impl DeploymentAction {
                 Deployments::abort(session, id).await.or_bail()?;
             }
             Self::AbortAll { page_size } => {
+                Deployments::abort_all(session, page_size).await.or_bail()?;
+            }
+            Self::AbortAllByDevice { page_size } => {
                 let mut pages = Devices::pages(session, page_size);
 
                 while let Some(page) = pages.next().await {
