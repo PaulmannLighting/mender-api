@@ -11,6 +11,7 @@ use crate::Pager;
 pub struct Pages<'session, 'path, T> {
     pager: Pager<'session, 'path>,
     page_no: NonZero<usize>,
+    done: bool,
     phantom: PhantomData<T>,
 }
 
@@ -21,6 +22,7 @@ impl<'session, 'path, T> Pages<'session, 'path, T> {
         Self {
             pager,
             page_no: NonZero::new(1).expect("1 is always non-zero."),
+            done: false,
             phantom: PhantomData,
         }
     }
@@ -32,6 +34,10 @@ where
 {
     /// Return the next page.
     pub async fn next(&mut self) -> Option<reqwest::Result<Vec<T>>> {
+        if self.done {
+            return None;
+        }
+
         let page_no = self.page_no;
         self.page_no = self.page_no.saturating_add(1);
 
@@ -41,12 +47,17 @@ where
             .await
             .inspect_err(|error| error!("{error}"))
         {
-            Ok(next_page) => {
-                if next_page.is_empty() {
+            Ok(page) => {
+                if page.is_empty() {
+                    self.done = true;
                     return None;
                 }
 
-                Some(Ok(next_page))
+                if page.len() < self.pager.page_size().get() {
+                    self.done = true;
+                }
+
+                Some(Ok(page))
             }
             Err(error) => Some(Err(error)),
         }

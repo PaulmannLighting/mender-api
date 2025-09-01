@@ -29,6 +29,11 @@ impl<'session, 'path> Pager<'session, 'path> {
 }
 
 impl Pager<'_, '_> {
+    /// Return the page size.
+    pub const fn page_size(&self) -> NonZero<usize> {
+        self.page_size
+    }
+
     /// Return the given page.
     ///
     /// # Errors
