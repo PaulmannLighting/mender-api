@@ -88,12 +88,18 @@ async fn run(args: Args) -> Result<(), ExitCode> {
             }
         },
         Endpoint::Devices { action } => match action {
-            DeviceAction::List { page_size } => {
+            DeviceAction::List { page_size, verbose } => {
                 let mut devices = Devices::list(&session, page_size);
 
                 while let Some(result) = devices.next().await {
                     match result {
-                        Ok(device) => println!("{device:#}"),
+                        Ok(device) => {
+                            if verbose {
+                                println!("{device:#}");
+                            } else {
+                                println!("{device}");
+                            }
+                        }
                         Err(error) => {
                             error!("{error}");
                             return Err(ExitCode::FAILURE);
