@@ -86,16 +86,13 @@ impl DeploymentAction {
                 for device in devices {
                     let start = Instant::now();
 
-                    match Deployments::abort_device(session, device.id()).await {
-                        Err(error) => {
-                            error!("Failed to abort deployment for device {device}: {error}");
-                            debug!("Abort took {:?}", start.elapsed());
-                            return_value = Err(ExitCode::FAILURE);
-                        }
-                        Ok(text) => {
-                            info!(r#"Aborted deployment for device {device}: "{text}""#);
-                            debug!("Abort took {:?}", start.elapsed());
-                        }
+                    if let Err(error) = Deployments::abort_device(session, device.id()).await {
+                        error!("Failed to abort deployment for device {device}: {error}");
+                        debug!("Abort took {:?}", start.elapsed());
+                        return_value = Err(ExitCode::FAILURE);
+                    } else {
+                        info!("Aborted deployment for device {device}");
+                        debug!("Abort took {:?}", start.elapsed());
                     }
                 }
 
