@@ -26,6 +26,9 @@ pub trait Deployments {
         page_size: Option<NonZero<usize>>,
     ) -> impl Future<Output = reqwest::Result<Vec<ListDeployment>>> + Send;
 
+    /// Show a deployment.
+    fn show(&self, id: Uuid) -> impl Future<Output = reqwest::Result<ListDeployment>> + Send;
+
     /// List device of the given deployment.
     fn devices_of(&self, id: Uuid) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
 
@@ -88,6 +91,17 @@ impl Deployments for Session {
     ) -> reqwest::Result<Vec<ListDeployment>> {
         Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
+            .await
+    }
+
+    async fn show(&self, id: Uuid) -> reqwest::Result<ListDeployment> {
+        self.client()
+            .get(self.format_url(format!("{PATH}/{id}"), None))
+            .bearer_auth(self.bearer_token())
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
             .await
     }
 

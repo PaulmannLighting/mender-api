@@ -19,6 +19,10 @@ pub enum DeploymentAction {
         #[clap(long, short = 'u', help = "List only unfinished deployments")]
         unfinished: bool,
     },
+    Show {
+        #[clap(index = 1, help = "Show details for a specific deployment")]
+        id: Uuid,
+    },
     DevicesOf {
         #[clap(index = 1, help = "List device for a specific deployment")]
         id: Uuid,
@@ -74,6 +78,10 @@ impl DeploymentAction {
                         }
                     }
                 }
+            }
+            Self::Show { id } => {
+                let deployment = Deployments::show(session, id).await.or_bail()?;
+                println!("{deployment:?}");
             }
             Self::DevicesOf { id } => {
                 for device_id in Deployments::devices_of(session, id).await.or_bail()? {
