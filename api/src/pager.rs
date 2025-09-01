@@ -76,6 +76,7 @@ impl Pager<'_, '_> {
     }
 }
 
+/// Iterator over pages of results.
 #[derive(Debug, Clone)]
 pub struct Pages<'session, 'path> {
     pager: Pager<'session, 'path>,
@@ -117,6 +118,12 @@ impl Pages<'_, '_> {
             }
             Err(error) => Some(Err(error)),
         }
+    }
+}
+
+impl<'session, 'path> From<Pager<'session, 'path>> for Pages<'session, 'path> {
+    fn from(pager: Pager<'session, 'path>) -> Self {
+        Self::new(pager)
     }
 }
 
