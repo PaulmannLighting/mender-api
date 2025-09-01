@@ -71,7 +71,6 @@ async fn run(args: Args) -> Result<(), ExitCode> {
 
                 while let Some(device) = devices.next().await {
                     debug!("Fetched device in {:?}", fetch_device.elapsed());
-                    fetch_device = Instant::now();
 
                     match device {
                         Ok(device) => {
@@ -96,6 +95,8 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                             return_value = Err(ExitCode::FAILURE);
                         }
                     }
+
+                    fetch_device = Instant::now();
                 }
 
                 return return_value;
