@@ -77,15 +77,18 @@ async fn run(args: Args) -> Result<(), ExitCode> {
                         Ok(device) => {
                             let start = Instant::now();
 
-                            if let Err(error) =
-                                Deployments::abort_device(&session, device.id()).await
-                            {
-                                error!("Failed to abort deployment for device {device}: {error}");
-                                debug!("Abort took {:?}", start.elapsed());
-                                return_value = Err(ExitCode::FAILURE);
-                            } else {
-                                info!("Aborted deployment for device {device}");
-                                debug!("Abort took {:?}", start.elapsed());
+                            match Deployments::abort_device(&session, device.id()).await {
+                                Err(error) => {
+                                    error!(
+                                        "Failed to abort deployment for device {device}: {error}"
+                                    );
+                                    debug!("Abort took {:?}", start.elapsed());
+                                    return_value = Err(ExitCode::FAILURE);
+                                }
+                                Ok(text) => {
+                                    info!("Aborted deployment for device {device}: {text}");
+                                    debug!("Abort took {:?}", start.elapsed());
+                                }
                             }
                         }
                         Err(error) => {
