@@ -2,9 +2,8 @@ use std::num::NonZero;
 use std::process::ExitCode;
 
 use clap::Subcommand;
-use log::{debug, error, info};
+use log::{error, info};
 use mender_api::{Deployments, Devices, Session};
-use tokio::time::Instant;
 use uuid::Uuid;
 
 use crate::util::OrBail;
@@ -74,30 +73,28 @@ impl DeploymentAction {
                 Deployments::abort(session, id).await.or_bail()?;
             }
             Self::AbortAll { page_size } => {
-                let start = Instant::now();
-                let devices = Devices::collect(session, page_size).await.or_bail()?;
-                debug!(
-                    "Collected {} devices in {:?}",
-                    devices.len(),
-                    start.elapsed()
-                );
-                let mut handles = Vec::with_capacity(devices.len());
+                let mut pages = Devices::pages(session, page_size);
 
-                for device in devices {
-                    let my_session = session.clone();
-                    handles.push(tokio::spawn(async move {
-                        if let Err(error) =
-                            Deployments::abort_device(&my_session, device.id()).await
-                        {
-                            error!("Failed to abort deployment for device {device}: {error}");
-                        } else {
-                            info!("Aborted deployment for device {device}");
-                        }
-                    }));
-                }
+                while let Some(page) = pages.next().await {
+                    let page = page.or_bail()?;
+                    let mut handles = Vec::with_capacity(page.len());
 
-                for handle in handles {
-                    let _ = handle.await;
+                    for device in page {
+                        let my_session = session.clone();
+                        handles.push(tokio::spawn(async move {
+                            if let Err(error) =
+                                Deployments::abort_device(&my_session, device.id()).await
+                            {
+                                error!("Failed to abort deployment for device {device}: {error}");
+                            } else {
+                                info!("Aborted deployment for device {device}");
+                            }
+                        }));
+                    }
+
+                    for handle in handles {
+                        handle.await.expect("Failed to join task");
+                    }
                 }
             }
         }
