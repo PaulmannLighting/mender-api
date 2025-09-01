@@ -3,7 +3,7 @@ use std::num::NonZero;
 use uuid::Uuid;
 
 use crate::dto::PatchGroupResponse;
-use crate::pager::{DEFAULT_PAGE_SIZE, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/groups";

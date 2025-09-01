@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 use crate::device_proxy::DeviceProxy;
 use crate::dto::{Device, DeviceGroup};
-use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/devices";

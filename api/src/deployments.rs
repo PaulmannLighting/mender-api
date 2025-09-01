@@ -5,7 +5,7 @@ use log::error;
 use uuid::Uuid;
 
 use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
-use crate::pager::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
+use crate::paging::{DEFAULT_PAGE_SIZE, PageIterator, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/deployments/deployments";
