@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::num::NonZero;
 
 use log::{error, info};
-use tokio::task;
+use tokio::task::JoinSet;
 use uuid::Uuid;
 
 use crate::Devices;
@@ -173,26 +173,25 @@ impl Deployments for Session {
         let mut pages = Deployments::pages(self, page_size);
 
         while let Some(page) = pages.next().await {
-            let page = page?;
-            let mut tasks = Vec::with_capacity(page.len());
+            let mut tasks = JoinSet::new();
 
-            for deployment in page
+            for deployment in page?
                 .into_iter()
                 .filter(|deployment| deployment.status() != DeploymentStatus::Finished)
             {
                 let id = deployment.id();
                 let this = self.clone();
 
-                tasks.push(task::spawn(async move {
+                tasks.spawn(async move {
                     this.abort(id)
                         .await
                         .inspect(|_| info!("Aborted deployment {id}"))
                         .inspect_err(|error| error!("Failed to abort deployment: {error}"))
-                }));
+                });
             }
 
-            for task in tasks {
-                task.await.expect("Task join failed")?;
+            for task in tasks.join_all().await {
+                task?;
             }
         }
 
@@ -215,23 +214,22 @@ impl Deployments for Session {
         let mut pages = Devices::pages(self, page_size);
 
         while let Some(page) = pages.next().await {
-            let page = page?;
-            let mut handles = Vec::with_capacity(page.len());
+            let mut tasks = JoinSet::new();
 
-            for device in page {
+            for device in page? {
                 let this = self.clone();
-                handles.push(task::spawn(async move {
+                tasks.spawn(async move {
                     this.abort_device(device.id())
                         .await
                         .inspect(|()| info!("Aborted deployment for device {device}"))
                         .inspect_err(|error| {
                             error!("Failed to abort deployment for device {device}: {error}");
                         })
-                }));
+                });
             }
 
-            for handle in handles {
-                handle.await.expect("Task join failed")?;
+            for task in tasks.join_all().await {
+                task?;
             }
         }
 
