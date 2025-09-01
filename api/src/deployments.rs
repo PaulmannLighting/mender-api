@@ -4,7 +4,7 @@ use std::num::NonZero;
 use log::{error, info};
 use uuid::Uuid;
 
-use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment, Status};
+use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment};
 use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
 
