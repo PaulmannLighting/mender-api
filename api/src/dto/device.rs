@@ -110,6 +110,7 @@ impl Display for Device {
             for attribute in &self.attributes {
                 write!(f, "\t\t- ")?;
                 Display::fmt(attribute, f)?;
+                writeln!(f)?;
             }
 
             Ok(())
