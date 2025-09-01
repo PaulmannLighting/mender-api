@@ -175,7 +175,8 @@ impl Deployments for Session {
             .send()
             .await?
             .error_for_status()?
-            .json()
+            .bytes()
             .await
+            .map(drop)
     }
 }
