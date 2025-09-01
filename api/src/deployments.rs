@@ -173,19 +173,17 @@ impl Deployments for Session {
                 .filter(|deployment| deployment.status() != DeploymentStatus::Finished)
             {
                 let id = deployment.id();
-                let this = self.clone();
 
-                tasks.push(tokio::spawn(async move {
-                    if let Err(error) = this.abort(id).await {
-                        error!("Failed to abort deployment: {error}");
-                    } else {
-                        info!("Aborted deployment {id}");
-                    }
-                }));
+                tasks.push(async move {
+                    self.abort(id)
+                        .await
+                        .inspect(|_| info!("Aborted deployment {id}"))
+                        .inspect_err(|error| error!("Failed to abort deployment: {error}"))
+                });
             }
 
             for task in tasks {
-                task.await.expect("Joining task failed");
+                task.await?;
             }
         }
 

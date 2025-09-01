@@ -87,20 +87,20 @@ impl DeploymentAction {
                     let mut handles = Vec::with_capacity(page.len());
 
                     for device in page {
-                        let my_session = session.clone();
-                        handles.push(tokio::spawn(async move {
-                            if let Err(error) =
-                                Deployments::abort_device(&my_session, device.id()).await
-                            {
-                                error!("Failed to abort deployment for device {device}: {error}");
-                            } else {
-                                info!("Aborted deployment for device {device}");
-                            }
-                        }));
+                        handles.push(async move {
+                            Deployments::abort_device(session, device.id())
+                                .await
+                                .inspect(|()| info!("Aborted deployment for device {device}"))
+                                .inspect_err(|error| {
+                                    error!(
+                                        "Failed to abort deployment for device {device}: {error}"
+                                    );
+                                })
+                        });
                     }
 
                     for handle in handles {
-                        handle.await.expect("Failed to join task");
+                        handle.await.or_bail()?;
                     }
                 }
             }
