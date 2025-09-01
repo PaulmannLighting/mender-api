@@ -10,4 +10,6 @@ pub enum Status {
     InProgress,
     /// Deployment has finished.
     Finished,
+    /// Deployment has been aborted.
+    Aborted,
 }

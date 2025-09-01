@@ -14,8 +14,6 @@ pub enum Status {
     NoAuth,
     /// Request was rejected.
     Rejected,
-    /// Deployment was aborted.
-    Aborted,
 }
 
 impl Status {
@@ -27,7 +25,6 @@ impl Status {
             Self::Accepted => "accepted",
             Self::NoAuth => "noauth",
             Self::Rejected => "rejected",
-            Self::Aborted => "aborted",
         }
     }
 }
@@ -41,13 +38,7 @@ impl Display for Status {
 #[cfg(feature = "clap")]
 impl clap::ValueEnum for Status {
     fn value_variants<'a>() -> &'a [Self] {
-        &[
-            Self::Pending,
-            Self::Accepted,
-            Self::NoAuth,
-            Self::Rejected,
-            Self::Aborted,
-        ]
+        &[Self::Pending, Self::Accepted, Self::NoAuth, Self::Rejected]
     }
 
     fn to_possible_value(&self) -> Option<clap::builder::PossibleValue> {

@@ -4,7 +4,7 @@ use std::num::NonZero;
 use log::{error, info};
 use uuid::Uuid;
 
-use crate::dto::{ListDeployment, NewDeployment, PutDeployment, Status};
+use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment, Status};
 use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
 
@@ -153,7 +153,7 @@ impl Deployments for Session {
         self.client()
             .put(self.format_url(format!("{PATH}/{id}/status"), None))
             .bearer_auth(self.bearer_token())
-            .json(&PutDeployment::new(Status::Aborted))
+            .json(&PutDeployment::new(DeploymentStatus::Aborted))
             .send()
             .await?
             .error_for_status()?
@@ -168,7 +168,10 @@ impl Deployments for Session {
             let page = page?;
             let mut tasks = Vec::with_capacity(page.len());
 
-            for deployment in page {
+            for deployment in page
+                .into_iter()
+                .filter(|deployment| deployment.status() != DeploymentStatus::Finished)
+            {
                 let id = deployment.id();
                 let this = self.clone();
 
