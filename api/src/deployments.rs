@@ -2,6 +2,7 @@ use std::fmt::Display;
 use std::num::NonZero;
 
 use log::{error, info};
+use tokio::task;
 use uuid::Uuid;
 
 use crate::Devices;
@@ -180,17 +181,18 @@ impl Deployments for Session {
                 .filter(|deployment| deployment.status() != DeploymentStatus::Finished)
             {
                 let id = deployment.id();
+                let this = self.clone();
 
-                tasks.push(async move {
-                    self.abort(id)
+                tasks.push(task::spawn(async move {
+                    this.abort(id)
                         .await
                         .inspect(|_| info!("Aborted deployment {id}"))
                         .inspect_err(|error| error!("Failed to abort deployment: {error}"))
-                });
+                }));
             }
 
             for task in tasks {
-                task.await?;
+                task.await.expect("Task join failed")?;
             }
         }
 
@@ -217,18 +219,19 @@ impl Deployments for Session {
             let mut handles = Vec::with_capacity(page.len());
 
             for device in page {
-                handles.push(async move {
-                    self.abort_device(device.id())
+                let this = self.clone();
+                handles.push(task::spawn(async move {
+                    this.abort_device(device.id())
                         .await
                         .inspect(|()| info!("Aborted deployment for device {device}"))
                         .inspect_err(|error| {
                             error!("Failed to abort deployment for device {device}: {error}");
                         })
-                });
+                }));
             }
 
             for handle in handles {
-                handle.await?;
+                handle.await.expect("Task join failed")?;
             }
         }
 
