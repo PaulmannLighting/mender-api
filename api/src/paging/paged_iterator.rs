@@ -9,7 +9,7 @@ use crate::Pager;
 /// Iterator for paginated results.
 #[derive(Debug, Clone)]
 pub struct PagedIterator<'session, 'path, T> {
-    pager: Pager<'session, 'path>,
+    pager: Pager<'session, 'path, T>,
     page_no: NonZero<usize>,
     current_page: Option<IntoIter<T>>,
 }
@@ -17,7 +17,7 @@ pub struct PagedIterator<'session, 'path, T> {
 impl<'session, 'path, T> PagedIterator<'session, 'path, T> {
     /// Create a new page iterator with the given page size.
     #[must_use]
-    pub(crate) const fn new(pager: Pager<'session, 'path>) -> Self {
+    pub(crate) const fn new(pager: Pager<'session, 'path, T>) -> Self {
         Self {
             pager,
             page_no: NonZero::new(1).expect("1 is always non-zero."),
@@ -28,7 +28,7 @@ impl<'session, 'path, T> PagedIterator<'session, 'path, T> {
 
 impl<T> PagedIterator<'_, '_, T>
 where
-    for<'deserialize> T: Deserialize<'deserialize>,
+    for<'deserialize> T: Deserialize<'deserialize> + Send + Sync,
 {
     /// Return the next item in the iterator, fetching a new page if necessary.
     pub async fn next(&mut self) -> Option<reqwest::Result<T>> {
@@ -53,8 +53,8 @@ where
     }
 }
 
-impl<'session, 'path, T> From<Pager<'session, 'path>> for PagedIterator<'session, 'path, T> {
-    fn from(pager: Pager<'session, 'path>) -> Self {
+impl<'session, 'path, T> From<Pager<'session, 'path, T>> for PagedIterator<'session, 'path, T> {
+    fn from(pager: Pager<'session, 'path, T>) -> Self {
         Self::new(pager)
     }
 }
