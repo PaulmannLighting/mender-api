@@ -12,7 +12,7 @@ where
     E: Display,
 {
     fn or_bail(self) -> Result<T, ExitCode> {
-        self.inspect_err(|error| error!("Error: {error}"))
+        self.inspect_err(|error| error!("{error}"))
             .map_err(|_| ExitCode::FAILURE)
     }
 }
