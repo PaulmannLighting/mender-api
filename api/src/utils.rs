@@ -2,7 +2,10 @@
 
 use std::fmt::Display;
 
+pub use pem_certificate::PemCertificate;
+
 pub mod as_str;
+mod pem_certificate;
 
 /// Display a slice of items, formatting them as a comma-separated list enclosed in square brackets.
 pub fn display_slice<T>(slice: &[T], f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result

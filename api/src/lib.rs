@@ -11,6 +11,7 @@ pub use releases::Releases;
 pub use reqwest::{Certificate, Error, Result};
 pub use session::Session;
 pub use tags::Tags;
+pub use utils::PemCertificate;
 
 mod client;
 mod deployments;

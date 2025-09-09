@@ -1,10 +1,8 @@
-use std::fs::read;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
-use log::error;
-use mender_api::{Certificate, Client, Devices, Login, Session};
+use mender_api::{Client, Devices, Login, PemCertificate, Session};
 use uuid::Uuid;
 
 use crate::args::deployments_action::DeploymentAction;
@@ -37,23 +35,8 @@ pub struct Args {
 }
 
 impl Args {
-    /// Read the certificate file if it exists and parse it into a `Certificate`.
-    pub fn certificate(&self) -> Result<Option<Certificate>, ExitCode> {
-        self.certificate
-            .as_ref()
-            .and_then(|certificate| {
-                read(certificate)
-                    .inspect_err(|error| error!("Failed to read certificate file: {error}"))
-                    .ok()
-            })
-            .map(|cert| Certificate::from_pem(&cert).or_bail())
-            .transpose()
-    }
-}
-
-impl Args {
     pub async fn run(self) -> Result<(), ExitCode> {
-        let cert = self.certificate()?;
+        let cert = self.certificate.load()?;
         let server = Client::new(self.url.parse().or_bail()?, cert, self.insecure).or_bail()?;
         let session = server.login(self.username, self.password).await.or_bail()?;
         self.endpoint.run(&session).await
