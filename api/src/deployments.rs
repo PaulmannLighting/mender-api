@@ -131,12 +131,11 @@ impl Deployments for Session {
         self.client()
             .post(self.format_url(PATH, None))
             .bearer_auth(self.bearer_token())
-            .json(&NewDeployment::new(
-                name.as_ref(),
-                artifact_name.as_ref(),
-                devices,
-                retries,
-            ))
+            .json(
+                &NewDeployment::new(name.as_ref(), artifact_name.as_ref())
+                    .with_devices(devices)
+                    .with_retries(retries),
+            )
             .send()
             .await?
             .error_for_status()?
@@ -159,12 +158,7 @@ impl Deployments for Session {
         self.client()
             .post(self.format_url(format!("{PATH}/group/{group_name}"), None))
             .bearer_auth(self.bearer_token())
-            .json(&NewDeployment::new(
-                name.as_ref(),
-                artifact_name.as_ref(),
-                &[],
-                retries,
-            ))
+            .json(&NewDeployment::new(name.as_ref(), artifact_name.as_ref()).with_retries(retries))
             .send()
             .await?
             .error_for_status()?
