@@ -9,6 +9,7 @@ use crate::Devices;
 use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment};
 use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
+use crate::utils::ResponseExt;
 
 const PATH: &str = "/api/management/v1/deployments/deployments";
 
@@ -39,7 +40,7 @@ pub trait Deployments {
         artifact_name: A,
         devices: &[Uuid],
         retries: usize,
-    ) -> impl Future<Output = reqwest::Result<String>> + Send
+    ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
         N: AsRef<str> + Send + Sync,
         A: AsRef<str> + Send + Sync;
@@ -51,14 +52,14 @@ pub trait Deployments {
         artifact_name: A,
         group_name: G,
         retries: usize,
-    ) -> impl Future<Output = reqwest::Result<String>> + Send
+    ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
         N: AsRef<str> + Send + Sync,
         A: AsRef<str> + Send + Sync,
         G: Display + Send + Sync;
 
     /// Abort a deployment.
-    fn abort(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
+    fn abort(&self, id: Uuid) -> impl Future<Output = reqwest::Result<()>> + Send;
 
     /// Abort all ongoing deployments.
     fn abort_all(
@@ -122,7 +123,7 @@ impl Deployments for Session {
         artifact_name: A,
         devices: &[Uuid],
         retries: usize,
-    ) -> reqwest::Result<String>
+    ) -> reqwest::Result<()>
     where
         N: AsRef<str> + Send + Sync,
         A: AsRef<str> + Send + Sync,
@@ -139,7 +140,7 @@ impl Deployments for Session {
             .send()
             .await?
             .error_for_status()?
-            .text()
+            .ensure_empty()
             .await
     }
 
@@ -149,7 +150,7 @@ impl Deployments for Session {
         artifact_name: A,
         group_name: G,
         retries: usize,
-    ) -> reqwest::Result<String>
+    ) -> reqwest::Result<()>
     where
         N: AsRef<str> + Send + Sync,
         A: AsRef<str> + Send + Sync,
@@ -167,11 +168,11 @@ impl Deployments for Session {
             .send()
             .await?
             .error_for_status()?
-            .text()
+            .ensure_empty()
             .await
     }
 
-    async fn abort(&self, id: Uuid) -> reqwest::Result<String> {
+    async fn abort(&self, id: Uuid) -> reqwest::Result<()> {
         self.client()
             .put(self.format_url(format!("{PATH}/{id}/status"), None))
             .bearer_auth(self.bearer_token())
@@ -179,7 +180,7 @@ impl Deployments for Session {
             .send()
             .await?
             .error_for_status()?
-            .text()
+            .ensure_empty()
             .await
     }
 
@@ -219,9 +220,8 @@ impl Deployments for Session {
             .send()
             .await?
             .error_for_status()?
-            .bytes()
+            .ensure_empty()
             .await
-            .map(drop)
     }
 
     async fn abort_all_by_device(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<()> {

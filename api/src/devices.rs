@@ -8,6 +8,7 @@ use crate::device_proxy::DeviceProxy;
 use crate::dto::{Device, DeviceGroup};
 use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
 use crate::session::Session;
+use crate::utils::ResponseExt;
 
 const PATH: &str = "/api/management/v1/inventory/devices";
 
@@ -36,7 +37,7 @@ pub trait Devices {
         &self,
         id: Uuid,
         group_name: T,
-    ) -> impl Future<Output = reqwest::Result<String>> + Send
+    ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
         T: AsRef<str> + Send;
 
@@ -82,7 +83,7 @@ impl Devices for Session {
             .map(DeviceGroup::into_name)
     }
 
-    async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<String>
+    async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
     where
         T: AsRef<str> + Send,
     {
@@ -93,7 +94,7 @@ impl Devices for Session {
             .send()
             .await?
             .error_for_status()?
-            .text()
+            .ensure_empty()
             .await
     }
 

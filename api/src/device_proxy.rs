@@ -42,7 +42,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn add_to_group<T>(&self, group_name: T) -> reqwest::Result<String>
+    pub async fn add_to_group<T>(&self, group_name: T) -> reqwest::Result<()>
     where
         T: AsRef<str> + Send,
     {
@@ -91,8 +91,6 @@ impl DeviceProxy<'_> {
     ///
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn abort_deployment(&self) -> reqwest::Result<()> {
-        Deployments::abort_device(self.session, self.id)
-            .await
-            .map(drop)
+        Deployments::abort_device(self.session, self.id).await
     }
 }
