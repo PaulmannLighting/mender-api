@@ -2,7 +2,6 @@
 
 use std::fmt::Display;
 
-use clap::builder::TypedValueParser;
 pub use pem_certificate::PemCertificate;
 pub use response_ext::ResponseExt;
 
