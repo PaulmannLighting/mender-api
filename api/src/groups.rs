@@ -47,7 +47,7 @@ impl Groups for Session {
     ) -> reqwest::Result<Vec<Uuid>> {
         Pager::new(
             self,
-            &format!("{PATH}/{group_name}/device"),
+            &format!("{PATH}/{group_name}/devices"),
             page_size.unwrap_or(DEFAULT_PAGE_SIZE),
         )
         .collect()
