@@ -81,7 +81,6 @@ impl DeviceAction {
                 }
 
                 if devices.is_empty() {
-                    error!("No device found with MAC address {mac_address}");
                     return Err(ExitCode::FAILURE);
                 }
 
