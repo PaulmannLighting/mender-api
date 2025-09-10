@@ -70,14 +70,24 @@ impl DeviceAction {
                 mac_address,
                 page_size,
             } => {
-                Devices::collect(session, page_size)
-                    .await
-                    .or_bail()?
-                    .into_iter()
-                    .filter(|device| device.mac_address().is_some_and(|addr| addr == mac_address))
-                    .for_each(|device| {
-                        println!("{device}");
-                    });
+                let mut devices = Vec::new();
+                let mut iterator = Devices::list(session, page_size);
+
+                while let Some(device) = iterator.next().await {
+                    let device = device.or_bail()?;
+                    if device.mac_address().is_some_and(|addr| addr == mac_address) {
+                        devices.push(device);
+                    }
+                }
+
+                if devices.is_empty() {
+                    println!("No device found with MAC address {mac_address}");
+                    return Err(ExitCode::FAILURE);
+                }
+
+                for device in devices {
+                    println!("{device}");
+                }
             }
         }
 
