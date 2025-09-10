@@ -30,7 +30,7 @@ pub trait Devices {
     fn get(&self, id: Uuid) -> impl Future<Output = reqwest::Result<Device>> + Send;
 
     /// Get the group of the specified device.
-    fn get_group(&self, id: Uuid) -> impl Future<Output = reqwest::Result<String>> + Send;
+    fn get_group(&self, id: Uuid) -> impl Future<Output = reqwest::Result<DeviceGroup>> + Send;
 
     /// Add the device to the specified group.
     fn set_group<T>(
@@ -39,7 +39,7 @@ pub trait Devices {
         group_name: T,
     ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
-        T: AsRef<str> + Send;
+        T: ToString + Send;
 
     /// Return a device proxy for the specified device ID.
     fn proxy(&self, id: Uuid) -> DeviceProxy<'_>;
@@ -71,7 +71,7 @@ impl Devices for Session {
             .await
     }
 
-    async fn get_group(&self, id: Uuid) -> reqwest::Result<String> {
+    async fn get_group(&self, id: Uuid) -> reqwest::Result<DeviceGroup> {
         self.client()
             .get(self.format_url(format!("{PATH}/{id}/group"), None))
             .bearer_auth(self.bearer_token())
@@ -80,17 +80,16 @@ impl Devices for Session {
             .error_for_status()?
             .json()
             .await
-            .map(DeviceGroup::into_name)
     }
 
     async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
     where
-        T: AsRef<str> + Send,
+        T: ToString + Send,
     {
         self.client()
             .post(self.format_url(format!("{PATH}/{id}/group"), None))
             .bearer_auth(self.bearer_token())
-            .json(&DeviceGroup::new(group_name.as_ref()))
+            .json(&DeviceGroup::new(group_name.to_string()))
             .send()
             .await?
             .error_for_status()?

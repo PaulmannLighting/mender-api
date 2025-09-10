@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::dto::{Device, Tag};
+use crate::dto::{Device, DeviceGroup, Tag};
 use crate::session::Session;
 use crate::{Deployments, Devices, Tags};
 
@@ -33,7 +33,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn get_group(&self) -> reqwest::Result<String> {
+    pub async fn get_group(&self) -> reqwest::Result<DeviceGroup> {
         Devices::get_group(self.session, self.id).await
     }
 
@@ -44,7 +44,7 @@ impl DeviceProxy<'_> {
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn add_to_group<T>(&self, group_name: T) -> reqwest::Result<()>
     where
-        T: AsRef<str> + Send,
+        T: ToString + Send,
     {
         Devices::set_group(self.session, self.id, group_name).await
     }
