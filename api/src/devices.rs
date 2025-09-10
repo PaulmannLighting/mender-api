@@ -87,7 +87,7 @@ impl Devices for Session {
         T: ToString + Send,
     {
         self.client()
-            .post(self.format_url(format!("{PATH}/{id}/group"), None))
+            .put(self.format_url(format!("{PATH}/{id}/group"), None))
             .bearer_auth(self.bearer_token())
             .json(&DeviceGroup::new(group_name.to_string()))
             .send()
