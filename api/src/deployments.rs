@@ -198,16 +198,14 @@ impl Deployments for Session {
                 let this = self.clone();
 
                 tasks.spawn(async move {
-                    this.abort(id)
-                        .await
-                        .inspect(|_| info!("Aborted deployment {id}"))
-                        .inspect_err(|error| error!("Failed to abort deployment: {error}"))
+                    match this.abort(id).await {
+                        Ok(()) => info!("Aborted deployment {id}"),
+                        Err(error) => error!("Failed to abort deployment: {error}"),
+                    }
                 });
             }
 
-            for task in tasks.join_all().await {
-                task?;
-            }
+            tasks.join_all().await;
         }
 
         Ok(())
