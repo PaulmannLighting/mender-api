@@ -58,6 +58,15 @@ impl DeviceProxy<'_> {
         Tags::add(self.session, self.id, tags).await
     }
 
+    /// Add a tag to the device.
+    ///
+    /// # Errors
+    ///
+    /// Return a [`reqwest::Error`] if the request fails.
+    pub async fn add_tag(&self, tag: Tag) -> reqwest::Result<String> {
+        self.add_tags(&[tag]).await
+    }
+
     /// Assign tags to the device.
     ///
     /// # Errors
