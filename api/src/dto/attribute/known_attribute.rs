@@ -286,114 +286,88 @@ impl KnownAttribute {
 impl Display for KnownAttribute {
     #[allow(clippy::too_many_lines)]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Never use alternate formatting for fields.
         match self {
             Self::Name { value, .. } => {
-                write!(f, "name: ")?;
-                Display::fmt(value, f)
+                write!(f, "name: {value}")
             }
             Self::Mac { value, .. } => {
-                // Never use alternate formatting for MAC addresses.
                 write!(f, "mac: {value}")
             }
             Self::Created { value, .. } => {
-                write!(f, "created_ts: ")?;
-                Display::fmt(value, f)
+                write!(f, "created_ts: {value}")
             }
             Self::Updated { value, .. } => {
-                write!(f, "updated_ts: ")?;
-                Display::fmt(value, f)
+                write!(f, "updated_ts: {value}")
             }
             Self::Status { value, .. } => {
-                write!(f, "status: ")?;
-                Display::fmt(value, f)
+                write!(f, "status: {value}")
             }
             Self::Group { value, .. } => {
-                write!(f, "group: ")?;
-                Display::fmt(value, f)
+                write!(f, "group: {value}")
             }
             Self::ArtifactName { value, .. } => {
-                write!(f, "artifact_name: ")?;
-                Display::fmt(value, f)
+                write!(f, "artifact_name: {value}")
             }
             Self::CpuModel { value, .. } => {
-                write!(f, "cpu_model: ")?;
-                Display::fmt(value, f)
+                write!(f, "cpu_model: {value}")
             }
             Self::DeviceType { value, .. } => {
-                write!(f, "device_type: ")?;
-                Display::fmt(value, f)
+                write!(f, "device_type: {value}")
             }
             Self::Hostname { value, .. } => {
-                write!(f, "hostname: ")?;
-                Display::fmt(value, f)
+                write!(f, "hostname: {value}")
             }
             Self::Ipv4Eth0 { value, .. } => {
-                write!(f, "ipv4_eth0: ")?;
-                Display::fmt(value, f)
+                write!(f, "ipv4_eth0: {value}")
             }
             Self::Ipv6Eth0 { value, .. } => {
-                write!(f, "ipv6_eth0: ")?;
-                Display::fmt(value, f)
+                write!(f, "ipv6_eth0: {value}")
             }
             Self::Kernel { value, .. } => {
-                write!(f, "kernel: ")?;
-                Display::fmt(value, f)
+                write!(f, "kernel: {value}")
             }
             Self::MacEth0 { value, .. } => {
-                write!(f, "mac_eth0: ")?;
-                Display::fmt(value, f)
+                write!(f, "mac_eth0: {value}")
             }
             Self::MemTotalKB { value, .. } => {
-                write!(f, "mem_total_kB: ")?;
-                Display::fmt(value, f)
+                write!(f, "mem_total_kB: {value}")
             }
             Self::MenderBootloaderIntegration { value, .. } => {
-                write!(f, "mender_bootloader_integration: ")?;
-                Display::fmt(value, f)
+                write!(f, "mender_bootloader_integration: {value}")
             }
             Self::MenderClientVersion { value, .. } => {
-                write!(f, "mender_client_version: ")?;
-                Display::fmt(value, f)
+                write!(f, "mender_client_version: {value}")
             }
             Self::NetworkInterfaces { value, .. } => {
-                write!(f, "network_interfaces: ")?;
-                Display::fmt(value, f)
+                write!(f, "network_interfaces: {value}")
             }
             Self::Os { value, .. } => {
-                write!(f, "os: ")?;
-                Display::fmt(value, f)
+                write!(f, "os: {value}")
             }
             Self::RootfsType { value, .. } => {
-                write!(f, "rootfs_type: ")?;
-                Display::fmt(value, f)
+                write!(f, "rootfs_type: {value}")
             }
             Self::GeoCity { value, .. } => {
-                write!(f, "geo-city: ")?;
-                Display::fmt(value, f)
+                write!(f, "geo-city: {value}")
             }
             Self::GeoCountry { value, .. } => {
-                write!(f, "geo-country: ")?;
-                Display::fmt(value, f)
+                write!(f, "geo-country: {value}")
             }
             Self::GeoIp { value, .. } => {
-                write!(f, "geo-ip: ")?;
-                Display::fmt(value, f)
+                write!(f, "geo-ip: {value}")
             }
             Self::GeoTimezone { value, .. } => {
-                write!(f, "geo-timezone: ")?;
-                Display::fmt(value, f)
+                write!(f, "geo-timezone: {value}")
             }
             Self::MacSit0 { value, .. } => {
-                write!(f, "mac_sit0: ")?;
-                Display::fmt(value, f)
+                write!(f, "mac_sit0: {value}")
             }
             Self::RootfsImageChecksum { value, .. } => {
-                write!(f, "rootfs-image.checksum: ")?;
-                Display::fmt(value, f)
+                write!(f, "rootfs-image.checksum: {value}")
             }
             Self::RootfsImageVersion { value, .. } => {
-                write!(f, "rootfs-image.version: ")?;
-                Display::fmt(value, f)
+                write!(f, "rootfs-image.version: {value}")
             }
             Self::UpdateModules { value, .. } => display_slice(value, f),
         }
