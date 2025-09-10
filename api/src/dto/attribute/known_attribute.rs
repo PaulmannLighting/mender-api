@@ -249,7 +249,7 @@ pub enum KnownAttribute {
 impl KnownAttribute {
     /// Return the attribute's scope.
     #[must_use]
-    pub const fn scope(&self) -> &Scope {
+    pub const fn scope(&self) -> Scope {
         match self {
             Self::Name { scope, .. }
             | Self::Mac { scope, .. }
@@ -278,7 +278,7 @@ impl KnownAttribute {
             | Self::MacSit0 { scope, .. }
             | Self::RootfsImageChecksum { scope, .. }
             | Self::RootfsImageVersion { scope, .. }
-            | Self::UpdateModules { scope, .. } => scope,
+            | Self::UpdateModules { scope, .. } => *scope,
         }
     }
 }

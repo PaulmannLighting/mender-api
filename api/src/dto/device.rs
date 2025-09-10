@@ -55,7 +55,7 @@ impl Device {
     pub fn tags(&self) -> impl Iterator<Item = &Attribute> {
         self.attributes()
             .iter()
-            .filter(|attr| attr.scope() == &Scope::Tags)
+            .filter(|attr| attr.scope() == Scope::Tags)
     }
 
     /// Return an iterator over known attributes of the device.

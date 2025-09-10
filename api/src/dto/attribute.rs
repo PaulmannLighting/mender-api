@@ -29,10 +29,10 @@ pub enum Attribute {
 impl Attribute {
     /// Return the attribute's scope.
     #[must_use]
-    pub const fn scope(&self) -> &Scope {
+    pub const fn scope(&self) -> Scope {
         match self {
             Self::Known(known) => known.scope(),
-            Self::Unknown { scope, .. } => scope,
+            Self::Unknown { scope, .. } => *scope,
         }
     }
 }
