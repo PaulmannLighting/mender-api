@@ -292,8 +292,8 @@ impl Display for KnownAttribute {
                 Display::fmt(value, f)
             }
             Self::Mac { value, .. } => {
-                write!(f, "mac: ")?;
-                Display::fmt(value, f)
+                // Never use alternate formatting for MAC addresses.
+                write!(f, "mac: {value}")
             }
             Self::Created { value, .. } => {
                 write!(f, "created_ts: ")?;
