@@ -54,7 +54,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn add_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
+    pub async fn add_tags(&self, tags: &[Tag]) -> reqwest::Result<()> {
         Tags::add(self.session, self.id, tags).await
     }
 
@@ -63,7 +63,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn add_tag(&self, tag: Tag) -> reqwest::Result<String> {
+    pub async fn add_tag(&self, tag: Tag) -> reqwest::Result<()> {
         self.add_tags(&[tag]).await
     }
 
@@ -72,7 +72,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn assign_tags(&self, tags: &[Tag]) -> reqwest::Result<String> {
+    pub async fn assign_tags(&self, tags: &[Tag]) -> reqwest::Result<()> {
         Tags::assign(self.session, self.id, tags).await
     }
 
@@ -81,7 +81,7 @@ impl DeviceProxy<'_> {
     /// # Errors
     ///
     /// Return a [`reqwest::Error`] if the request fails.
-    pub async fn clear_tags(&self) -> reqwest::Result<String> {
+    pub async fn clear_tags(&self) -> reqwest::Result<()> {
         Tags::clear(self.session, self.id).await
     }
 
