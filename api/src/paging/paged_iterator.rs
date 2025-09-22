@@ -51,6 +51,21 @@ where
         self.page_no = self.page_no.saturating_add(1);
         Some(Ok(item))
     }
+
+    /// Collect all items in the iterator into a `Vec`.
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`reqwest::Error`] if any of the requests fail or the responses cannot be deserialized.
+    pub async fn collect(&mut self) -> reqwest::Result<Vec<T>> {
+        let mut results = Vec::new();
+
+        while let Some(result) = self.next().await {
+            results.push(result?);
+        }
+
+        Ok(results)
+    }
 }
 
 impl<'session, 'path, T> From<Pager<'session, 'path>> for PagedIterator<'session, 'path, T> {
