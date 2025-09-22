@@ -33,6 +33,7 @@ impl GroupAction {
             }
             Self::Devices { name, page_size } => {
                 for device_id in Groups::devices_of(session, &name, page_size)
+                    .collect()
                     .await
                     .or_bail()?
                 {

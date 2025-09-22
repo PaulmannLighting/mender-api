@@ -2,6 +2,7 @@ use std::num::NonZero;
 
 use uuid::Uuid;
 
+use crate::PagedIterator;
 use crate::dto::PatchGroupResponse;
 use crate::paging::{DEFAULT_PAGE_SIZE, Pager};
 use crate::session::Session;
@@ -18,7 +19,7 @@ pub trait Groups {
         &self,
         group_name: &str,
         page_size: Option<NonZero<usize>>,
-    ) -> impl Future<Output = reqwest::Result<Vec<Uuid>>> + Send;
+    ) -> PagedIterator<'_, '_, Uuid>;
 
     /// Update or create a new group with the specified name and device.
     fn patch(
@@ -40,18 +41,17 @@ impl Groups for Session {
             .await
     }
 
-    async fn devices_of(
+    fn devices_of(
         &self,
         group_name: &str,
         page_size: Option<NonZero<usize>>,
-    ) -> reqwest::Result<Vec<Uuid>> {
+    ) -> PagedIterator<'_, '_, Uuid> {
         Pager::new(
             self,
-            &format!("{PATH}/{group_name}/devices"),
+            format!("{PATH}/{group_name}/devices").into(),
             page_size.unwrap_or(DEFAULT_PAGE_SIZE),
         )
-        .collect()
-        .await
+        .into()
     }
 
     async fn patch(&self, name: &str, devices: &[Uuid]) -> reqwest::Result<PatchGroupResponse> {
