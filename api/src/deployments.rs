@@ -79,18 +79,18 @@ pub trait Deployments {
 
 impl Deployments for Session {
     fn pages(&self, page_size: Option<NonZero<usize>>) -> Pages<'_, '_, ListDeployment> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
+        Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
     fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
+        Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
     async fn collect(
         &self,
         page_size: Option<NonZero<usize>>,
     ) -> reqwest::Result<Vec<ListDeployment>> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
+        Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
             .await
     }

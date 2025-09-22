@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::num::NonZero;
 
 use serde::Deserialize;
@@ -8,7 +9,7 @@ use crate::Session;
 #[derive(Debug, Clone)]
 pub struct Pager<'session, 'path> {
     session: &'session Session,
-    path: &'path str,
+    path: Cow<'path, str>,
     page_size: NonZero<usize>,
 }
 
@@ -17,7 +18,7 @@ impl<'session, 'path> Pager<'session, 'path> {
     #[must_use]
     pub const fn new(
         session: &'session Session,
-        path: &'path str,
+        path: Cow<'path, str>,
         page_size: NonZero<usize>,
     ) -> Self {
         Self {
@@ -47,7 +48,7 @@ impl Pager<'_, '_> {
         self.session
             .client()
             .get(self.session.format_url(
-                self.path,
+                self.path.as_ref(),
                 format!("per_page={}&page={page_no}", self.page_size),
             ))
             .bearer_auth(self.session.bearer_token())

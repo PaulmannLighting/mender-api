@@ -20,11 +20,11 @@ pub trait Releases {
 
 impl Releases for Session {
     fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, Release> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
+        Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
     async fn collect(&self, page_size: Option<NonZero<usize>>) -> reqwest::Result<Vec<Release>> {
-        Pager::new(self, PATH, page_size.unwrap_or(DEFAULT_PAGE_SIZE))
+        Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE))
             .collect()
             .await
     }
