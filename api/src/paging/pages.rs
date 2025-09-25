@@ -1,7 +1,6 @@
 use std::marker::PhantomData;
 use std::num::NonZero;
 
-use log::error;
 use serde::Deserialize;
 
 use crate::Pager;
@@ -41,12 +40,7 @@ where
         let page_no = self.page_no;
         self.page_no = self.page_no.saturating_add(1);
 
-        match self
-            .pager
-            .page(page_no)
-            .await
-            .inspect_err(|error| error!("{error}"))
-        {
+        match self.pager.page(page_no).await {
             Ok(page) => {
                 if page.is_empty() {
                     self.done = true;

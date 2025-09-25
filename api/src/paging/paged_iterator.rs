@@ -1,7 +1,6 @@
 use std::num::NonZero;
 use std::vec::IntoIter;
 
-use log::error;
 use serde::Deserialize;
 
 use crate::Pager;
@@ -36,12 +35,7 @@ where
             return Some(Ok(item));
         }
 
-        let mut next_page = match self
-            .pager
-            .page(self.page_no)
-            .await
-            .inspect_err(|error| error!("{error}"))
-        {
+        let mut next_page = match self.pager.page(self.page_no).await {
             Ok(next_page) => next_page.into_iter(),
             Err(error) => return Some(Err(error)),
         };
