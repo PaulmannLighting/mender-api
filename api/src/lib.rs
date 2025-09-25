@@ -8,7 +8,7 @@ pub use groups::Groups;
 pub use login::Login;
 pub use paging::{PagedIterator, Pager, Pages};
 pub use releases::Releases;
-pub use reqwest::{Certificate, Error, Result};
+pub use reqwest::{Certificate, Error, Result, StatusCode};
 pub use session::Session;
 pub use tags::Tags;
 pub use utils::PemCertificate;
