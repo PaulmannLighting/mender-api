@@ -2,7 +2,7 @@ use std::process::ExitCode;
 
 use clap::Subcommand;
 use mender_api::DeviceProxy;
-use mender_api::dto::Tag;
+use mender_api::dto::{Attribute, Tag};
 
 use crate::util::OrBail;
 
@@ -26,6 +26,10 @@ pub enum TagsAction {
     },
     Clear,
     List,
+    Except {
+        #[clap(help = "Exclude tag name")]
+        exclude: String,
+    },
 }
 
 impl TagsAction {
@@ -57,6 +61,30 @@ impl TagsAction {
             Self::List => {
                 for tag in device.tags().await.or_bail()? {
                     println!("{tag}");
+                }
+            }
+            Self::Except { exclude } => {
+                for tag in device
+                    .get()
+                    .await
+                    .or_bail()?
+                    .tags()
+                    .filter_map(|attribute| {
+                        if let Attribute::Unknown {
+                            name,
+                            value,
+                            description,
+                            ..
+                        } = attribute
+                            && name != &exclude
+                        {
+                            Some(Tag::new(name.clone(), value.clone(), description.clone()))
+                        } else {
+                            None
+                        }
+                    })
+                {
+                    println!("{tag:?}");
                 }
             }
         }
