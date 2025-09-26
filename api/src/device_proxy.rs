@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-use crate::dto::{Device, DeviceGroup, Tag};
+use crate::dto::{Attribute, Device, DeviceGroup, Tag};
 use crate::session::Session;
 use crate::{Deployments, Devices, Tags};
 
@@ -92,5 +92,14 @@ impl DeviceProxy<'_> {
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn abort_deployment(&self) -> reqwest::Result<()> {
         Deployments::abort_device(self.session, self.id).await
+    }
+
+    /// Get the tags assigned to the device.
+    ///
+    /// # Errors
+    ///
+    /// Return a [`reqwest::Error`] if the request fails.
+    pub async fn tags(&self) -> reqwest::Result<Vec<Attribute>> {
+        Ok(self.get().await?.tags().cloned().collect())
     }
 }
