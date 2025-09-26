@@ -25,6 +25,7 @@ pub enum TagsAction {
         description: Option<String>,
     },
     Clear,
+    List,
 }
 
 impl TagsAction {
@@ -52,6 +53,11 @@ impl TagsAction {
             }
             Self::Clear => {
                 device.clear_tags().await.or_bail()?;
+            }
+            Self::List => {
+                for tag in device.tags().await.or_bail()? {
+                    println!("{tag}");
+                }
             }
         }
 
