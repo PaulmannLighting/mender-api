@@ -62,11 +62,11 @@ impl Device {
     #[must_use]
     pub fn tag(&self, name: &str) -> Option<&Attribute> {
         self.tags().find(|attr| {
-            if let Attribute::Unknown(unknown) = attr {
-                unknown.name() == name
-            } else {
-                false
-            }
+            let Attribute::Unknown(unknown) = attr else {
+                return false;
+            };
+
+            unknown.name() == name
         })
     }
 
