@@ -96,6 +96,12 @@ impl Device {
             }
         })
     }
+
+    /// Return the first group of the device if it exists.
+    #[must_use]
+    pub fn group(&self) -> Option<&str> {
+        self.groups().next()
+    }
 }
 
 impl Display for Device {
