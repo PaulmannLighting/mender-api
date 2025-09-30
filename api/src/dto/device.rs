@@ -58,6 +58,18 @@ impl Device {
             .filter(|attr| attr.scope() == Scope::Tags)
     }
 
+    /// Return the tag with the specified name if it exists.
+    #[must_use]
+    pub fn tag(&self, key: &str) -> Option<&Attribute> {
+        self.tags().find(|attr| {
+            if let Attribute::Unknown { name, .. } = attr {
+                name == key
+            } else {
+                false
+            }
+        })
+    }
+
     /// Return an iterator over known attributes of the device.
     pub fn known_attributes(&self) -> impl Iterator<Item = &KnownAttribute> {
         self.attributes.iter().filter_map(|attr| {
