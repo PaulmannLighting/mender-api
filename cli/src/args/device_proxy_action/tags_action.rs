@@ -73,11 +73,7 @@ impl TagsAction {
                         if let Attribute::Unknown(unknown) = attribute
                             && unknown.name() != exclude
                         {
-                            Some(Tag::new(
-                                unknown.name().to_owned(),
-                                unknown.value().to_owned(),
-                                unknown.description().map(ToOwned::to_owned),
-                            ))
+                            Some(Tag::from(unknown))
                         } else {
                             None
                         }
