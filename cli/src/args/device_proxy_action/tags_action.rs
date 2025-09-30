@@ -70,15 +70,14 @@ impl TagsAction {
                     .or_bail()?
                     .tags()
                     .filter_map(|attribute| {
-                        if let Attribute::Unknown {
-                            name,
-                            value,
-                            description,
-                            ..
-                        } = attribute
-                            && name != &exclude
+                        if let Attribute::Unknown(unknown) = attribute
+                            && unknown.name() != exclude
                         {
-                            Some(Tag::new(name.clone(), value.clone(), description.clone()))
+                            Some(Tag::new(
+                                unknown.name().to_owned(),
+                                unknown.value().to_owned(),
+                                unknown.description().map(ToOwned::to_owned),
+                            ))
                         } else {
                             None
                         }

@@ -60,10 +60,10 @@ impl Device {
 
     /// Return the tag with the specified name if it exists.
     #[must_use]
-    pub fn tag(&self, key: &str) -> Option<&Attribute> {
+    pub fn tag(&self, name: &str) -> Option<&Attribute> {
         self.tags().find(|attr| {
-            if let Attribute::Unknown { name, .. } = attr {
-                name == key
+            if let Attribute::Unknown(unknown) = attr {
+                unknown.name() == name
             } else {
                 false
             }

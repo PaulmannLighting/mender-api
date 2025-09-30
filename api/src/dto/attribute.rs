@@ -2,10 +2,12 @@ use std::fmt::Display;
 
 pub use known_attribute::KnownAttribute;
 use serde::{Deserialize, Serialize};
+pub use unknown_attribute::UnknownAttribute;
 
 use crate::dto::scope::Scope;
 
 mod known_attribute;
+mod unknown_attribute;
 
 /// Available attributes for device in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -14,16 +16,7 @@ pub enum Attribute {
     /// Known attributes with known types.
     Known(KnownAttribute),
     /// Unknown attributes with unknown types.
-    Unknown {
-        /// The name of the unknown attribute.
-        name: String,
-        /// The value of the unknown attribute.
-        value: String,
-        /// An optional description.
-        description: Option<String>,
-        /// The scope of this attribute.
-        scope: Scope,
-    },
+    Unknown(UnknownAttribute),
 }
 
 impl Attribute {
@@ -32,7 +25,7 @@ impl Attribute {
     pub const fn scope(&self) -> Scope {
         match self {
             Self::Known(known) => known.scope(),
-            Self::Unknown { scope, .. } => *scope,
+            Self::Unknown(unknown) => unknown.scope(),
         }
     }
 }
@@ -41,18 +34,7 @@ impl Display for Attribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Known(known) => Display::fmt(known, f),
-            Self::Unknown {
-                name,
-                value,
-                description,
-                scope,
-            } => {
-                if let Some(desc) = description {
-                    write!(f, "{name}: {value} ({desc}) [{scope}]")
-                } else {
-                    write!(f, "{name}: {value} [{scope}]")
-                }
-            }
+            Self::Unknown(unknown) => Display::fmt(unknown, f),
         }
     }
 }
