@@ -8,6 +8,7 @@ use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use crate::dto::attribute::UnknownAttribute;
 use crate::dto::{Attribute, KnownAttribute, Scope};
 use crate::{DeviceProxy, Session};
 
@@ -60,13 +61,15 @@ impl Device {
 
     /// Return the tag with the specified name if it exists.
     #[must_use]
-    pub fn tag(&self, name: &str) -> Option<&Attribute> {
-        self.tags().find(|attr| {
-            let Attribute::Unknown(unknown) = attr else {
-                return false;
-            };
-
-            unknown.name() == name
+    pub fn tag(&self, name: &str) -> Option<&UnknownAttribute> {
+        self.tags().find_map(|attr| {
+            if let Attribute::Unknown(unknown) = attr
+                && unknown.name() == name
+            {
+                Some(unknown)
+            } else {
+                None
+            }
         })
     }
 
