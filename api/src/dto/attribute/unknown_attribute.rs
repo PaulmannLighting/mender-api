@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::dto::Scope;
+use crate::dto::{Scope, Tag};
 
 /// Unknown attributes for devices in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -66,5 +66,21 @@ impl Display for UnknownAttribute {
         } else {
             write!(f, "{}: {} [{}]", self.name, self.value, self.scope)
         }
+    }
+}
+
+impl From<UnknownAttribute> for Tag {
+    fn from(attr: UnknownAttribute) -> Self {
+        Self::new(attr.name, attr.value, attr.description)
+    }
+}
+
+impl From<&UnknownAttribute> for Tag {
+    fn from(attr: &UnknownAttribute) -> Self {
+        Self::new(
+            attr.name.clone(),
+            attr.value.clone(),
+            attr.description.clone(),
+        )
     }
 }
