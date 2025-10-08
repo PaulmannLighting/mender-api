@@ -7,7 +7,7 @@ use uuid::Uuid;
 
 use crate::Devices;
 use crate::dto::{DeploymentStatus, ListDeployment, NewDeployment, PutDeployment};
-use crate::paging::{DEFAULT_PAGE_SIZE, PagedIterator, Pager, Pages};
+use crate::pagination::{DEFAULT_PAGE_SIZE, Pager, Pages, PaginatedIterator};
 use crate::session::Session;
 use crate::utils::ResponseExt;
 
@@ -19,7 +19,7 @@ pub trait Deployments {
     fn pages(&self, page_size: Option<NonZero<usize>>) -> Pages<'_, '_, ListDeployment>;
 
     /// List deployment.
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment>;
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PaginatedIterator<'_, '_, ListDeployment>;
 
     /// Collect deployment into a `Vec`.
     fn collect(
@@ -82,7 +82,7 @@ impl Deployments for Session {
         Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 
-    fn list(&self, page_size: Option<NonZero<usize>>) -> PagedIterator<'_, '_, ListDeployment> {
+    fn list(&self, page_size: Option<NonZero<usize>>) -> PaginatedIterator<'_, '_, ListDeployment> {
         Pager::new(self, PATH.into(), page_size.unwrap_or(DEFAULT_PAGE_SIZE)).into()
     }
 

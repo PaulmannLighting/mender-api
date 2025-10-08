@@ -2,9 +2,9 @@ use std::num::NonZero;
 
 use uuid::Uuid;
 
-use crate::PagedIterator;
+use crate::PaginatedIterator;
 use crate::dto::PatchGroupResponse;
-use crate::paging::{DEFAULT_PAGE_SIZE, Pager};
+use crate::pagination::{DEFAULT_PAGE_SIZE, Pager};
 use crate::session::Session;
 
 const PATH: &str = "/api/management/v1/inventory/groups";
@@ -19,7 +19,7 @@ pub trait Groups {
         &self,
         group_name: &str,
         page_size: Option<NonZero<usize>>,
-    ) -> PagedIterator<'_, '_, Uuid>;
+    ) -> PaginatedIterator<'_, '_, Uuid>;
 
     /// Update or create a new group with the specified name and device.
     fn patch(
@@ -45,7 +45,7 @@ impl Groups for Session {
         &self,
         group_name: &str,
         page_size: Option<NonZero<usize>>,
-    ) -> PagedIterator<'_, '_, Uuid> {
+    ) -> PaginatedIterator<'_, '_, Uuid> {
         Pager::new(
             self,
             format!("{PATH}/{group_name}/devices").into(),
