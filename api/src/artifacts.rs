@@ -8,6 +8,7 @@ use crate::{Pager, PaginatedIterator, Session};
 
 const PATH_V2: &str = "/api/management/v2/deployments";
 
+/// Artifacts management API.
 pub trait Artifacts {
     /// List all artifacts.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PaginatedIterator<'_, '_, Artifact>;
