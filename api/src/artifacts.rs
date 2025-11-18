@@ -36,7 +36,8 @@ impl Artifacts for Session {
             .send()
             .await?
             .error_for_status()?
-            .json()
+            .text()
             .await
+            .map(drop)
     }
 }

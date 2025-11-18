@@ -42,12 +42,15 @@ impl ArtifactAction {
                     }
                 }
             }
-            Self::Delete { id } => {
-                Artifacts::delete(session, id).await.map_err(|error| {
-                    error!("{error}");
-                    ExitCode::FAILURE
-                })?;
-            }
+            Self::Delete { id } => match Artifacts::delete(session, id).await {
+                Ok(()) => {
+                    println!("Artifact {id} deleted successfully.");
+                }
+                Err(error) => {
+                    error!("Failed to delete artifact {id}: {error}");
+                    return Err(ExitCode::FAILURE);
+                }
+            },
         }
 
         Ok(())
