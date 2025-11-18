@@ -33,6 +33,7 @@ pub trait ConfigArgs {
     /// # Errors
     ///
     /// Returns an error if the home directory could not be determined, or if the file could not be read or parsed.
+    #[expect(async_fn_in_trait)]
     async fn login(&self) -> Result<Session, ExitCode> {
         let config_file = match ConfigFile::load() {
             Ok(config) => config,
