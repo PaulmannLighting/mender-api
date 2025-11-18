@@ -49,7 +49,7 @@ impl Pager<'_, '_> {
             .client()
             .get(self.session.format_url(
                 self.path.as_ref(),
-                format!("per_page={}&page={page_no}", self.page_size),
+                format!("per_page={}&page={page_no}", self.page_size).as_str(),
             ))
             .bearer_auth(self.session.bearer_token())
             .send()

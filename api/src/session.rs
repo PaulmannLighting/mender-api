@@ -32,16 +32,16 @@ impl Session {
 
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
-    pub(crate) fn format_url<P, Q>(&self, path: P, query: Q) -> Url
+    pub(crate) fn format_url<'q, P, Q>(&self, path: P, query: Q) -> Url
     where
         P: AsRef<str>,
-        Q: Into<Option<String>>,
+        Q: Into<Option<&'q str>>,
     {
         let mut url = self.base_url.clone();
         url.set_path(path.as_ref());
 
         if let Some(query) = query.into() {
-            url.set_query(Some(query.as_ref()));
+            url.set_query(Some(query));
         }
 
         url
