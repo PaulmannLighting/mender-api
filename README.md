@@ -44,7 +44,14 @@ mender-api = { path = "./api" }
 Import and use the library in your Rust project:
 
 ```rust
-use mender_api::client::Client;
+use mender_api::{Client, Login};
+
+#[tokio::main]
+async fn main() {
+    let client = Client::new("https://mender.example.com", None, false);
+    let session = client.login("username", "password").await;
+    // Use the session to interact with the Mender API.
+}
 ```
 
 ## Configuration
