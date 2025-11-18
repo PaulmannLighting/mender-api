@@ -4,6 +4,7 @@ use std::process::ExitCode;
 use clap::Subcommand;
 use log::error;
 use mender_api::{Artifacts, Session};
+use uuid::Uuid;
 
 #[derive(Debug, Subcommand)]
 pub enum ArtifactAction {
@@ -12,6 +13,10 @@ pub enum ArtifactAction {
         page_size: Option<NonZero<usize>>,
         #[clap(long, short = 'v', help = "List detailed device information")]
         verbose: bool,
+    },
+    Delete {
+        #[clap(index = 1, help = "Delete an artifact by its ID")]
+        id: Uuid,
     },
 }
 
@@ -36,6 +41,12 @@ impl ArtifactAction {
                         }
                     }
                 }
+            }
+            Self::Delete { id } => {
+                Artifacts::delete(session, id).await.map_err(|error| {
+                    error!("{error}");
+                    ExitCode::FAILURE
+                })?;
             }
         }
 
