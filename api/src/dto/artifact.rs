@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::fmt::Display;
 
 use chrono::{DateTime, FixedOffset};
 pub use dependency::Dependency;
@@ -145,5 +146,11 @@ impl Artifact {
     #[must_use]
     pub const fn size(&self) -> usize {
         self.size
+    }
+}
+
+impl Display for Artifact {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Artifact {{ id: {}, name: {} }}", self.id, self.name)
     }
 }

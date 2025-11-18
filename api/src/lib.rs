@@ -1,5 +1,6 @@
 //!  Implementation of the Mender server API.
 
+pub use artifacts::Artifacts;
 pub use client::Client;
 pub use deployments::Deployments;
 pub use device_proxy::DeviceProxy;
@@ -13,6 +14,7 @@ pub use session::Session;
 pub use tags::Tags;
 pub use utils::PemCertificate;
 
+mod artifacts;
 mod client;
 mod deployments;
 mod device_proxy;

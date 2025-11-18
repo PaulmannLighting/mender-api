@@ -5,6 +5,7 @@ use clap::{Parser, Subcommand};
 use mender_api::{Client, Devices, Login, PemCertificate, Session};
 use uuid::Uuid;
 
+use self::artifact_action::ArtifactAction;
 use crate::args::deployments_action::DeploymentAction;
 use crate::args::device_action::DeviceAction;
 use crate::args::device_proxy_action::DeviceProxyAction;
@@ -12,6 +13,7 @@ use crate::args::group_action::GroupAction;
 use crate::args::release_action::ReleaseAction;
 use crate::util::OrBail;
 
+mod artifact_action;
 mod deployments_action;
 mod device_action;
 mod device_proxy_action;
@@ -45,6 +47,10 @@ impl Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Endpoint {
+    Artifacts {
+        #[clap(subcommand)]
+        action: ArtifactAction,
+    },
     Deployments {
         #[clap(subcommand)]
         action: DeploymentAction,
@@ -73,6 +79,7 @@ pub enum Endpoint {
 impl Endpoint {
     pub async fn run(self, session: &Session) -> Result<(), ExitCode> {
         match self {
+            Self::Artifacts { action } => action.run(session).await,
             Self::Deployments { action } => action.run(session).await,
             Self::Devices { action } => action.run(session).await,
             Self::Groups { action } => action.run(session).await,
