@@ -3,11 +3,11 @@
 use std::fmt::{Debug, Display};
 
 use chrono::{DateTime, FixedOffset};
-pub use group::Group;
 use macaddr::MacAddr6;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+pub use self::group::Group;
 use crate::dto::attribute::UnknownAttribute;
 use crate::dto::{Attribute, KnownAttribute, Scope};
 use crate::{DeviceProxy, Session};

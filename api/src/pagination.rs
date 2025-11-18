@@ -2,9 +2,9 @@
 
 use std::num::NonZero;
 
-pub use pager::Pager;
-pub use pages::Pages;
-pub use paginated_iterator::PaginatedIterator;
+pub use self::pager::Pager;
+pub use self::pages::Pages;
+pub use self::paginated_iterator::PaginatedIterator;
 
 mod pager;
 mod pages;

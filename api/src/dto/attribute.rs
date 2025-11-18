@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-pub use known_attribute::KnownAttribute;
 use serde::{Deserialize, Serialize};
-pub use unknown_attribute::UnknownAttribute;
 
+pub use self::known_attribute::KnownAttribute;
+pub use self::unknown_attribute::UnknownAttribute;
 use crate::dto::scope::Scope;
 
 mod known_attribute;

@@ -1,7 +1,7 @@
 //! Deployment-related data structures and types.
 
-pub use kind::Kind;
-pub use status::Status;
+pub use self::kind::Kind;
+pub use self::status::Status;
 
 mod kind;
 pub mod list;

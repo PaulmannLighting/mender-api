@@ -2,14 +2,14 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 
 use chrono::{DateTime, FixedOffset};
-pub use dependency::Dependency;
-pub use file::File;
-pub use info::Info;
 use serde::{Deserialize, Serialize};
-pub use type_info::TypeInfo;
-pub use update::Update;
 use uuid::Uuid;
 
+pub use self::dependency::Dependency;
+pub use self::file::File;
+pub use self::info::Info;
+pub use self::type_info::TypeInfo;
+pub use self::update::Update;
 use crate::dto::DeviceType;
 
 mod dependency;

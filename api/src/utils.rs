@@ -2,8 +2,8 @@
 
 use std::fmt::Display;
 
-pub use pem_certificate::PemCertificate;
-pub use response_ext::ResponseExt;
+pub use self::pem_certificate::PemCertificate;
+pub use self::response_ext::ResponseExt;
 
 pub mod as_str;
 mod pem_certificate;
