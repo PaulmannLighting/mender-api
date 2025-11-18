@@ -23,11 +23,11 @@ mod release_action;
 #[derive(Debug, Parser)]
 pub struct Args {
     #[clap(help = "URL of the Mender server")]
-    pub url: String,
+    pub url: Option<String>,
     #[clap(long, short, help = "Username for Mender server login")]
-    pub username: String,
+    pub username: Option<String>,
     #[clap(long, short, help = "Password for Mender server login")]
-    pub password: String,
+    pub password: Option<String>,
     #[clap(long, short = 'k', help = "Accept invalid certificates (insecure)")]
     pub insecure: bool,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
@@ -45,7 +45,7 @@ impl Args {
 
 impl ConfigArgs for Args {
     fn url(&self) -> Option<&str> {
-        Some(&self.url)
+        self.url.as_deref()
     }
 
     fn certificate(&self) -> Option<&Path> {
@@ -53,11 +53,11 @@ impl ConfigArgs for Args {
     }
 
     fn username(&self) -> Option<&str> {
-        Some(&self.username)
+        self.username.as_deref()
     }
 
     fn password(&self) -> Option<&str> {
-        Some(&self.password)
+        self.password.as_deref()
     }
 
     fn insecure(&self) -> bool {
