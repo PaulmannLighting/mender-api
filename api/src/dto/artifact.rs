@@ -151,6 +151,38 @@ impl Artifact {
 
 impl Display for Artifact {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Artifact {{ id: {}, name: {} }}", self.id, self.name)
+        if f.alternate() {
+            write!(
+                f,
+                "Artifact {{
+    id: {},
+    name: {},
+    description: {:?},
+    compatible_device_types: {:?},
+    info: {:#},
+    signed: {},
+    updates: {:#?},
+    provides: {:#?},
+    depends: {:#},
+    clears_provides: {:?},
+    size: {},
+    modified: {}
+}}",
+                self.id,
+                self.name,
+                self.description,
+                self.compatible_device_types,
+                self.info,
+                self.signed,
+                self.updates,
+                self.provides,
+                self.depends,
+                self.clears_provides,
+                self.size,
+                self.modified
+            )
+        } else {
+            write!(f, "Artifact {{ id: {}, name: {} }}", self.id, self.name)
+        }
     }
 }

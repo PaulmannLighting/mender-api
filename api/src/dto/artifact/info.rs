@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 /// Information about an artifact.
@@ -25,5 +27,15 @@ impl Info {
     #[must_use]
     pub const fn version(&self) -> u8 {
         self.version
+    }
+}
+
+impl Display for Info {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Info {{ format: {}, version: {} }}",
+            self.format, self.version
+        )
     }
 }
