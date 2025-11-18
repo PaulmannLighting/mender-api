@@ -756,6 +756,7 @@ dependencies = [
  "log",
  "macaddr",
  "mender-api",
+ "mender-api-cfg",
  "tokio",
  "uuid",
 ]

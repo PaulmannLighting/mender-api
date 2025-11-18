@@ -1,8 +1,9 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
-use mender_api::{Client, Devices, Login, PemCertificate, Session};
+use mender_api::{Devices, Session};
+use mender_api_cfg::ConfigArgs;
 use uuid::Uuid;
 
 use self::artifact_action::ArtifactAction;
@@ -11,7 +12,6 @@ use crate::args::device_action::DeviceAction;
 use crate::args::device_proxy_action::DeviceProxyAction;
 use crate::args::group_action::GroupAction;
 use crate::args::release_action::ReleaseAction;
-use crate::util::OrBail;
 
 mod artifact_action;
 mod deployments_action;
@@ -38,10 +38,30 @@ pub struct Args {
 
 impl Args {
     pub async fn run(self) -> Result<(), ExitCode> {
-        let cert = self.certificate.load()?;
-        let server = Client::new(self.url.parse().or_bail()?, cert, self.insecure).or_bail()?;
-        let session = server.login(self.username, self.password).await.or_bail()?;
+        let session = self.login().await?;
         self.endpoint.run(&session).await
+    }
+}
+
+impl ConfigArgs for Args {
+    fn url(&self) -> Option<&str> {
+        Some(&self.url)
+    }
+
+    fn certificate(&self) -> Option<&Path> {
+        self.certificate.as_deref()
+    }
+
+    fn username(&self) -> Option<&str> {
+        Some(&self.username)
+    }
+
+    fn password(&self) -> Option<&str> {
+        Some(&self.password)
+    }
+
+    fn insecure(&self) -> bool {
+        self.insecure
     }
 }
 

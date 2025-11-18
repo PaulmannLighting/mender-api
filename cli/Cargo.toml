@@ -10,6 +10,7 @@ env_logger = "0.11"
 log = "0.4"
 macaddr = "1.0"
 mender-api = { path = "../api", features = ["clap"] }
+mender-api-cfg = { path = "../cfg" }
 tokio = { version = "1.47", features = ["rt", "rt-multi-thread", "macros"] }
 uuid = "1.18"
 
