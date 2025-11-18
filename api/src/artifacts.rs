@@ -6,6 +6,7 @@ use uuid::Uuid;
 
 use crate::dto::Artifact;
 use crate::pagination::DEFAULT_PAGE_SIZE;
+use crate::utils::ResponseExt;
 use crate::{Pager, PaginatedIterator, Session};
 
 const PATH: &str = "api/management/v1/deployments/artifacts";
@@ -36,8 +37,7 @@ impl Artifacts for Session {
             .send()
             .await?
             .error_for_status()?
-            .text()
+            .ensure_empty()
             .await
-            .map(drop)
     }
 }
