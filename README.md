@@ -20,7 +20,7 @@ software deployments.
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/mender-api.git
+git clone https://github.com/PaulmannLighting/mender-api.git
 cd mender-api
 cargo build --release
 ```
