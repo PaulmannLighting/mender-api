@@ -3,6 +3,7 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 
 use crate::dto::DeviceType;
+use crate::utils::display_slice;
 
 /// Artifact dependencies.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -27,17 +28,8 @@ impl Dependency {
 
 impl Display for Dependency {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let types: Vec<String> = self.device_type.iter().map(|dt| dt.to_string()).collect();
-        write!(f, "Dependency {{ device_types: [")?;
-
-        for (index, device_type) in self.device_type.iter().enumerate() {
-            write!(f, "{device_type}")?;
-
-            if index < types.len().saturating_sub(1) {
-                write!(f, ", ")?;
-            }
-        }
-
-        write!(f, "] }}")
+        write!(f, "Dependency {{ device_types: ")?;
+        display_slice(&self.device_type, f)?;
+        write!(f, " }}")
     }
 }
