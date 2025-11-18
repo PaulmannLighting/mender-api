@@ -11,7 +11,7 @@ use crate::dto::scope::Scope;
 use crate::dto::status::Status;
 use crate::dto::types::OneOrMany;
 use crate::dto::{BootloaderIntegration, Country, DeviceType, RootfsType};
-use crate::utils::{as_str, display_slice};
+use crate::utils::{DisplaySlice, as_str};
 
 /// Known attributes for device in the Mender inventory API.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -369,7 +369,7 @@ impl Display for KnownAttribute {
             Self::RootfsImageVersion { value, .. } => {
                 write!(f, "rootfs-image.version: {value}")
             }
-            Self::UpdateModules { value, .. } => display_slice(value, f),
+            Self::UpdateModules { value, .. } => value.fmt(f),
         }
     }
 }

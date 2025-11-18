@@ -3,7 +3,7 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 
 use crate::dto::DeviceType;
-use crate::utils::display_slice;
+use crate::utils::DisplaySlice;
 
 /// Artifact dependencies.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -29,7 +29,7 @@ impl Dependency {
 impl Display for Dependency {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Dependency {{ device_types: ")?;
-        display_slice(&self.device_type, f)?;
+        self.device_type.fmt(f)?;
         write!(f, " }}")
     }
 }

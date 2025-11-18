@@ -3,7 +3,7 @@ use std::vec::IntoIter;
 
 use serde::{Deserialize, Serialize};
 
-use crate::utils::display_slice;
+use crate::utils::DisplaySlice;
 
 /// A wrapper type to represent either a single item or a list of items.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Deserialize, Serialize)]
@@ -59,7 +59,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::One(item) => item.fmt(f),
-            Self::Many(items) => display_slice(items, f),
+            Self::Many(items) => items.fmt(f),
         }
     }
 }
