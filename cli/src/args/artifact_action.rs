@@ -3,18 +3,14 @@ use std::process::ExitCode;
 
 use clap::Subcommand;
 use log::error;
-use macaddr::MacAddr6;
 use mender_api::{Artifacts, Session};
-use uuid::Uuid;
-
-use crate::util::OrBail;
 
 #[derive(Debug, Subcommand)]
 pub enum ArtifactAction {
     List {
         #[clap(long, short = 'p', help = "Page size for device listing")]
         page_size: Option<NonZero<usize>>,
-        #[clap(long, short = 'p', help = "List detailed device information")]
+        #[clap(long, short = 'v', help = "List detailed device information")]
         verbose: bool,
     },
 }

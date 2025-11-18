@@ -14,7 +14,7 @@ pub enum DeviceAction {
     List {
         #[clap(long, short = 'p', help = "Page size for device listing")]
         page_size: Option<NonZero<usize>>,
-        #[clap(long, short = 'p', help = "List detailed device information")]
+        #[clap(long, short = 'v', help = "List detailed device information")]
         verbose: bool,
     },
     Get {
