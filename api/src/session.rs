@@ -51,7 +51,7 @@ impl Session {
             .bearer_auth(&self.bearer_token)
     }
 
-    /// Make a PATCH request.
+    /// Make a PUT request.
     pub fn put<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
     where
         P: AsRef<str>,
@@ -62,7 +62,7 @@ impl Session {
             .bearer_auth(&self.bearer_token)
     }
 
-    /// Make a PATCH request.
+    /// Make a DELETE request.
     pub fn delete<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
     where
         P: AsRef<str>,
