@@ -7,11 +7,11 @@ use mender_api_cfg::ConfigArgs;
 use uuid::Uuid;
 
 use self::artifact_action::ArtifactAction;
-use crate::args::deployments_action::DeploymentAction;
-use crate::args::device_action::DeviceAction;
-use crate::args::device_proxy_action::DeviceProxyAction;
-use crate::args::group_action::GroupAction;
-use crate::args::release_action::ReleaseAction;
+use self::deployments_action::DeploymentAction;
+use self::device_action::DeviceAction;
+use self::device_proxy_action::DeviceProxyAction;
+use self::group_action::GroupAction;
+use self::release_action::ReleaseAction;
 
 mod artifact_action;
 mod deployments_action;
