@@ -31,9 +31,7 @@ impl Artifacts for Session {
     }
 
     async fn delete(&self, id: Uuid) -> reqwest::Result<()> {
-        self.client()
-            .delete(self.format_url(format!("{PATH}/{id}"), None))
-            .bearer_auth(self.bearer_token())
+        self.delete(format!("{PATH}/{id}"), None)
             .send()
             .await?
             .error_for_status()?

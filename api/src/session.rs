@@ -1,4 +1,4 @@
-use reqwest::{Client, Url};
+use reqwest::{Client, RequestBuilder, Url};
 
 /// A session on the Mender server API.
 #[derive(Clone, Debug)]
@@ -18,21 +18,64 @@ impl Session {
         }
     }
 
-    /// Return request client for the Mender server.
-    #[must_use]
-    pub(crate) const fn client(&self) -> &Client {
-        &self.client
+    /// Make a GET request.
+    pub fn get<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
+    where
+        P: AsRef<str>,
+        Q: Into<Option<&'q str>>,
+    {
+        self.client
+            .get(self.format_url(path, query))
+            .bearer_auth(&self.bearer_token)
     }
 
-    /// Return the bearer token for authentication.
-    #[must_use]
-    pub(crate) fn bearer_token(&self) -> &str {
-        &self.bearer_token
+    /// Make a POST request.
+    pub fn post<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
+    where
+        P: AsRef<str>,
+        Q: Into<Option<&'q str>>,
+    {
+        self.client
+            .post(self.format_url(path, query))
+            .bearer_auth(&self.bearer_token)
+    }
+
+    /// Make a PATCH request.
+    pub fn patch<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
+    where
+        P: AsRef<str>,
+        Q: Into<Option<&'q str>>,
+    {
+        self.client
+            .patch(self.format_url(path, query))
+            .bearer_auth(&self.bearer_token)
+    }
+
+    /// Make a PATCH request.
+    pub fn put<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
+    where
+        P: AsRef<str>,
+        Q: Into<Option<&'q str>>,
+    {
+        self.client
+            .put(self.format_url(path, query))
+            .bearer_auth(&self.bearer_token)
+    }
+
+    /// Make a PATCH request.
+    pub fn delete<'q, P, Q>(&self, path: P, query: Q) -> RequestBuilder
+    where
+        P: AsRef<str>,
+        Q: Into<Option<&'q str>>,
+    {
+        self.client
+            .delete(self.format_url(path, query))
+            .bearer_auth(&self.bearer_token)
     }
 
     /// Return the URL to the specified path on the Mender server.
     #[must_use]
-    pub(crate) fn format_url<'q, P, Q>(&self, path: P, query: Q) -> Url
+    fn format_url<'q, P, Q>(&self, path: P, query: Q) -> Url
     where
         P: AsRef<str>,
         Q: Into<Option<&'q str>>,

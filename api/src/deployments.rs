@@ -96,9 +96,7 @@ impl Deployments for Session {
     }
 
     async fn show(&self, id: Uuid) -> reqwest::Result<ListDeployment> {
-        self.client()
-            .get(self.format_url(format!("{PATH}/{id}"), None))
-            .bearer_auth(self.bearer_token())
+        self.get(format!("{PATH}/{id}"), None)
             .send()
             .await?
             .error_for_status()?
@@ -107,9 +105,7 @@ impl Deployments for Session {
     }
 
     async fn devices_of(&self, id: Uuid) -> reqwest::Result<Vec<Uuid>> {
-        self.client()
-            .get(self.format_url(format!("{PATH}/{id}/device_list"), None))
-            .bearer_auth(self.bearer_token())
+        self.get(format!("{PATH}/{id}/device_list"), None)
             .send()
             .await?
             .error_for_status()?
@@ -128,9 +124,7 @@ impl Deployments for Session {
         N: AsRef<str> + Send + Sync,
         A: AsRef<str> + Send + Sync,
     {
-        self.client()
-            .post(self.format_url(PATH, None))
-            .bearer_auth(self.bearer_token())
+        self.post(PATH, None)
             .json(
                 &NewDeployment::new(name.as_ref(), artifact_name.as_ref())
                     .with_devices(devices)
@@ -155,9 +149,7 @@ impl Deployments for Session {
         A: AsRef<str> + Send + Sync,
         G: Display + Send + Sync,
     {
-        self.client()
-            .post(self.format_url(format!("{PATH}/group/{group_name}"), None))
-            .bearer_auth(self.bearer_token())
+        self.post(format!("{PATH}/group/{group_name}"), None)
             .json(&NewDeployment::new(name.as_ref(), artifact_name.as_ref()).with_retries(retries))
             .send()
             .await?
@@ -167,9 +159,7 @@ impl Deployments for Session {
     }
 
     async fn abort(&self, id: Uuid) -> reqwest::Result<()> {
-        self.client()
-            .put(self.format_url(format!("{PATH}/{id}/status"), None))
-            .bearer_auth(self.bearer_token())
+        self.put(format!("{PATH}/{id}/status"), None)
             .json(&PutDeployment::new(DeploymentStatus::Aborted))
             .send()
             .await?
@@ -206,9 +196,7 @@ impl Deployments for Session {
     }
 
     async fn abort_device(&self, device_id: Uuid) -> reqwest::Result<()> {
-        self.client()
-            .delete(self.format_url(format!("{PATH}/devices/{device_id}"), None))
-            .bearer_auth(self.bearer_token())
+        self.delete(format!("{PATH}/devices/{device_id}"), None)
             .send()
             .await?
             .error_for_status()?

@@ -28,9 +28,7 @@ pub trait Tags {
 
 impl Tags for Session {
     async fn add(&self, device_id: Uuid, tags: &[Tag]) -> reqwest::Result<()> {
-        self.client()
-            .patch(self.format_url(format!("{PATH}/{device_id}/tags"), None))
-            .bearer_auth(self.bearer_token())
+        self.patch(format!("{PATH}/{device_id}/tags"), None)
             .json(tags)
             .send()
             .await?
@@ -40,9 +38,7 @@ impl Tags for Session {
     }
 
     async fn assign(&self, device_id: Uuid, tags: &[Tag]) -> reqwest::Result<()> {
-        self.client()
-            .put(self.format_url(format!("{PATH}/{device_id}/tags"), None))
-            .bearer_auth(self.bearer_token())
+        self.put(format!("{PATH}/{device_id}/tags"), None)
             .json(tags)
             .send()
             .await?

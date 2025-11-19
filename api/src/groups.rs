@@ -31,9 +31,7 @@ pub trait Groups {
 
 impl Groups for Session {
     async fn list(&self) -> reqwest::Result<Vec<String>> {
-        self.client()
-            .get(self.format_url(PATH, None))
-            .bearer_auth(self.bearer_token())
+        self.get(PATH, None)
             .send()
             .await?
             .error_for_status()?
@@ -55,9 +53,7 @@ impl Groups for Session {
     }
 
     async fn patch(&self, name: &str, devices: &[Uuid]) -> reqwest::Result<PatchGroupResponse> {
-        self.client()
-            .patch(self.format_url(format!("{PATH}/{name}/device"), None))
-            .bearer_auth(self.bearer_token())
+        self.patch(format!("{PATH}/{name}/device"), None)
             .json(devices)
             .send()
             .await?

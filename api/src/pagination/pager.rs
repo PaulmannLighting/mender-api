@@ -46,12 +46,10 @@ impl Pager<'_, '_> {
         for<'deserialize> T: Deserialize<'deserialize>,
     {
         self.session
-            .client()
-            .get(self.session.format_url(
+            .get(
                 self.path.as_ref(),
                 format!("per_page={}&page={page_no}", self.page_size).as_str(),
-            ))
-            .bearer_auth(self.session.bearer_token())
+            )
             .send()
             .await?
             .error_for_status()?

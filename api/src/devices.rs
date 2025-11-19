@@ -61,9 +61,7 @@ impl Devices for Session {
     }
 
     async fn get(&self, id: Uuid) -> reqwest::Result<Device> {
-        self.client()
-            .get(self.format_url(format!("{PATH}/{id}"), None))
-            .bearer_auth(self.bearer_token())
+        self.get(format!("{PATH}/{id}"), None)
             .send()
             .await?
             .error_for_status()?
@@ -72,9 +70,7 @@ impl Devices for Session {
     }
 
     async fn get_group(&self, id: Uuid) -> reqwest::Result<DeviceGroup> {
-        self.client()
-            .get(self.format_url(format!("{PATH}/{id}/group"), None))
-            .bearer_auth(self.bearer_token())
+        self.get(format!("{PATH}/{id}/group"), None)
             .send()
             .await?
             .error_for_status()?
@@ -86,9 +82,7 @@ impl Devices for Session {
     where
         T: ToString + Send,
     {
-        self.client()
-            .put(self.format_url(format!("{PATH}/{id}/group"), None))
-            .bearer_auth(self.bearer_token())
+        self.put(format!("{PATH}/{id}/group"), None)
             .json(&DeviceGroup::new(group_name.to_string()))
             .send()
             .await?
