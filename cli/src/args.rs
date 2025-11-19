@@ -23,17 +23,17 @@ mod release_action;
 #[derive(Debug, Parser)]
 pub struct Args {
     #[clap(help = "URL of the Mender server")]
-    pub url: Option<String>,
+    url: Option<String>,
     #[clap(long, short, help = "Username for Mender server login")]
-    pub username: Option<String>,
+    username: Option<String>,
     #[clap(long, short, help = "Password for Mender server login")]
-    pub password: Option<String>,
+    password: Option<String>,
     #[clap(long, short = 'k', help = "Accept invalid certificates (insecure)")]
-    pub insecure: bool,
+    insecure: bool,
     #[clap(long, short, help = "Path to the certificate file (optional)")]
-    pub certificate: Option<PathBuf>,
+    certificate: Option<PathBuf>,
     #[clap(subcommand)]
-    pub endpoint: Endpoint,
+    endpoint: Endpoint,
 }
 
 impl Args {
