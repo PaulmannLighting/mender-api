@@ -29,12 +29,9 @@ impl ConfigFile {
     ///
     /// Returns an error if the home directory could not be determined, or if the file could not be read or parsed.
     pub fn load() -> Result<Option<Self>, Box<dyn std::error::Error>> {
-        let Some(config) = read_to_string(
-            home_dir()
-                .ok_or("Could not determine home directory")?
-                .join(DEFAULT_FILE_NAME),
-        )
-        .ok() else {
+        let Some(config) =
+            read_to_string(default_config_path().ok_or("Could not determine home directory")?).ok()
+        else {
             warn!("No config file found at default path, continuing without it.");
             return Ok(None);
         };
@@ -63,4 +60,15 @@ impl ConfigArgs for ConfigFile {
     fn insecure(&self) -> bool {
         self.insecure
     }
+}
+
+fn default_config_path() -> Option<PathBuf> {
+    let mut path = home_dir()?;
+
+    #[cfg(target_os = "linux")]
+    {
+        path = path.join(".config");
+    }
+
+    Some(path.join(DEFAULT_FILE_NAME))
 }
