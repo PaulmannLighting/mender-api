@@ -1,6 +1,7 @@
 //! Configuration file handling for Mender API client.
 
 use std::env::home_dir;
+use std::error::Error;
 use std::fs::read_to_string;
 use std::path::{Path, PathBuf};
 
@@ -28,7 +29,7 @@ impl ConfigFile {
     /// # Errors
     ///
     /// Returns an error if the home directory could not be determined, or if the file could not be read or parsed.
-    pub fn load() -> Result<Option<Self>, Box<dyn std::error::Error>> {
+    pub fn load() -> Result<Option<Self>, Box<dyn Error>> {
         let Some(config) =
             read_to_string(default_config_path().ok_or("Could not determine home directory")?).ok()
         else {
