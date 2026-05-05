@@ -13,10 +13,6 @@ pub struct Client {
 
 impl Client {
     /// Crate a new API instance.
-    ///
-    /// # Errors
-    ///
-    /// Returns a [`reqwest::Error`] if the client could not be built.
     #[must_use]
     pub fn new(base_url: Url) -> Self {
         Self {
