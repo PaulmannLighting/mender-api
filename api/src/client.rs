@@ -12,7 +12,7 @@ pub struct Client {
 }
 
 impl Client {
-    /// Crate a new API instance.
+    /// Crate a new mender client.
     #[must_use]
     pub fn new(base_url: Url) -> Self {
         Self {
