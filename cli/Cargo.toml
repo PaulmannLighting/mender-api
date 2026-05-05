@@ -5,14 +5,14 @@ edition = "2024"
 publish = false
 
 [dependencies]
-clap = { version = "4.5", features = ["derive"] }
+clap = { version = "4.6", features = ["derive"] }
 env_logger = "0.11"
 log = "0.4"
 macaddr = "1.0"
 mender-api = { path = "../api", features = ["clap"] }
 mender-api-cfg = { path = "../cfg" }
-tokio = { version = "1.48", features = ["rt", "rt-multi-thread", "macros"] }
-uuid = "1.18"
+tokio = { version = "1.52", features = ["rt", "rt-multi-thread", "macros"] }
+uuid = "1.23"
 
 [lints]
 workspace = true
