@@ -1,8 +1,8 @@
 use reqwest::{ClientBuilder, Url};
 
-pub use self::builder::Builder;
+pub use self::into_mender_client::IntoMenderClient;
 
-mod builder;
+mod into_mender_client;
 
 /// Mender server API client.
 #[derive(Clone, Debug)]

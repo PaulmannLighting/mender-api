@@ -2,7 +2,7 @@ use std::path::Path;
 use std::process::ExitCode;
 
 use log::error;
-use mender_api::{Builder, Client, Login, PemCertificate, Session};
+use mender_api::{Client, IntoMenderClient, Login, PemCertificate, Session};
 
 use crate::ConfigFile;
 
@@ -82,7 +82,8 @@ pub trait ConfigArgs {
         }
 
         let Ok(client) = builder
-            .build_with_url(url)
+            .build()
+            .map(|client| client.into_mender_client(url))
             .inspect_err(|error| error!("Failed to create client: {error}"))
         else {
             return Err(ExitCode::FAILURE);
