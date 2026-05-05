@@ -48,7 +48,7 @@ use mender_api::{Client, Login};
 
 #[tokio::main]
 async fn main() {
-    let client = Client::new("https://mender.example.com", None, false);
+    let client = Client::new("https://mender.example.com");
     let session = client.login("username", "password").await;
     // Use the session to interact with the Mender API.
 }

@@ -3,7 +3,7 @@
 pub use reqwest::{Certificate, Error, Result, StatusCode};
 
 pub use self::artifacts::Artifacts;
-pub use self::client::Client;
+pub use self::client::{Builder, Client};
 pub use self::deployments::Deployments;
 pub use self::device_proxy::DeviceProxy;
 pub use self::devices::Devices;

@@ -2,7 +2,7 @@ use std::path::Path;
 use std::process::ExitCode;
 
 use log::error;
-use mender_api::{Client, Login, PemCertificate, Session};
+use mender_api::{Builder, Client, Login, PemCertificate, Session};
 
 use crate::ConfigFile;
 
@@ -71,7 +71,18 @@ pub trait ConfigArgs {
             .as_ref()
             .map_or_else(|| self.insecure(), ConfigFile::insecure);
 
-        let Ok(client) = Client::new(url, certificate, insecure)
+        let mut builder = Client::builder();
+
+        if let Some(certificate) = certificate {
+            builder = builder.add_root_certificate(certificate);
+        }
+
+        if insecure {
+            builder = builder.danger_accept_invalid_certs(true);
+        }
+
+        let Ok(client) = builder
+            .build_with_url(url)
             .inspect_err(|error| error!("Failed to create client: {error}"))
         else {
             return Err(ExitCode::FAILURE);
