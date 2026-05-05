@@ -66,18 +66,18 @@ impl Pager<'_, '_> {
     where
         for<'deserialize> T: Deserialize<'deserialize>,
     {
-        let mut devices = Vec::new();
+        let mut items = Vec::new();
 
         for page_no in (1..).filter_map(NonZero::new) {
             let page = self.page(page_no).await?;
             let page_size = page.len();
-            devices.extend(page);
+            items.extend(page);
 
             if page_size < self.page_size.get() {
                 break;
             }
         }
 
-        Ok(devices)
+        Ok(items)
     }
 }
