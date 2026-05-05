@@ -43,15 +43,6 @@ pub trait ConfigArgs {
             }
         };
 
-        let certificate = match self
-            .certificate()
-            .or_else(|| config_file.as_ref().and_then(ConfigFile::certificate))
-            .load()
-        {
-            Ok(cert) => cert,
-            Err(code) => return Err(code),
-        };
-
         let Some(url) = self
             .url()
             .or_else(|| config_file.as_ref().and_then(ConfigFile::url))
@@ -73,7 +64,14 @@ pub trait ConfigArgs {
 
         let mut builder = Client::builder();
 
-        if let Some(certificate) = certificate {
+        if let Some(certificate) = match self
+            .certificate()
+            .or_else(|| config_file.as_ref().and_then(ConfigFile::certificate))
+            .load()
+        {
+            Ok(cert) => cert,
+            Err(code) => return Err(code),
+        } {
             builder = builder.add_root_certificate(certificate);
         }
 
