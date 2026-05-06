@@ -30,9 +30,7 @@ impl<'session, 'path, T> Pager<'session, 'path, T> {
             phantom: PhantomData,
         }
     }
-}
 
-impl<T> Pager<'_, '_, T> {
     /// Return the page size.
     #[must_use]
     pub const fn page_size(&self) -> NonZero<usize> {
