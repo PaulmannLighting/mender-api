@@ -17,7 +17,6 @@ pub use self::utils::PemCertificate;
 
 mod artifacts;
 mod client;
-mod config_file;
 mod deployments;
 mod device_proxy;
 mod devices;
