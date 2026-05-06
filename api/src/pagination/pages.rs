@@ -1,4 +1,3 @@
-use std::marker::PhantomData;
 use std::num::NonZero;
 
 use serde::Deserialize;
@@ -8,21 +7,19 @@ use crate::Pager;
 /// Iterator over pages of results.
 #[derive(Debug, Clone)]
 pub struct Pages<'session, 'path, T> {
-    pager: Pager<'session, 'path>,
+    pager: Pager<'session, 'path, T>,
     page_no: NonZero<usize>,
     done: bool,
-    phantom: PhantomData<T>,
 }
 
 impl<'session, 'path, T> Pages<'session, 'path, T> {
     /// Create a new pages iterator with the given page size.
     #[must_use]
-    pub(crate) const fn new(pager: Pager<'session, 'path>) -> Self {
+    pub(crate) const fn new(pager: Pager<'session, 'path, T>) -> Self {
         Self {
             pager,
             page_no: NonZero::new(1).expect("1 is always non-zero."),
             done: false,
-            phantom: PhantomData,
         }
     }
 }
@@ -58,8 +55,8 @@ where
     }
 }
 
-impl<'session, 'path, T> From<Pager<'session, 'path>> for Pages<'session, 'path, T> {
-    fn from(pager: Pager<'session, 'path>) -> Self {
+impl<'session, 'path, T> From<Pager<'session, 'path, T>> for Pages<'session, 'path, T> {
+    fn from(pager: Pager<'session, 'path, T>) -> Self {
         Self::new(pager)
     }
 }

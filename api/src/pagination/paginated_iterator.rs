@@ -8,7 +8,7 @@ use crate::Pager;
 /// Iterator for paginated results.
 #[derive(Debug, Clone)]
 pub struct PaginatedIterator<'session, 'path, T> {
-    pager: Pager<'session, 'path>,
+    pager: Pager<'session, 'path, T>,
     page_no: NonZero<usize>,
     current_page: Option<IntoIter<T>>,
 }
@@ -16,7 +16,7 @@ pub struct PaginatedIterator<'session, 'path, T> {
 impl<'session, 'path, T> PaginatedIterator<'session, 'path, T> {
     /// Create a new page iterator with the given page size.
     #[must_use]
-    pub(crate) const fn new(pager: Pager<'session, 'path>) -> Self {
+    pub(crate) const fn new(pager: Pager<'session, 'path, T>) -> Self {
         Self {
             pager,
             page_no: NonZero::new(1).expect("1 is always non-zero."),
@@ -62,8 +62,8 @@ where
     }
 }
 
-impl<'session, 'path, T> From<Pager<'session, 'path>> for PaginatedIterator<'session, 'path, T> {
-    fn from(pager: Pager<'session, 'path>) -> Self {
+impl<'session, 'path, T> From<Pager<'session, 'path, T>> for PaginatedIterator<'session, 'path, T> {
+    fn from(pager: Pager<'session, 'path, T>) -> Self {
         Self::new(pager)
     }
 }
