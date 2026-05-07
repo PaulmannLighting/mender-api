@@ -17,7 +17,7 @@ pub trait Devices {
     /// Iterate over device pages.
     fn pages(&self, page_size: Option<NonZero<usize>>) -> Pages<'_, '_, Device>;
 
-    /// List device.
+    /// List devices.
     fn list(&self, page_size: Option<NonZero<usize>>) -> PaginatedIterator<'_, '_, Device>;
 
     /// Collect device into a `Vec`.
