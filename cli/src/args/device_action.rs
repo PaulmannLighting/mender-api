@@ -33,6 +33,10 @@ pub enum DeviceAction {
         #[clap(long, short = 'p', help = "Page size for device listing")]
         page_size: Option<NonZero<usize>>,
     },
+    Group {
+        #[clap(index = 1, help = "ID of the device to retrieve")]
+        id: Uuid,
+    },
 }
 
 impl DeviceAction {
@@ -87,6 +91,12 @@ impl DeviceAction {
                 for device in devices {
                     println!("{device}");
                 }
+            }
+            Self::Group { id } => {
+                println!(
+                    "{}",
+                    Devices::get_group(session, id).await.or_bail()?.name()
+                );
             }
         }
 
