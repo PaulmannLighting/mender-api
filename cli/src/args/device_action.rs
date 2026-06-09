@@ -34,8 +34,8 @@ pub enum DeviceAction {
         page_size: Option<NonZero<usize>>,
     },
     Group {
-        #[clap(index = 1, help = "ID of the device to retrieve")]
-        id: Uuid,
+        #[clap(index = 1, help = "IDs of the devices to list the group of")]
+        ids: Vec<Uuid>,
     },
 }
 
@@ -92,11 +92,17 @@ impl DeviceAction {
                     println!("{device}");
                 }
             }
-            Self::Group { id } => {
-                println!(
-                    "{}",
-                    Devices::get_group(session, id).await.or_bail()?.name()
-                );
+            Self::Group { ids } => {
+                for id in ids {
+                    match Devices::get_group(session, id).await {
+                        Ok(group) => {
+                            println!("{id}: {}", group.name());
+                        }
+                        Err(error) => {
+                            error!("{error}");
+                        }
+                    }
+                }
             }
         }
 
