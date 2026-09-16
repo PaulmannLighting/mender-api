@@ -17,6 +17,8 @@ software deployments.
 - `cfg/` — Configuration module
 - `cli/` — Command-line application
 
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the internal architecture.
+
 ## Installation
 
 ```bash
@@ -48,8 +50,8 @@ use mender_api::{Client, Login};
 
 #[tokio::main]
 async fn main() {
-    let client = Client::new("https://mender.example.com");
-    let session = client.login("username", "password").await;
+    let client = Client::new("https://mender.example.com".parse().expect("valid server URL"));
+    let session = client.login("username", "password").await.expect("login failed");
     // Use the session to interact with the Mender API.
 }
 ```
