@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use uuid::Uuid;
 
 use crate::dto::{Attribute, Device, DeviceGroup, Tag};
@@ -44,7 +46,7 @@ impl DeviceProxy<'_> {
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn add_to_group<T>(&self, group_name: T) -> reqwest::Result<()>
     where
-        T: ToString + Send,
+        T: Display + Send,
     {
         Devices::set_group(self.session, self.id, group_name).await
     }
@@ -56,7 +58,7 @@ impl DeviceProxy<'_> {
     /// Return a [`reqwest::Error`] if the request fails.
     pub async fn remove_from_group<T>(&self, group_name: T) -> reqwest::Result<()>
     where
-        T: ToString + Send,
+        T: Display + Send,
     {
         Devices::remove_from_group(self.session, self.id, group_name).await
     }

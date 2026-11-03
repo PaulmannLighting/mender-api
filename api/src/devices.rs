@@ -1,5 +1,6 @@
 //! Devices management API.
 
+use std::fmt::Display;
 use std::num::NonZero;
 
 use uuid::Uuid;
@@ -39,7 +40,7 @@ pub trait Devices {
         group_name: T,
     ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
-        T: ToString + Send;
+        T: Display + Send;
 
     /// Remove the device from the specified group.
     fn remove_from_group<T>(
@@ -48,7 +49,7 @@ pub trait Devices {
         group_name: T,
     ) -> impl Future<Output = reqwest::Result<()>> + Send
     where
-        T: ToString + Send;
+        T: Display + Send;
 
     /// Return a device proxy for the specified device ID.
     fn proxy(&self, id: Uuid) -> DeviceProxy<'_>;
@@ -89,7 +90,7 @@ impl Devices for Session {
 
     async fn set_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
     where
-        T: ToString + Send,
+        T: Display + Send,
     {
         self.put(format!("{PATH}/{id}/group"), None)
             .json(&DeviceGroup::new(group_name.to_string()))
@@ -102,17 +103,14 @@ impl Devices for Session {
 
     async fn remove_from_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
     where
-        T: ToString + Send,
+        T: Display + Send,
     {
-        self.delete(
-            format!("{PATH}/{id}/group/{}", group_name.to_string()),
-            None,
-        )
-        .send()
-        .await?
-        .error_for_status()?
-        .ensure_empty()
-        .await
+        self.delete(format!("{PATH}/{id}/group/{group_name}"), None)
+            .send()
+            .await?
+            .error_for_status()?
+            .ensure_empty()
+            .await
     }
 
     fn proxy(&self, id: Uuid) -> DeviceProxy<'_> {
