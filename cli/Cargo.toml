@@ -1,6 +1,6 @@
 [package]
 name = "mender-api-cli"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 publish = false
 
@@ -9,8 +9,8 @@ clap = { version = "4.6", features = ["derive"] }
 env_logger = "0.11"
 log = "0.4"
 macaddr = "1.0"
-mender-api = { path = "../api", features = ["clap"] }
-mender-api-cfg = { path = "../cfg" }
+mender-api = { version = "0.3.0", path = "../api", features = ["clap"] }
+mender-api-cfg = { version = "0.3.0", path = "../cfg" }
 tokio = { version = "1.52", features = ["rt", "rt-multi-thread", "macros"] }
 uuid = "1.23"
 
