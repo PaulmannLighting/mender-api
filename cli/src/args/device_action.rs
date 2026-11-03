@@ -27,6 +27,12 @@ pub enum DeviceAction {
         #[clap(index = 2, help = "Name of the group to add the device to")]
         group_name: String,
     },
+    RemoveFromGroup {
+        #[clap(index = 1, help = "ID of the device to remove from a group")]
+        id: Uuid,
+        #[clap(index = 2, help = "Name of the group to remove the device from")]
+        group_name: String,
+    },
     ByMac {
         #[clap(index = 1, help = "Find a device by its MAC address")]
         mac_address: MacAddr6,
@@ -67,6 +73,11 @@ impl DeviceAction {
             }
             Self::AddToGroup { id, group_name } => {
                 Devices::set_group(session, id, group_name)
+                    .await
+                    .or_bail()?;
+            }
+            Self::RemoveFromGroup { id, group_name } => {
+                Devices::remove_from_group(session, id, group_name)
                     .await
                     .or_bail()?;
             }

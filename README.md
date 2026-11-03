@@ -35,6 +35,12 @@ cargo build --release
 cargo run --bin mender-api-cli -- <commands> [options]
 ```
 
+To remove a device from a group:
+
+```bash
+cargo run --bin mender-api-cli -- devices remove-from-group <device-id> <group-name>
+```
+
 ### Library
 
 Add to your `Cargo.toml`:

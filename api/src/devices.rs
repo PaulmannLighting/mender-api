@@ -41,6 +41,15 @@ pub trait Devices {
     where
         T: ToString + Send;
 
+    /// Remove the device from the specified group.
+    fn remove_from_group<T>(
+        &self,
+        id: Uuid,
+        group_name: T,
+    ) -> impl Future<Output = reqwest::Result<()>> + Send
+    where
+        T: ToString + Send;
+
     /// Return a device proxy for the specified device ID.
     fn proxy(&self, id: Uuid) -> DeviceProxy<'_>;
 }
@@ -89,6 +98,21 @@ impl Devices for Session {
             .error_for_status()?
             .ensure_empty()
             .await
+    }
+
+    async fn remove_from_group<T>(&self, id: Uuid, group_name: T) -> reqwest::Result<()>
+    where
+        T: ToString + Send,
+    {
+        self.delete(
+            format!("{PATH}/{id}/group/{}", group_name.to_string()),
+            None,
+        )
+        .send()
+        .await?
+        .error_for_status()?
+        .ensure_empty()
+        .await
     }
 
     fn proxy(&self, id: Uuid) -> DeviceProxy<'_> {
